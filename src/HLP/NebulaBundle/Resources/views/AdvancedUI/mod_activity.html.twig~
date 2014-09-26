@@ -1,4 +1,0 @@
-{% extends "HLPNebulaBundle:AdvancedUI:mod.html.twig" %}
-
-{% block modder_tab %}
-{% endblock %}
