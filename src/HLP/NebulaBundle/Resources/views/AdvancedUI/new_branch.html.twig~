@@ -1,0 +1,29 @@
+{% extends "HLPNebulaBundle::layout.html.twig" %}
+
+{% block title %}
+  {{ modder }} / {{ mod.title }} / New branch - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <ol class="breadcrumb">
+    <li><a href="{{ path('hlp_nebula_homepage') }}">Nebula</a></li>
+    <li><a href="{{ path('hlp_nebula_modder', {'modder': modder}) }}">{{ modder }}</a></li>
+    <li><a href="{{ path('hlp_nebula_mod', {'modder': modder, 'mod': mod.modId}) }}">{{ mod.title }}</a></li>
+    <li href="active">New branch</li>
+  </ol>
+</div>
+<div class="row">
+  <div class="col-sm-3">
+    <h2><small>Create a </small>New branch</h2>
+    <hr/>
+    <p class="lead"><small class="text-muted">of mod </small>{{ mod.title }}</p>
+    <p class="lead"><small class="text-muted">as </small>{{ modder }}</p>
+    <hr/>
+    <p class="lead"><small class="text-muted">or </small><a href="{{ path('hlp_nebula_mod', {'modder': modder, 'mod':mod.modId}) }}" class="btn btn-danger">Cancel</a></p>
+  </div>
+  <div class="col-sm-9">
+  {% include "HLPNebulaBundle:AdvancedUI:form_branch.html.twig" %}
+  </div>
+</div>
+{% endblock %}

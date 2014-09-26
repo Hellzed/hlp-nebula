@@ -1,0 +1,140 @@
+# Base Nebula (owners part) routes
+
+hlp_nebula_homepage:
+    path:     /nebula
+    defaults: { _controller: HLPNebulaBundle:Base:index }
+    
+hlp_nebula_get_started:
+    path:     /nebula/get_started
+    defaults: { _controller: HLPNebulaBundle:Base:getStarted }
+    
+hlp_nebula_all_mods:
+    path:     /nebula/mods
+    defaults: { _controller: HLPNebulaBundle:Base:mods }
+    
+hlp_nebula_all_owners:
+    path:     /nebula/owners
+    defaults: { _controller: HLPNebulaBundle:Base:owners }
+    
+hlp_nebula_all_activity:
+    path:     /nebula/activity
+    defaults: { _controller: HLPNebulaBundle:Base:activity }
+    
+    
+# Nebula owners public data routes
+
+hlp_nebula_owner:
+    path:     /nebula/{owner}
+    defaults: { _controller: HLPNebulaBundle:Owner:index }
+    
+hlp_nebula_owner_mods:
+    path:     /nebula/{owner}/mods
+    defaults: { _controller: HLPNebulaBundle:Owner:mods }
+    
+hlp_nebula_owner_profile:
+    path:     /nebula/{owner}/profile
+    defaults: { _controller: HLPNebulaBundle:Owner:profile }
+    
+hlp_nebula_owner_activity:
+    path:     /nebula/{owner}/activity
+    defaults: { _controller: HLPNebulaBundle:Owner:activity }
+    
+hlp_nebula_new_mod:
+    path:     /nebula/{owner}/new_mod
+    defaults: { _controller: HLPNebulaBundle:Owner:newMod }
+    
+    
+# Nebula mods routes
+
+hlp_nebula_mod:
+    path:     /nebula/{owner}/{mod}
+    defaults: { _controller: HLPNebulaBundle:Mod:index }
+    
+hlp_nebula_mod_branches:
+    path:     /nebula/{owner}/{mod}/branches
+    defaults: { _controller: HLPNebulaBundle:Mod:branches }
+    
+hlp_nebula_mod_metadata:
+    path:     /nebula/{owner}/{mod}/details
+    defaults: { _controller: HLPNebulaBundle:Mod:metadata }
+    
+hlp_nebula_mod_activity:
+    path:     /nebula/{owner}/{mod}/activity
+    defaults: { _controller: HLPNebulaBundle:Mod:activity }
+    
+hlp_nebula_new_branch:
+    path:     /nebula/{owner}/{mod}/new_branch
+    defaults: { _controller: HLPNebulaBundle:Mod:newBranch }
+    
+hlp_nebula_delete_mod:
+    path:     /nebula/{owner}/{mod}/delete
+    defaults: { _controller: HLPNebulaBundle:Mod:delete }
+    
+hlp_nebula_edit_mod:
+    path:     /nebula/{owner}/{mod}/edit
+    defaults: { _controller: HLPNebulaBundle:Mod:edit }
+    
+    
+# Nebula branches routes
+
+hlp_nebula_branch:
+    path:     /nebula/{owner}/{mod}/{branch}
+    defaults: { _controller: HLPNebulaBundle:Branch:index }
+    
+hlp_nebula_branch_builds:
+    path:     /nebula/{owner}/{mod}/{branch}/builds
+    defaults: { _controller: HLPNebulaBundle:Branch:builds }
+    
+hlp_nebula_branch_details:
+    path:     /nebula/{owner}/{mod}/{branch}/details
+    defaults: { _controller: HLPNebulaBundle:Branch:details }
+    
+hlp_nebula_branch_activity:
+    path:     /nebula/{owner}/{mod}/{branch}/activity
+    defaults: { _controller: HLPNebulaBundle:Branch:activity }
+    
+hlp_nebula_new_build:
+    path:     /nebula/{owner}/{mod}/{branch}/new_build
+    defaults: { _controller: HLPNebulaBundle:Branch:newBuild }
+    
+hlp_nebula_delete_branch:
+    path:     /nebula/{owner}/{mod}/{branch}/delete
+    defaults: { _controller: HLPNebulaBundle:Branch:delete }
+    
+hlp_nebula_edit_branch:
+    path:     /nebula/{owner}/{mod}/{branch}/edit
+    defaults: { _controller: HLPNebulaBundle:Branch:edit }
+    
+# Nebula builds routes
+
+hlp_nebula_build:
+    path:     /nebula/{owner}/{mod}/{branch}/{build}
+    defaults: { _controller: HLPNebulaBundle:Build:index }
+    requirements:
+        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+
+hlp_nebula_build_data:
+    path:     /nebula/{owner}/{mod}/{branch}/{build}/show_data
+    defaults: { _controller: HLPNebulaBundle:Build:show }
+    requirements:
+        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+
+hlp_nebula_delete_build:
+    path:     /nebula/{owner}/{mod}/{branch}/{build}/delete
+    defaults: { _controller: HLPNebulaBundle:Build:delete }
+    
+hlp_nebula_fs2mod:
+    path:      /nebula/{owner}/{mod}/{branch}/{build}.{format}
+    defaults:  { _controller: SdzBlogBundle:Blog:voirSlug, build: current , format: json }
+    requirements:
+        format: json|txt
+    
+remove_trailing_slash:
+    path: /{url}
+    defaults: { _controller: HLPNebulaBundle:Redirecting:removeTrailingSlash }
+    requirements:
+        url: .*/$
+    methods: [GET]
+    
+
+    

@@ -1,0 +1,62 @@
+<?php
+
+namespace HLP\NebulaBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
+use HLP\NebulaBundle\Entity\User;
+use HLP\NebulaBundle\Entity\FSMod;
+use HLP\NebulaBundle\Form\FSModType;
+
+class ModderController extends Controller
+{
+  public function indexAction($modder)
+  {
+    return $this->redirect($this->generateUrl('hlp_nebula_modder_mods', array('modder' => $modder)), 301);
+  }
+  
+  public function modsAction(User $modder)
+  {
+    $modsList = $modder->getMods();
+    
+    return $this->render('HLPNebulaBundle:AdvancedUI:modder_mods.html.twig', array('modder' => $modder, 'modsList' => $modsList));
+  }
+  
+  public function profileAction(User $modder)
+  {
+    return $this->render('HLPNebulaBundle:AdvancedUI:modder_profile.html.twig', array('modder' => $modder));
+  }
+  
+  public function activityAction(User $modder)
+  {
+    return $this->render('HLPNebulaBundle:AdvancedUI:modder_activity.html.twig', array('modder' => $modder));
+  }
+  
+  public function newModAction(Request $request, User $modder)
+  {
+    if (false === $this->get('security.context')->isGranted('add', $modder)) {
+        throw new AccessDeniedException('Unauthorised access!');
+    }
+    
+    $mod = new FSMod;
+    $mod->setFirstRelease(new \Datetime());
+    $mod->setModder($modder);
+    $form = $this->createForm(new FSModType(), $mod);
+    
+    if ($form->handleRequest($request)->$form->isValid()) {
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($mod);
+      $em->flush();
+
+      return $this->redirect($this->generateUrl('hlp_nebula_modder', array('modder' => $modder)));
+    }
+    
+    return $this->render('HLPNebulaBundle:AdvancedUI:new_mod.html.twig', array(
+      'modder' => $modder,
+      'form' => $form->createView()
+    ));
+  }
+}

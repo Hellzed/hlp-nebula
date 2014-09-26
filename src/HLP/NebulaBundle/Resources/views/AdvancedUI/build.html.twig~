@@ -1,0 +1,37 @@
+{% extends "HLPNebulaBundle::layout.html.twig" %}
+
+{% block title %}
+  {{ owner.name }} / {{ mod.title }} / {{ branch.name }} / {{ build.version }} - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <ol class="breadcrumb">
+    <li><a href="{{ path('hlp_nebula_homepage') }}">Nebula</a></li>
+    <li><a href="{{ path('hlp_nebula_owner', {'owner': owner.nameCanonical}) }}">{{ owner.name }}</a></li>
+    <li><a href="{{ path('hlp_nebula_mod', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}">{{ mod.title }}</a></li>
+    <li><a href="{{ path('hlp_nebula_branch', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}">{{ branch.name }}</a></li>
+    <li href="active">{{ build.version }}</li>
+  </ol>
+</div>
+<div class="row">
+  <div class="col-sm-3">
+    <h2><small>{{ mod.modId }}_</small>{{ build.version }}</h2>
+    <hr/>
+    <p class="text-muted">Released on {{ build.updated|date("d M Y") }}</p>
+    <hr/>
+    <p class="lead"><small class="text-muted">a build in </small>{{ branch.name }}</p>
+    <p class="lead"><small class="text-muted">a branch of </small>{{ mod.title }}</p>
+    <p class="lead"><small class="text-muted">a mod by </small>{{ owner.name }}</p>
+  </div>
+  <div class="col-sm-9">
+    <ul class="mainTabs nav nav-tabs" role="tablist">
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_build_data' %}active{% endif %}"><a href="{{ path('hlp_nebula_build_data', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}"><strong>Configuration data</strong></a></li>
+      <li class=""><a href="{{ path('hlp_nebula_build_data', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}"><strong>Generated data</strong></a></li>
+    </ul>
+  {% block build_tab %}
+    <pre>{{ data|json_encode(192) }}</pre>
+  {% endblock %}
+  </div>
+</div>
+{% endblock %}

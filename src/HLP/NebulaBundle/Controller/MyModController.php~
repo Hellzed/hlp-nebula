@@ -1,0 +1,76 @@
+<?php
+
+namespace HLP\NebulaBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
+
+use HLP\NebulaBundle\Entity\Build;
+
+use HLP\NebulaBundle\Form\BuildType;
+
+class MyModController extends Controller
+{
+    public function createAction()
+    {
+        $build = new Build();
+
+        // On crée le formulaire grâce à l'ArticleType
+        $form = $this->createForm(new BuildType(), $build);
+
+        // On récupère la requête
+        $request = $this->getRequest();
+
+        // On vérifie qu'elle est de type POST
+        if ($request->getMethod() == 'POST') {
+        // On fait le lien Requête <-> Formulaire
+        $form->bind($request);
+
+        // On vérifie que les valeurs entrées sont correctes
+        // (Nous verrons la validation des objets en détail dans le prochain chapitre)
+        if ($form->isValid()) {
+            // On enregistre notre objet $article dans la base de données
+            $em = $this->getDoctrine()->getManager();
+        
+            $em->persist($build);
+            $em->flush();
+
+            // On définit un message flash
+            $this->get('session')->getFlashBag()->add('info', 'Well Done !');
+
+        // On redirige vers la page de visualisation de l'article nouvellement créé
+        return new Response("Registered mod !");
+      }
+    }
+
+    // À ce stade :
+    // - Soit la requête est de type GET, donc le visiteur vient d'arriver sur la page et veut voir le formulaire
+    // - Soit la requête est de type POST, mais le formulaire n'est pas valide, donc on l'affiche de nouveau
+
+    return $this->render('HLPNebulaBundle:MyMod:create.html.twig', array(
+      'form' => $form->createView(),
+    ));
+    }
+    
+    public function updateAction($mod_id)
+    {
+        // On récupère la requête
+        $request = $this->getRequest();
+
+        // On récupère notre paramètre tag
+        $tag = $request->query->get('tag');
+
+        return new Response("Updating mod : ".$mod_id);
+    }
+  
+    public function removeAction($mod_id)
+    {
+        // On récupère la requête
+        $request = $this->getRequest();
+
+        // On récupère notre paramètre tag
+        $tag = $request->query->get('tag');
+
+        return new Response("Removing mod : ".$mod_id);
+    }
+}

@@ -1,0 +1,154 @@
+<?php
+
+namespace HLP\NebulaBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * Dependency
+ *
+ * @ORM\Table(name="hlp_nebula_dependency")
+ * @ORM\Entity(repositoryClass="HLP\NebulaBundle\Entity\DependencyRepository")
+ */
+class Dependency
+{
+    /**
+     * @ORM\ManyToOne(targetEntity="HLP\NebulaBundle\Entity\Package", inversedBy="dependencies")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $package;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="depId", type="string", length=255)
+     */
+    private $depId;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="packages", type="array")
+     */
+    private $depPkgs;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="version", type="string", length=255)
+     */
+    private $version;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set depId
+     *
+     * @param string $depId
+     * @return Dependency
+     */
+    public function setDepId($depId)
+    {
+        $this->depId = $depId;
+
+        return $this;
+    }
+
+    /**
+     * Get depId
+     *
+     * @return string 
+     */
+    public function getDepId()
+    {
+        return $this->depId;
+    }
+
+    /**
+     * Set packages
+     *
+     * @param array $packages
+     * @return Dependency
+     */
+    public function setDepPkgs($depPkgs)
+    {
+        $this->depPkgs = $depPkgs;
+
+        return $this;
+    }
+
+    /**
+     * Get packages
+     *
+     * @return array 
+     */
+    public function getDepPkgs()
+    {
+        return $this->depPkgs;
+    }
+
+    /**
+     * Set version
+     *
+     * @param string $version
+     * @return Dependency
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get version
+     *
+     * @return string 
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set package
+     *
+     * @param \HLP\NebulaBundle\Entity\Package $package
+     * @return Dependency
+     */
+    public function setPackage(\HLP\NebulaBundle\Entity\Package $package)
+    {
+        $this->package = $package;
+
+        return $this;
+    }
+
+    /**
+     * Get package
+     *
+     * @return \HLP\NebulaBundle\Entity\Package 
+     */
+    public function getPackage()
+    {
+        return $this->package;
+    }
+}

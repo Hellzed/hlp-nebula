@@ -1,0 +1,47 @@
+<?php
+namespace HLP\NebulaBundle\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManager;
+
+class ModderConverter implements ParamConverterInterface
+{
+  protected $class;
+  protected $repository;
+
+  public function __construct($class, EntityManager $em)
+  {
+    $this->class = $class;
+    $this->repository = $em->getRepository($class);
+    print_r(get_class_methods ($this->repository));
+  }
+
+  public function apply(Request $request, ParamConverter $configuration)
+  {
+    //find with joins À FAIRE !!!
+    //+logique de séléction mod>branch>build
+    //$options = $this->getOptions($configuration);
+    //echo $options['test'];
+    $modderId = $request->attributes->get('modder');
+    $modder = $this->repository->findSingleUser($modderId); 
+
+    // On définit ensuite un attribut de requête du nom de $conf->getName()
+    // et contenant notre entité Site
+    $request->attributes->set($configuration->getName(), $modder);
+    return true;
+  }
+
+  public function supports(ParamConverter $configuration)
+  {
+    return $this->class === $configuration->getClass();
+  }
+  
+  protected function getOptions(ParamConverter $configuration)
+  {
+    return array_replace(array(
+    'test' => false,
+    ), $configuration->getOptions());
+  }
+}

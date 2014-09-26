@@ -1,0 +1,9 @@
+{% extends "HLPNebulaBundle:AdvancedUI:modder.html.twig" %}
+
+{% block modder_tab %}
+<ul class="nav nav-tabs" role="tablist">
+  <li><a href="{{ path('hlp_nebula_modder_mods', {'modder': modder}) }}"><strong>Mods</strong></a></li>
+  <li><a href="{{ path('hlp_nebula_modder_profile', {'modder': modder}) }}"><strong>Modder profile</strong></a></li>
+  <li class="active"><a href="{{ path('hlp_nebula_modder_activity', {'modder': modder}) }}"><strong>Activity</strong></a></li>
+</ul>
+{% endblock %}

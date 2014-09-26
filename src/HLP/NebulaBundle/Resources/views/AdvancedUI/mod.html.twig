@@ -1,0 +1,40 @@
+{% extends "HLPNebulaBundle::layout.html.twig" %}
+
+{% block title %}
+  {{ owner.name }} / {{ mod.title }} - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <ol class="breadcrumb">
+    <li><a href="{{ path('hlp_nebula_homepage') }}">Nebula</a></li>
+    <li><a href="{{ path('hlp_nebula_owner', {'owner': owner.nameCanonical}) }}">{{ owner.name }}</a></li>
+    <li href="active">{{ mod.title }}</li>
+  </ol>
+</div>
+<div class="row">
+  <div class="col-sm-3">
+    <h2>{{ mod.title }}</h2>
+    <hr/>
+    <p class="text-muted">First released on {{ mod.firstRelease|date("d M Y") }}</p>
+    <hr/>
+    <div class="row">
+      <div class="col-md-4 text-center"><p class="lead">{{ mod.branches|length }}<br/><small class="text-muted">branch{% if mod.branches|length > 1 %}es{% endif %}</small></p></div>
+      <div class="col-md-4 text-center"><p class="lead">0<br/><small class="text-muted">builds</small></p></div>
+    </div>
+    <hr/>
+    <p class="lead"><small class="text-muted">a mod by </small><a href="{{ path('hlp_nebula_owner', {'owner': owner.nameCanonical}) }}">{{ owner.name }}</a></p>
+  </div>
+  <div class="col-sm-9">
+    <ul class="mainTabs nav nav-tabs" role="tablist">
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_mod_branches' %}active{% endif %}"><a href="{{ path('hlp_nebula_mod_branches', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}"><h4 class="titletab">Branches</h4></a></li>
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_mod_metadata' %}active{% endif %}"><a href="{{ path('hlp_nebula_mod_metadata', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}"><h4 class="titletab">Mod metadata</h4></a></li>
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_mod_activity' %}active{% endif %}"><a href="{{ path('hlp_nebula_mod_activity', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}"><h4 class="titletab">Activity</h4></a></li>
+    </ul>
+    
+  {% include "HLPNebulaBundle:AdvancedUI:flashbox.html.twig" %}
+  {% block mod_tab %}
+  {% endblock %}
+  </div>
+</div>
+{% endblock %}

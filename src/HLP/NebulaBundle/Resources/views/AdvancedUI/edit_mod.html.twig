@@ -1,0 +1,27 @@
+{% extends "HLPNebulaBundle::layout.html.twig" %}
+
+{% block title %}
+  {{ owner.name }} / Edit mod  - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <ol class="breadcrumb">
+    <li><a href="{{ path('hlp_nebula_homepage') }}">Nebula</a></li>
+    <li><a href="{{ path('hlp_nebula_owner', {'owner': owner.nameCanonical}) }}">{{ owner.name }}</a></li>
+    <li href="active">Edit mod : <a href="{{ path('hlp_nebula_mod', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}">{{ mod.title }}</a></li>
+  </ol>
+</div>
+<div class="row">
+  <div class="col-sm-3">
+    <h2><small>Edit mod </small>{{ mod.title }}</h2>
+    <hr/>
+    <p class="lead"><small class="text-muted">as </small>{{ owner.name }}</p>
+    <hr/>
+    <p class="lead"><small class="text-muted">or </small><a href="{{ path('hlp_nebula_owner', {'owner': owner.nameCanonical}) }}" class="btn btn-danger">Cancel</a></p>
+  </div>
+  <div class="col-sm-9">
+  {% include "HLPNebulaBundle:AdvancedUI:form_mod.html.twig" %}
+  </div>
+</div>
+{% endblock %}

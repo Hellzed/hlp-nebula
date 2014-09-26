@@ -1,0 +1,40 @@
+{% extends "HLPNebulaBundle::layout.html.twig" %}
+
+{% block title %}
+  {{ owner.name }} / {{ mod.title }} / {{ branch.name }} - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <ol class="breadcrumb">
+    <li><a href="{{ path('hlp_nebula_homepage') }}">Nebula</a></li>
+    <li><a href="{{ path('hlp_nebula_owner', {'owner': owner.nameCanonical}) }}">{{ owner.name }}</a></li>
+    <li><a href="{{ path('hlp_nebula_mod', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}">{{ mod.title }}</a></li>
+    <li href="active">{{ branch.name }}</li>
+  </ol>
+</div>
+<div class="row">
+  <div class="col-sm-3">
+    <h2>{{ branch.name }}</h2>
+    <hr/>
+    <p class="text-muted">Latest build on {% if branch.builds[0] is defined %}{{ branch.builds[0].updated|date("d M Y") }}{% else %}Empty branch !{% endif %}</p>
+    <hr/>
+    <div class="row">
+      <div class="col-md-4 text-center"><p class="lead">{{ branch.builds|length }}<br/><small class="text-muted">build{% if branch.builds|length > 1 %}s{% endif %}</small></p></div>
+    </div>
+    <hr/>
+    <p class="lead"><small class="text-muted">a branch of </small>{{ mod.title }}</p>
+    <p class="lead"><small class="text-muted">a mod by </small>{{ owner.name }}</p>
+  </div>
+  <div class="col-sm-9">
+    <ul class="mainTabs nav nav-tabs" role="tablist">
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_branch_builds' %}active{% endif %}"><a href="{{ path('hlp_nebula_branch_builds', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}"><h4 class="titletab">Builds</h4></a></li>
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_branch_details' %}active{% endif %}"><a href="{{ path('hlp_nebula_branch_details', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}"><h4 class="titletab">Branch details</h4></a></li>
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_branch_activity' %}active{% endif %}"><a href="{{ path('hlp_nebula_branch_activity', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}"><h4 class="titletab">Activity</h4></a></li>
+    </ul>
+  {% include "HLPNebulaBundle:AdvancedUI:flashbox.html.twig" %}
+  {% block branch_tab %}
+  {% endblock %}
+  </div>
+</div>
+{% endblock %}

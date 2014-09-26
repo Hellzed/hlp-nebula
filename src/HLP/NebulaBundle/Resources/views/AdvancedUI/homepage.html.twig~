@@ -1,0 +1,9 @@
+{% extends "HLPNebulaBundle::layout.html.twig" %}
+
+{% block title %}
+  {{ parent() }} - Homepage
+{% endblock %}
+
+{% block body %}
+Homepage
+{% endblock %}

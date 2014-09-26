@@ -1,0 +1,6 @@
+<?php
+namespace HLP\NebulaBundle\Entity;
+
+abstract class Owner
+{
+}

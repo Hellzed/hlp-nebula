@@ -1,0 +1,40 @@
+{% extends "HLPNebulaBundle:AdvancedUI:mod.html.twig" %}
+
+{% block mod_tab %}
+  {% if is_granted('add', owner) %}
+    <p class="well"><a href="{{ path('hlp_nebula_new_branch', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> New branch</a></p>
+  {% endif %}
+
+{% for branch in branchesList %}
+  {% if loop.first %}
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Branch ID</th>
+          <th>Branch name</th>
+          <th>Last update</th>
+          {% if is_granted('add', owner) %}<th>Actions</th>{% endif %}
+        </tr>
+      </thead>
+      <tbody>
+  {% endif %}
+        <tr>
+          <td><a href="{{ path('hlp_nebula_branch', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}">{{ branch.branchId }}</a></td>
+          <td>{{ branch.name }}</td>
+          <td>{% if branch.builds[0] is defined %}{{ branch.builds[0].updated|date("d M Y") }}{% else %}Empty branch !{% endif %}</td>
+          {% if is_granted('add', owner) %}
+            <td>
+              <a href="{{ path('hlp_nebula_edit_branch', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}" class="btn btn-default btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-pencil"></span> Edit&nbsp;</a>&nbsp;
+              <a href="{{ path('hlp_nebula_delete_branch', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}" class="btn btn-danger btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-trash"></span> Delete&nbsp;</a>
+            </td>
+          {% endif %}
+        </tr>
+  {% if loop.last %}
+      </tbody>
+    </table>
+  {% endif %}
+{% else %}
+<p class="lead">No branch found.</p>
+{% endfor %}
+
+{% endblock %}
