@@ -1,8 +1,30 @@
 {% form_theme form 'HLPNebulaBundle:AdvancedUI:form_theme.html.twig' %}
 
-<form role="form" class="mainForm row" action="{% if app.request.attributes.get('_route') == 'hlp_nebula_edit_branch' %}{{ path('hlp_nebula_edit_branch', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}{% else %}{{ path('hlp_nebula_new_branch', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}{% endif %}" method="post" {{ form_enctype(form) }}>
+{{ form_start(form, {'attr': {'class': 'mainForm row'}}) }}
+  {{ form_errors(form) }}
   <h4><span class="glyphicon glyphicon-asterisk"></span> Branch details</h4>
   <hr/>
-  {{ form_widget(form) }}
-  <button type="submit" class="btn btn-default">Submit</button>
-</form>
+  <div class="form-group">
+  {% if form.branchId is defined %}
+    {{ form_label(form.branchId, "Unique branch ID*") }}
+    <p class="help-block">This setting cannot be edited once the mod is published.</p>
+    {{ form_errors(form.branchId) }}
+    {{ form_widget(form.branchId, {'attr':{'pattern':'^[\\w]+[-\\w]*$', 'title': 'URL friendly unique ID : spaces and special characters not allowed, hyphen (\"-\") not allowed at the beginning of the ID. Underscores (\"_\") allowed.'}}) }}
+  {% else %}
+    <label class="form-label" for="branchId_disabled">Unique branch ID <span class="text-muted">(cannot be changed)</span></label>
+    <input id="branchId_disabled"class="form-control" type="text" value="{{ branch.branchId }}" disabled>
+  {% endif %}    
+  </div>
+  <div class="form-group">
+    {{ form_label(form.name, "Branch name*") }}
+    {{ form_errors(form.name) }}
+    {{ form_widget(form.name, {'attr':{'title': 'Branch full name. Any character allowed (UTF-8), including spaces.'}}) }}
+  </div>
+  <div class="form-group">
+    {{ form_label(form.notes, "Notes") }}
+    {{ form_errors(form.notes) }}
+    {{ form_widget(form.notes) }}
+  </div>
+  {{ form_rest(form) }}
+  <button type="submit" class="btn btn-success">Submit</button>
+{{ form_end(form) }}

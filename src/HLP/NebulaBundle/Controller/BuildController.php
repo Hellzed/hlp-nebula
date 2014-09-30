@@ -31,10 +31,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 
 use HLP\NebulaBundle\Entity\FSMod;
 use HLP\NebulaBundle\Entity\Branch;
 use HLP\NebulaBundle\Entity\Build;
+use HLP\NebulaBundle\Form\BuildType;
 
 class BuildController extends Controller
 {
@@ -51,8 +54,57 @@ class BuildController extends Controller
     
     $jsonBuilder = $this->container->get('hlpnebula.json_builder');
     $data = $jsonBuilder->createFromBuild($build);
+    $data = Array('mods' => Array($data));
     
     return $this->render('HLPNebulaBundle:AdvancedUI:build.html.twig', array('owner' => $owner, 'mod' => $mod, 'branch' => $branch, 'build' => $build, 'data' => $data));
+  }
+  
+  public function rawAction(Build $build)
+  {
+    $jsonBuilder = $this->container->get('hlpnebula.json_builder');
+    $data = $jsonBuilder->createFromBuild($build);
+    $data = Array('mods' => Array($data));
+    
+    $response = new JsonResponse();
+    $response->setData($data);
+    $response->headers->set('Content-Type', 'application/json');
+    
+    return $response;
+  }
+  
+  public function newBuildFromAction(Request $request, Build $build)
+  {
+    $branch = $build->getBranch();
+    $mod = $branch->getMod();
+    $owner = $mod->getOwner();
+    
+    if (false === $this->get('security.context')->isGranted('add', $owner)) {
+        throw new AccessDeniedException('Unauthorised access!');
+    }
+    
+    $newBuild = clone $build;
+    
+    $form = $this->createForm(new BuildType(), $newBuild);
+    
+    $form->handleRequest($request);
+
+    if ($form->isValid()) {
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($newBuild);
+      $em->flush();
+      
+      $request->getSession()->getFlashBag()->add('success', "New build <strong>version ".$newBuild->getVersion()."</strong> successfully created from <strong>version ".$build->getVersion()."</strong>.");
+
+      return $this->redirect($this->generateUrl('hlp_nebula_branch', array('owner' => $owner, 'mod' => $mod->getModId(), 'branch' => $branch->getBranchId())));
+    }
+    
+    return $this->render('HLPNebulaBundle:AdvancedUI:copy_and_update_build.html.twig', array(
+      'owner'  => $owner,
+      'mod'    => $mod,
+      'branch' => $branch,
+      'build'  => $build,
+      'form'   => $form->createView()
+    ));
   }
   
   public function deleteAction(Request $request, Build $build)
@@ -77,7 +129,6 @@ class BuildController extends Controller
       return $this->redirect($this->generateUrl('hlp_nebula_branch', array('owner' => $owner->getNameCanonical(), 'mod' => $mod->getModId(), 'branch' => $branch->getBranchId())));
     }
 
-    // Si la requête est en GET, on affiche une page de confirmation avant de supprimer
     return $this->render('HLPNebulaBundle:AdvancedUI:delete_build.html.twig', array(
       'owner' => $owner,
       'mod' => $mod,
@@ -86,4 +137,5 @@ class BuildController extends Controller
       'form' => $form->createView()
     ));
   }
+
 }

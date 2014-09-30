@@ -1,9 +1,14 @@
 $(document).ready(function() {
 
+
+
   var $form = $('form');
   var $index = new Array();
   
   findCollections($form);
+  findSelect($form);
+  findDepId($form);
+  findDepPkgs($form);
   
   function findCollections($element) {
   
@@ -49,7 +54,9 @@ $(document).ready(function() {
         });
         
         if($fieldId.split("_").pop(-1) == 'urls' || $fieldId.split("_").pop(-1) == 'paths') {
-          addField($field, $prototype, $fieldId);
+          if($index[$fieldId] == 0) {
+            addField($field, $prototype, $fieldId);
+          }
         }
         
       }
@@ -84,26 +91,83 @@ $(document).ready(function() {
         });
         
     findCollections($prototype);
-    
-    //findSelect($prototype, $strippedId)
+    findSelect($prototype);
+    findDepId($prototype);
+    findDepPkgs($prototype);
   }
-  /*
-  function findSelect($prototype, $strippedId) {
-    if($strippedId == 'actions') {
-      var $select = $prototype.find('select');
+  
+  function findSelect($element) {
+    var $select = $element.find('[id$=type]');
+    
+    
+    $select.each(function(index) {
+      var $fieldId = $(this).attr('id');
+      var $strippedId = $fieldId.split("_").pop(-1);
+      var $container = $(this).closest('[id$=actions]');
       
-      $select.change(function(e) {
-          var $value = $select.val();
-          var $destField = $select.parent().parent().children(':nth-child(3)')
+      if($strippedId == 'type' && typeof $container !== undefined && $container !== false) {
+      
+        $(this).change(function(e) {
+          var $value = $(this).val();
+          
+          var $destField = $(this).closest('.well').children(':nth-child(3)')
           if($value == 'delete') {
             $destField.attr('hidden', 'hidden');
           } else {
             $destField.removeAttr('hidden');
           }
         });
+      }
+    });
+  }
+  
+  function findDepId($element) {
+    var $depId = $element.find('[id$=depId]');
     
-    }
-  }*/
+    $depId.each(function(index) {
+      var $fieldId = $(this).attr('id');
+      var $strippedId = $fieldId.split("_").pop(-1);
+      var $container = $(this).closest('[id$=dependencies]');
+      if($strippedId == 'depId' && typeof $container !== undefined && $container !== false) {
+      
+        $(this).autocomplete({
+            source : 'http://localhost/Symfony/web/app_dev.php/nebula/ajax/search_mods',
+            minLength: 1,
+            delay: 200,
+        });
+        
+        $(this).change(function (index) {
+          findDepPkgs($(this).closest('.well'));
+        });
+      }
+    });
+  }
+  
+  function findDepPkgs($element) {
+    $element.find('.depPkgItem').each(function(index) {
+      $depPkgInput = $(this).find('input');
+      $currentModSearch = $depPkgInput.closest('.well').find('[id$="depId"]').val();
+      
+      $depPkgInput.autocomplete({
+            source : 'http://localhost/Symfony/web/app_dev.php/nebula/ajax/'+$currentModSearch+'/search_packages',
+            minLength: 0,
+            delay: 200
+
+      });
+      $depPkgInput.focus(function(index) {
+        var $searchTerm = $depPkgInput.val();
+        if($searchTerm.length == 0) {
+          $depPkgInput.autocomplete( "search", $searchTerm );
+        } else {
+          $depPkgInput.autocomplete( "search", "");
+        }
+      });
+    });
+  }
+   
+  
+      
+  
   
   
 });

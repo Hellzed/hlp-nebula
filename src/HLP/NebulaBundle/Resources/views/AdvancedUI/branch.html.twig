@@ -17,10 +17,10 @@
   <div class="col-sm-3">
     <h2>{{ branch.name }}</h2>
     <hr/>
-    <p class="text-muted">Latest build on {% if branch.builds[0] is defined %}{{ branch.builds[0].updated|date("d M Y") }}{% else %}Empty branch !{% endif %}</p>
+    <p class="text-muted"><span class="glyphicon glyphicon-time"></span> Latest build on {% if branch.builds[0] is defined %}{{ branch.builds[0].updated|date("d M Y") }}{% else %}Empty branch !{% endif %}</p>
     <hr/>
     <div class="row">
-      <div class="col-md-4 text-center"><p class="lead">{{ branch.builds|length }}<br/><small class="text-muted">build{% if branch.builds|length > 1 %}s{% endif %}</small></p></div>
+      <div class="col-md-4 text-center"><p class="lead">{{ branch.nbBuilds }}<br/><small class="text-muted">build{% if branch.nbBuilds > 1 %}s{% endif %}</small></p></div>
     </div>
     <hr/>
     <p class="lead"><small class="text-muted">a branch of </small><a href="{{ path('hlp_nebula_mod', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}">{{ mod.title }}</a></p>

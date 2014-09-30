@@ -13,11 +13,11 @@
     {{ form_errors(form.versionMetadata) }}
     <div class="form-inline well well-sm">
       {{ form_label(form.versionMajor, "MAJOR : ") }}
-      {{ form_widget(form.versionMajor, { 'attr': {'style': 'width: 60px;'} }) }}&#160;
+      {{ form_widget(form.versionMajor, { 'attr': {'style': 'width: 60px;','min':'0'} }) }}&#160;
       {{ form_label(form.versionMinor, "MINOR : ") }}
-      {{ form_widget(form.versionMinor, { 'attr': {'style': 'width: 60px;'} }) }}&#160;
+      {{ form_widget(form.versionMinor, { 'attr': {'style': 'width: 60px;','min':'0'} }) }}&#160;
       {{ form_label(form.versionPatch, "PATCH : ") }}
-      {{ form_widget(form.versionPatch, { 'attr': {'style': 'width: 70px;'} }) }}&#160;
+      {{ form_widget(form.versionPatch, { 'attr': {'style': 'width: 70px;','min':'0'} }) }}&#160;
       {{ form_label(form.versionPreRelease, "Pre-release : ") }}
       {{ form_widget(form.versionPreRelease, { 'attr': {'style': 'width: 95px;'} }) }}&#160;
       {{ form_label(form.versionMetadata, "Metadata : ") }}
@@ -33,12 +33,25 @@
   <h4><span class="glyphicon glyphicon-download-alt"></span> Installer data</h4>
   <hr/>
   <div class="form-group">
-    {{ form_label(form.folder, "Install folder") }}&nbsp;&nbsp;&nbsp;<span class="text-muted">Mod install path, relative to FreeSpace 2 install path. If not set, current default is : <strong>{{ mod.modId }}/</strong>.</span>
+    {{ form_label(form.folder, "Install folder") }}
+    <p class="help-block">This is the mod install path, relative to FreeSpace 2 install path. If not set, current default is : <strong>{{ mod.modId }}/</strong>.</p>
     {{ form_errors(form.folder) }}
-    {{ form_widget(form.folder) }}
+    {{ form_widget(form.folder, {'attr':{'pattern':'^([\\\/]?[^\0\\\/:\*\?"<>\|]+)*[\\\/]?$', 'title': 'The install folder must be a valid path, relative to FreeSpace 2 install folder.' }}) }}
   </div>
   <div class="form-group">
     {{ form_label(form.packages, "Packages") }}
+    <p class="help-block">
+    Packages are your base mod "building blocks". They have a <em>name</em> and a <em>status</em> :
+      <dl style="margin-left: 25px; margin-bottom: 0px;">
+        <dt class="text-muted">Required</dt>
+        <dd class="text-muted">- These packages are <em>always</em> installed with the mod.</dd>
+        <dt class="text-muted">Recommended</dt>
+        <dd class="text-muted">- These pacakges are <em>automatically installed</em> with the mod by default. Users can skip their installation or remove them independantly from the mod.</dd>
+        <dt class="text-muted">Optional</dt>
+        <dd class="text-muted">- These pacakges are <em>not installed</em> with the mod by default. Users can add them to the mod during the install process, or install them afterwards.</dd>
+      </dl>
+      <br/>
+    </p>
     {{ form_errors(form.packages) }}
     {{ form_widget(form.packages) }}
     <div class="nospacer">
@@ -51,7 +64,12 @@
   <h4><span class="glyphicon glyphicon-wrench"></span> Post-install scripting</h4>
   <hr/>
   <div class="form-group clearfix">
-    <div class="clearfix">{{ form_label(form.actions, "Actions") }}</div>
+    <div class="clearfix">{{ form_label(form.actions, "Actions") }}
+      <p class="help-block">
+        Actions allow to <em>move</em> or <em>delete</em> files after install. You should consider relying on the client to preserve the integrity of the mod instead of using this method.
+        <br/>Actions are used to ensure <em>compatibility with legacy clients</em> that do not support automatic mod folder cleaning after update.
+      </p>
+    </div>
     {{ form_errors(form.actions) }}
     {{ form_widget(form.actions) }}
     <div class="col-sm-4 cardspacer">

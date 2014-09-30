@@ -29,10 +29,16 @@ namespace HLP\NebulaBundle\Entity;
 
 interface OwnerInterface
 {
+    public function getId();
     public function getName();
     public function getNameCanonical();
+    
     public function addMod(\HLP\NebulaBundle\Entity\FSMod $mods);
     public function removeMod(\HLP\NebulaBundle\Entity\FSMod $mods);
     public function getMods();
+    
+    public function getNbMods();
+    public function getNbBranches();
+    public function getNbBuilds();
 }
 

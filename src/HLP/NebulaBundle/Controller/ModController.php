@@ -34,7 +34,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use HLP\NebulaBundle\Entity\FSMod;
 use HLP\NebulaBundle\Entity\Branch;
-use HLP\NebulaBundle\Form\FSModType;
+use HLP\NebulaBundle\Form\FSModEditType;
 use HLP\NebulaBundle\Form\BranchType;
 
 class ModController extends Controller
@@ -44,11 +44,30 @@ class ModController extends Controller
     return $this->redirect($this->generateUrl('hlp_nebula_mod_branches', array('owner' => $owner, 'mod' => $mod)), 301);
   }
   
-  public function branchesAction(FSMod $mod)
+  public function branchesAction(FSMod $mod, $page)
   {
+    if ($page < 1) {
+      throw $this->createNotFoundException("Page ".$page." does not exist.");
+    }
+    
     $owner = $mod->getOwner();
-  
-    return $this->render('HLPNebulaBundle:AdvancedUI:mod_branches.html.twig', array('owner' => $owner, 'mod' => $mod, 'branchesList' => $mod->getBranches()));
+       
+    $branchesPerPage = 10;
+    $branchesAll = $mod->getBranches()->toArray();
+    $nbPages = ceil(count($branchesAll)/$branchesPerPage);
+    
+    if (($page > $nbPages) && ($page > 1)) {
+      throw $this->createNotFoundException("Page ".$page." does not exist.");
+    }
+    
+    $branchesList = array_slice($branchesAll, ($page-1)*$branchesPerPage, $branchesPerPage);
+    
+    return $this->render('HLPNebulaBundle:AdvancedUI:mod_branches.html.twig', array(
+      'owner' => $owner,
+      'mod' => $mod,
+      'branchesList' => $branchesList,
+      'page' => $page,
+      'nbPages' => $nbPages));
   }
   
   public function metadataAction(FSMod $mod)
@@ -104,7 +123,7 @@ class ModController extends Controller
         throw new AccessDeniedException('Unauthorised access!');
     }
 
-    $form = $this->createForm(new FSModType(), $mod);
+    $form = $this->createForm(new FSModEditType(), $mod);
 
     if ($form->handleRequest($request)->isValid()) {
       //$request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');

@@ -43,21 +43,37 @@ class OwnerController extends Controller
     return $this->redirect($this->generateUrl('hlp_nebula_owner_mods', array('owner' => $owner)), 301);
   }
   
-  public function modsAction(OwnerInterface $owner)
+  public function modsAction(OwnerInterface $owner, $page)
   {
-    $modsList = $owner->getMods();
+    if ($page < 1) {
+      throw $this->createNotFoundException("Page ".$page." does not exist.");
+    }
     
-    return $this->render('HLPNebulaBundle:AdvancedUI:modder_mods.html.twig', array('modder' => $owner, 'modsList' => $modsList));
+    $modsPerPage = 10;
+    $modsAll = $owner->getMods()->toArray();
+    $nbPages = ceil(count($modsAll)/$modsPerPage);
+    
+    if (($page > $nbPages) && ($page > 1)) {
+      throw $this->createNotFoundException("Page ".$page." does not exist.");
+    }
+    
+    $modsList = array_slice($modsAll, ($page-1)*$modsPerPage, $modsPerPage);
+    
+    return $this->render('HLPNebulaBundle:AdvancedUI:modder_mods.html.twig', array(
+      'owner' => $owner,
+      'modsList' => $modsList,
+      'page' => $page,
+      'nbPages' => $nbPages));
   }
   
   public function profileAction(OwnerInterface $owner)
   {
-    return $this->render('HLPNebulaBundle:AdvancedUI:modder_profile.html.twig', array('modder' => $owner));
+    return $this->render('HLPNebulaBundle:AdvancedUI:modder_profile.html.twig', array('owner' => $owner));
   }
   
   public function activityAction(OwnerInterface $owner)
   {
-    return $this->render('HLPNebulaBundle:AdvancedUI:modder_activity.html.twig', array('modder' => $owner));
+    return $this->render('HLPNebulaBundle:AdvancedUI:modder_activity.html.twig', array('owner' => $owner));
   }
   
   public function newModAction(Request $request, OwnerInterface $owner)
@@ -67,7 +83,6 @@ class OwnerController extends Controller
     }
     
     $mod = new FSMod;
-    $mod->setFirstRelease(new \Datetime());
     $mod->setOwner($owner);
     $form = $this->createForm(new FSModType(), $mod);
     

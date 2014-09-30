@@ -35,10 +35,20 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="hlp_nebula_fsmod")
  * @ORM\Entity(repositoryClass="HLP\NebulaBundle\Entity\FSModRepository")
- * @UniqueEntity(fields={"userAsOwner","teamAsOwner","modId"}, ignoreNull=false, message="Same modId error.")
+ * @UniqueEntity(fields={"modId"}, ignoreNull=false, message="The mod ID must be unique.")
  */
 class FSMod
 {
+    /**
+     * @var Integer
+     */
+    private $nbBranches = null;
+    
+    /**
+     * @var Integer
+     */
+    private $nbBuilds = null;
+    
     /**
      * @ORM\OneToMany(targetEntity="HLP\NebulaBundle\Entity\Branch", mappedBy="mod", cascade={"remove"})
      */
@@ -270,6 +280,7 @@ class FSMod
     public function __construct()
     {
         $this->branches = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->firstRelease = new \Datetime();
     }
 
     /**
@@ -383,5 +394,44 @@ class FSMod
         }
     }
     
+      // lib/model/doctrine/BlogPost.class.php
+
+  /**
+   * Return the number of tags related to the blog post.
+   *
+   * @return Integer
+
+   */
+  public function getNbBranches()
+  {
+    if (is_null($this->nbBranches))
+    {
+      $this->nbBranches = $this->getBranches()->count();
+    }
+
+    return $this->nbBranches;
+  }
+  
+  /**
+   * Return the number of tags related to the blog post.
+   *
+   * @return Integer
+
+   */
+  public function getNbBuilds()
+  {
+    if (is_null($this->nbBuilds))
+    {
+      $this->nbBuilds = 0;
+      foreach($this->getBranches() as $branch)
+      {
+        $this->nbBuilds += $branch->getBuilds()->count();
+      }
+    }
+
+    return $this->nbBuilds;
+  }
+  
+  
     
 }

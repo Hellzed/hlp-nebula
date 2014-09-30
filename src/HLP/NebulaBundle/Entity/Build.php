@@ -473,8 +473,41 @@ class Build
      */
     public function __construct()
     {
+        $this->isReady = false;
+        $this->isFailed = false;
+        $this->updated = new \Datetime;
+        
         $this->packages = new \Doctrine\Common\Collections\ArrayCollection();
         $this->actions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    public function __clone()
+    {
+         if ($this->id) {
+            $this->id = null;
+            $this->versionPatch++;
+            $this->versionPreRelease = null;
+            $this->versionMetadata = null;
+            $this->isReady = false;
+            $this->isFailed = false;
+            $this->updated = new \Datetime;
+            
+            $newPackages = new \Doctrine\Common\Collections\ArrayCollection();
+            foreach($this->packages as $package) {
+              $newPackage = clone $package;
+              $newPackages[] = $newPackage;
+              $newPackage->setBuild($this);
+            }
+            $this->packages = $newPackages;
+            
+            $newActions = new \Doctrine\Common\Collections\ArrayCollection();
+            foreach($this->actions as $action) {
+              $newAction = clone $action;
+              $newActions[] = $newAction;
+              $newAction->setBuild($this);
+            }
+            $this->actions = $newActions;
+         }
     }
 
     /**

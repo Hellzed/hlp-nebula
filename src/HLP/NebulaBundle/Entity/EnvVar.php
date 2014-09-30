@@ -145,4 +145,11 @@ class EnvVar
     {
         return $this->package;
     }
+    
+    public function __clone()
+    {
+         if ($this->id) {
+            $this->id = null;
+         }
+    }
 }

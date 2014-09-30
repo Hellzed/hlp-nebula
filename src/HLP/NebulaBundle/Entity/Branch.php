@@ -35,10 +35,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="hlp_nebula_branch")
  * @ORM\Entity(repositoryClass="HLP\NebulaBundle\Entity\BranchRepository")
- * @UniqueEntity(fields={"mod","branchId"}, message="Same branchId error.")
+ * @UniqueEntity(fields={"mod","branchId"}, message="A branch with the same ID already exists in the repository.")
  */
 class Branch
 {
+    /**
+     * @var Integer
+     */
+    private $nbBuilds = null;
     
     /**
      * @ORM\OneToMany(targetEntity="HLP\NebulaBundle\Entity\Build", mappedBy="branch", cascade={"remove"})
@@ -260,5 +264,19 @@ class Branch
         return $this->builds;
     }
 
+  /**
+   * Return the number of tags related to the blog post.
+   *
+   * @return Integer
 
+   */
+  public function getNbBuilds()
+  {
+    if (is_null($this->nbBuilds))
+    {
+      $this->nbBuilds = $this->getBuilds()->count();
+    }
+
+    return $this->nbBuilds;
+  }
 }

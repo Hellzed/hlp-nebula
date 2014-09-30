@@ -37,6 +37,21 @@ use Doctrine\ORM\Mapping as ORM;
 class User extends BaseUser implements OwnerInterface
 {
   /**
+   * @var Integer
+   */
+  private $nbMods = null;
+  
+  /**
+   * @var Integer
+   */
+  private $nbBranches = null;
+  
+  /**
+   * @var Integer
+   */
+  private $nbBuilds = null;
+    
+  /**
    * @ORM\OneToMany(targetEntity="HLP\NebulaBundle\Entity\FSMod", mappedBy="userAsOwner")
    */
   private $mods;
@@ -142,4 +157,63 @@ class User extends BaseUser implements OwnerInterface
     {
         return $this->joined;
     }
+  
+  /**
+   * Return the number of tags related to the blog post.
+   *
+   * @return Integer
+
+   */
+  public function getNbMods()
+  {
+    if (is_null($this->nbMods))
+    {
+      $this->nbMods = $this->getMods()->count();
+    }
+
+    return $this->nbMods;
+  }
+  
+  /**
+   * Return the number of tags related to the blog post.
+   *
+   * @return Integer
+
+   */
+  public function getNbBranches()
+  {
+    if (is_null($this->nbBranches))
+    {
+      $this->nbBranches = 0;
+      foreach($this->getMods() as $mod)
+      {
+        $this->nbBranches += $mod->getBranches()->count();
+      }
+    }
+
+    return $this->nbBranches;
+  }
+    
+  /**
+   * Return the number of tags related to the blog post.
+   *
+   * @return Integer
+
+   */
+  public function getNbBuilds()
+  {
+    if (is_null($this->nbBuilds))
+    {
+      $this->nbBuilds = 0;
+      foreach($this->getMods() as $mod)
+      {
+        foreach($mod->getBranches() as $branch)
+        {
+          $this->nbBuilds += $branch->getBuilds()->count();
+        }
+      }
+    }
+
+    return $this->nbBuilds;
+  }
 }

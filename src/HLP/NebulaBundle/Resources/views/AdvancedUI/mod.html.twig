@@ -16,11 +16,11 @@
   <div class="col-sm-3">
     <h2>{{ mod.title }}</h2>
     <hr/>
-    <p class="text-muted">First released on {{ mod.firstRelease|date("d M Y") }}</p>
+    <p class="text-muted"><span class="glyphicon glyphicon-time"></span> First released on {{ mod.firstRelease|date("d M Y") }}</p>
     <hr/>
     <div class="row">
-      <div class="col-md-4 text-center"><p class="lead">{{ mod.branches|length }}<br/><small class="text-muted">branch{% if mod.branches|length > 1 %}es{% endif %}</small></p></div>
-      <div class="col-md-4 text-center"><p class="lead">0<br/><small class="text-muted">builds</small></p></div>
+      <div class="col-md-4 text-center"><p class="lead">{{ mod.nbBranches }}<br/><small class="text-muted">branch{% if mod.nbBranches > 1 %}es{% endif %}</small></p></div>
+      <div class="col-md-4 text-center"><p class="lead">{{ mod.nbBuilds }}<br/><small class="text-muted">build{% if mod.nbBuilds > 1 %}s{% endif %}</small></p></div>
     </div>
     <hr/>
     <p class="lead"><small class="text-muted">a mod by </small><a href="{{ path('hlp_nebula_owner', {'owner': owner.nameCanonical}) }}">{{ owner.name }}</a></p>

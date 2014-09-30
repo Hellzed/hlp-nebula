@@ -52,6 +52,7 @@ class PackageType extends AbstractType
                     'type'            => new EnvVarType(),
                     'allow_add'       => true,
                     'allow_delete'    => true,
+                    'by_reference'    => false,
                     'prototype'       => true,
                     'prototype_name'  => '__envVars_prototype__')
                 )
@@ -59,6 +60,7 @@ class PackageType extends AbstractType
                     'type'            => new DependencyType(),
                     'allow_add'       => true,
                     'allow_delete'    => true,
+                    'by_reference'    => false,
                     'prototype'       => true,
                     'prototype_name'  => '__dependencies_prototype__')
                 )
@@ -66,6 +68,7 @@ class PackageType extends AbstractType
                     'type'            => new FileType(),
                     'allow_add'       => true,
                     'allow_delete'    => true,
+                    'by_reference'    => false,
                     'prototype'       => true,
                     'prototype_name'  => '__files_prototype__')
                 )

@@ -2,7 +2,7 @@
 
 /*
 * Copyright 2014 HLP-Nebula authors, see NOTICE file
-4
+
 *
 * Licensed under the EUPL, Version 1.1 or – as soon they
 will be approved by the European Commission - subsequent
@@ -13,7 +13,7 @@ Licence.
 *
 *
 http://ec.europa.eu/idabc/eupl
-5
+
 *
 * Unless required by applicable law or agreed to in
 writing, software distributed under the Licence is
@@ -78,10 +78,10 @@ class JSONBuilder
             $data['packages'][$i]['dependencies'][$j]['id'] = $dependency->getDepId();
             $data['packages'][$i]['dependencies'][$j]['version'] = $dependency->getVersion();
             
-            if(count($dependency->getPackages()) > 0) {
+            if(count($dependency->getDepPkgs()) > 0) {
               $data['packages'][$i]['dependencies'][$j]['packages'] = Array();
               
-              foreach ($dependency->getPackages() as $k => $pkg) {
+              foreach ($dependency->getDepPkgs() as $k => $pkg) {
                 $data['packages'][$i]['dependencies'][$j]['packages'][$k] = $pkg;
               }
             }

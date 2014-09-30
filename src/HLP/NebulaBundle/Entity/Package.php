@@ -207,6 +207,37 @@ class Package
         $this->dependencies = new \Doctrine\Common\Collections\ArrayCollection();
         $this->files = new \Doctrine\Common\Collections\ArrayCollection();
     }
+    
+    public function __clone()
+    {
+         if ($this->id) {
+            $this->id = null;
+            
+            $newEnvVars = new \Doctrine\Common\Collections\ArrayCollection();
+            foreach($this->envVars as $envVar) {
+              $newEnvVar = clone $envVar;
+              $newEnvVars[] = $newEnvVar;
+              $newEnvVar->setPackage($this);
+            }
+            $this->envVars = $newEnvVars;
+            
+            $newDependencies = new \Doctrine\Common\Collections\ArrayCollection();
+            foreach($this->dependencies as $dependency) {
+              $newDependency = clone $dependency;
+              $newDependencies[] = $newDependency;
+              $newDependency->setPackage($this);
+            }
+            $this->dependencies = $newDependencies;
+            
+            $newFiles = new \Doctrine\Common\Collections\ArrayCollection();
+            foreach($this->files as $file) {
+              $newFile = clone $file;
+              $newFiles[] = $newFile;
+              $newFile->setPackage($this);
+            }
+            $this->files = $newFiles;
+         }
+    }
 
     /**
      * Add envVars

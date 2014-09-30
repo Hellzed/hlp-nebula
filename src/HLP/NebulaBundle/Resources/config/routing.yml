@@ -20,7 +20,16 @@ hlp_nebula_all_activity:
     path:     /nebula/activity
     defaults: { _controller: HLPNebulaBundle:Base:activity }
     
+# Nebula AJAX Routes
+
+hlp_nebula_ajax_mods:
+    path:     /nebula/ajax/search_mods
+    defaults: { _controller: HLPNebulaBundle:AJAX:searchMods }
     
+hlp_nebula_ajax_packages:
+    path:     /nebula/ajax/{mod}/search_packages
+    defaults: { _controller: HLPNebulaBundle:AJAX:searchPacakgesInMod }
+        
 # Nebula owners public data routes
 
 hlp_nebula_owner:
@@ -28,8 +37,10 @@ hlp_nebula_owner:
     defaults: { _controller: HLPNebulaBundle:Owner:index }
     
 hlp_nebula_owner_mods:
-    path:     /nebula/{owner}/mods
-    defaults: { _controller: HLPNebulaBundle:Owner:mods }
+    path:     /nebula/{owner}/mods/{page}
+    defaults: { _controller: HLPNebulaBundle:Owner:mods, page: 1 }
+    requirements:
+        page: \d*
     
 hlp_nebula_owner_profile:
     path:     /nebula/{owner}/profile
@@ -51,8 +62,10 @@ hlp_nebula_mod:
     defaults: { _controller: HLPNebulaBundle:Mod:index }
     
 hlp_nebula_mod_branches:
-    path:     /nebula/{owner}/{mod}/branches
-    defaults: { _controller: HLPNebulaBundle:Mod:branches }
+    path:     /nebula/{owner}/{mod}/branches/{page}
+    defaults: { _controller: HLPNebulaBundle:Mod:branches, page: 1 }
+    requirements:
+        page: \d*
     
 hlp_nebula_mod_metadata:
     path:     /nebula/{owner}/{mod}/details
@@ -82,8 +95,10 @@ hlp_nebula_branch:
     defaults: { _controller: HLPNebulaBundle:Branch:index }
     
 hlp_nebula_branch_builds:
-    path:     /nebula/{owner}/{mod}/{branch}/builds
-    defaults: { _controller: HLPNebulaBundle:Branch:builds }
+    path:     /nebula/{owner}/{mod}/{branch}/builds/{page}
+    defaults: { _controller: HLPNebulaBundle:Branch:builds, page: 1 }
+    requirements:
+        page: \d*
     
 hlp_nebula_branch_details:
     path:     /nebula/{owner}/{mod}/{branch}/details
@@ -118,6 +133,12 @@ hlp_nebula_build_data:
     defaults: { _controller: HLPNebulaBundle:Build:show }
     requirements:
         build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+        
+hlp_nebula_update_build:
+    path:     /nebula/{owner}/{mod}/{branch}/{build}/copy_and_update
+    defaults: { _controller: HLPNebulaBundle:Build:newBuildFrom }
+    requirements:
+        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
 
 hlp_nebula_delete_build:
     path:     /nebula/{owner}/{mod}/{branch}/{build}/delete
@@ -125,8 +146,9 @@ hlp_nebula_delete_build:
     
 hlp_nebula_fs2mod:
     path:      /nebula/{owner}/{mod}/{branch}/{build}.{format}
-    defaults:  { _controller: SdzBlogBundle:Blog:voirSlug, build: current , format: json }
+    defaults:  { _controller: HLPNebulaBundle:Build:raw, build: current , format: json }
     requirements:
+        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
         format: json|txt
     
 remove_trailing_slash:

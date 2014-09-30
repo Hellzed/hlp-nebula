@@ -158,7 +158,7 @@ class File
      */
     public function setUrls($urls)
     {
-        $this->urls = $urls;
+        $this->urls = array_values($urls);
 
         return $this;
     }
@@ -217,5 +217,12 @@ class File
     public function getPackage()
     {
         return $this->package;
+    }
+    
+    public function __clone()
+    {
+         if ($this->id) {
+            $this->id = null;
+         }
     }
 }

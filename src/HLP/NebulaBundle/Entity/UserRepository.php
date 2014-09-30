@@ -38,15 +38,20 @@ class UserRepository extends EntityRepository
 {
   public function findSingleUser($usernameCanonical)
   {
-  
+
     $qb = $this->_em->createQueryBuilder();
     $qb->select('i')
        ->from('HLPNebulaBundle:User', 'i')
        ->where('i.usernameCanonical = :usernameCanonical')
        ->leftJoin('i.mods', 'm')
        ->addSelect('m')
-       ->setParameter('usernameCanonical', $usernameCanonical);
+       ->leftJoin('m.branches', 'b')
+       ->leftJoin('b.builds', 'u')
+       ->addSelect('PARTIAL b.{id}')
+       //->addSelect('COUNT(b) AS i.{nbBuilds}')
+       ->addSelect('PARTIAL u.{id}')
        
+       ->setParameter('usernameCanonical', $usernameCanonical);
 
     return $qb->getQuery()
               ->getOneOrNullResult();

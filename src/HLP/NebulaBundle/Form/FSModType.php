@@ -41,7 +41,8 @@ class FSModType extends AbstractType
         $builder
             ->add('modId',          'text')
             ->add('notes',          'textarea',   array('required' => false))
-            ->add('firstRelease',   'date',       array('years' => range(1999, date('Y'))))
+            ->add('firstRelease',   'date',       array('years'  => range(1999, date('Y')),
+                                                        'format' => 'dd-MM-yyyy'))
             ->add('title',          'text')
             ->add('description',    'textarea',   array('required' => false))
             ->add('features',       'collection', array('type'     => 'text',

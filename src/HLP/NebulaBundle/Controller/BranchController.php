@@ -35,7 +35,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use HLP\NebulaBundle\Entity\FSMod;
 use HLP\NebulaBundle\Entity\Branch;
 use HLP\NebulaBundle\Entity\Build;
-use HLP\NebulaBundle\Form\BranchType;
+use HLP\NebulaBundle\Form\BranchEditType;
 use HLP\NebulaBundle\Form\BuildType;
 
 
@@ -51,12 +51,33 @@ class BranchController extends Controller
   /**
    * @ParamConverter("branch", options={"test": false})
    */
-  public function buildsAction(Branch $branch)
+  public function buildsAction(Branch $branch, $page)
   {
+    if ($page < 1) {
+      throw $this->createNotFoundException("Page ".$page." does not exist.");
+    }
+    
     $mod = $branch->getMod();
     $owner = $mod->getOwner();
     
-    return $this->render('HLPNebulaBundle:AdvancedUI:branch_builds.html.twig', array('owner' => $owner, 'mod' => $mod, 'branch' => $branch, 'buildsList' => $branch->getBuilds()));
+    $buildsPerPage = 10;
+    $buildsAll = $branch->getBuilds()->toArray();
+    $nbPages = ceil(count($buildsAll)/$buildsPerPage);
+    
+    if (($page > $nbPages) && ($page > 1)) {
+      throw $this->createNotFoundException("Page ".$page." does not exist.");
+    }
+    
+    $buildsList = array_slice($buildsAll, ($page-1)*$buildsPerPage, $buildsPerPage);
+    
+    return $this->render('HLPNebulaBundle:AdvancedUI:branch_builds.html.twig', array(
+      'owner' => $owner,
+      'mod' => $mod,
+      'branch' => $branch,
+      'buildsList' => $buildsList,
+      'page' => $page,
+      'nbPages' => $nbPages
+    ));
   }
   
   public function detailsAction(Branch $branch)
@@ -86,9 +107,7 @@ class BranchController extends Controller
     
     $build = new Build;
     $build->setBranch($branch);
-    $build->setIsReady(false);
-    $build->setIsFailed(false);
-    $build->setUpdated(new \Datetime);
+    
     $form = $this->createForm(new BuildType(), $build);
 
     $form->handleRequest($request);
@@ -120,7 +139,7 @@ class BranchController extends Controller
         throw new AccessDeniedException('Unauthorised access!');
     }
 
-    $form = $this->createForm(new BranchType(), $branch);
+    $form = $this->createForm(new BranchEditType(), $branch);
 
     if ($form->handleRequest($request)->isValid()) {
       

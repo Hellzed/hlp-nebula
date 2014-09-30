@@ -56,6 +56,10 @@ class Dependency
      * @var string
      *
      * @ORM\Column(name="depId", type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(max=255)
+     * @Assert\Regex("/^[-\w]+$/", message="Special characters not allowed in the dependency mod ID.")
+     * @Assert\Regex("/^-/", match=false, message="Dash not allowed at the beginning of the dependency mod ID.")
      */
     private $depId;
 
@@ -63,6 +67,11 @@ class Dependency
      * @var array
      *
      * @ORM\Column(name="packages", type="array")
+     * @Assert\All({
+     *     @Assert\Regex("/^[-\w]+$/", message="Special characters not allowed in the dependency package name."),
+     *     @Assert\Regex("/^-/", match=false, message="Dash not allowed at the beginning of a dependency package name."),
+     *     @Assert\Length(max=255)
+     * })
      */
     private $depPkgs;
 
@@ -70,6 +79,8 @@ class Dependency
      * @var string
      *
      * @ORM\Column(name="version", type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(max=255)
      */
     private $version;
 
@@ -115,7 +126,7 @@ class Dependency
      */
     public function setDepPkgs($depPkgs)
     {
-        $this->depPkgs = $depPkgs;
+        $this->depPkgs = array_values($depPkgs);
 
         return $this;
     }
@@ -174,5 +185,12 @@ class Dependency
     public function getPackage()
     {
         return $this->package;
+    }
+    
+    public function __clone()
+    {
+         if ($this->id) {
+            $this->id = null;
+         }
     }
 }

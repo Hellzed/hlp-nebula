@@ -48,7 +48,7 @@ class FSModRepository extends EntityRepository
        ->leftJoin('m.branches', 'b')
        ->addSelect('b')
        ->leftJoin('b.builds', 'u')
-       ->addSelect('u')
+       ->addSelect('PARTIAL u.{id, updated}')
        ->orderBy('u.updated', 'DESC')
        ->where('uo.usernameCanonical = :nameCanonical OR to.nameCanonical = :nameCanonical')
        ->andWhere('m.modId = :modId')

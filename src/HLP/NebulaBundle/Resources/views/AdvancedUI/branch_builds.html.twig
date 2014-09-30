@@ -23,6 +23,7 @@
           <td>test</td>
           {% if is_granted('add', owner) %}
             <td>
+              <a href="{{ path('hlp_nebula_update_build', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}" class="btn btn-default btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-retweet"></span> Copy and update&nbsp;</a>&nbsp;
               <a href="{{ path('hlp_nebula_delete_build', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}" class="btn btn-danger btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-trash"></span> Delete&nbsp;</a>
             </td>
           {% endif %}
@@ -30,6 +31,23 @@
   {% if loop.last %}
       </tbody>
     </table>
+    {% if nbPages > 1 %}
+    <div class="text-center">
+      <ul class="pagination pagination-sm">
+        {% if page != 1 %}
+          <li><a href="{{ path('hlp_nebula_branch_builds', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'page': page-1}) }}">&laquo;</a></li>
+        {% endif %}
+        {% for p in range(1, nbPages) %}
+          <li{% if p == page %} class="active"{% endif %}>
+            <a href="{{ path('hlp_nebula_branch_builds', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'page': p}) }}">{{ p }}</a>
+          </li>
+        {% endfor %}
+        {% if page != nbPages %}
+          <li><a href="{{ path('hlp_nebula_branch_builds', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'page': page+1}) }}">&raquo;</a></li>
+        {% endif %}
+      </ul>
+    </div>
+    {% endif %}
   {% endif %}
 {% else %}
 <p class="lead">No build found.</p>

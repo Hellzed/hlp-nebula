@@ -63,6 +63,17 @@ class Action
      * @var array
      *
      * @ORM\Column(name="paths", type="array")
+     * @Assert\Count(
+     *      min = "1",
+     *      minMessage = "You must specify at least one path for the action."
+     * )
+     * @Assert\All({
+     *     @Assert\Length(max=255),
+     *     @Assert\Regex(
+     *     pattern="/^([\\\/]?[^\0\\\/:\*\?\x22<>\|]+)*[\\\/]?$/",
+     *     message="The action path must be a valid relative path."
+     *     )
+     * })
      */
     private $paths;
 
@@ -127,7 +138,12 @@ class Action
      */
     public function setPaths($paths)
     {
-        $this->paths = $paths;
+        $this->paths = array_values($paths);
+        
+        foreach($this->paths as $key => $path)
+        {
+          $this->paths[$key] = trim(str_replace('\\', '/', $path), '/');
+        }
 
         return $this;
     }
@@ -174,7 +190,9 @@ class Action
     public function setDest($dest)
     {
         $this->dest = trim(str_replace('\\', '/', $dest), '/');
-
+        if($this->type == 'delete') {
+            $this->dest = null;
+        }
         return $this;
     }
 
@@ -209,5 +227,12 @@ class Action
     public function getBuild()
     {
         return $this->build;
+    }
+    
+    public function __clone()
+    {
+         if ($this->id) {
+            $this->id = null;
+         }
     }
 }
