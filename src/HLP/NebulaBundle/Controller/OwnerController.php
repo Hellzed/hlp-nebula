@@ -51,7 +51,7 @@ class OwnerController extends Controller
     }
     
     $session = new Session();
-    $session->set('modEditRefer', 'fromList');
+    $session->set('modRefer', 'fromList');
     
     $modsPerPage = 10;
     $modsAll = $owner->getMods()->toArray();

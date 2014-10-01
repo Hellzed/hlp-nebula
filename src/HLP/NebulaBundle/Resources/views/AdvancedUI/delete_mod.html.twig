@@ -18,7 +18,7 @@
     <hr/>
     <p class="lead"><small class="text-muted">as </small>{{ owner.name }}</p>
     <hr/>
-    <p class="lead"><small class="text-muted">or </small><a href="{{ path('hlp_nebula_owner', {'owner': owner.nameCanonical}) }}" class="btn btn-default">Cancel</a></p>
+    <p class="lead"><small class="text-muted">or </small><a href="{{ referURL }}" class="btn btn-default">Cancel</a></p>
   </div>
   <div class="col-sm-9">
     <form action="{{ path('hlp_nebula_delete_mod', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}" method="post" class="mainForm row">

@@ -87,7 +87,7 @@ class BranchController extends Controller
     $owner = $mod->getOwner();
     
     $session = new Session();
-    $session->set('branchEditRefer', 'fromDetails');
+    $session->set('branchRefer', 'fromDetails');
     
     return $this->render('HLPNebulaBundle:AdvancedUI:branch_details.html.twig', array('owner' => $owner, 'mod' => $mod, 'branch' => $branch));
   }
@@ -144,16 +144,8 @@ class BranchController extends Controller
     }
     
     $session = new Session();
-    $refer = $session->get('branchEditRefer');
-    
-    if($refer == 'fromDetails')
-    {
-      $referURL = $this->generateUrl('hlp_nebula_branch_details', array('branch' => $branch->getBranchId(), 'mod' => $mod->getModId(), 'owner' => $owner->getNameCanonical()));
-    }
-    else
-    {
-      $referURL = $this->generateUrl('hlp_nebula_mod_branches', array('mod' => $mod->getModId(), 'owner' => $owner->getNameCanonical()));
-    }
+    $refer = $session->get('branchRefer');
+    $referURL = $this->getReferURL($refer, $owner, $mod, $branch);
 
     $form = $this->createForm(new BranchEditType(), $branch);
 
@@ -185,6 +177,10 @@ class BranchController extends Controller
     if (false === $this->get('security.context')->isGranted('add', $owner)) {
         throw new AccessDeniedException('Unauthorised access!');
     }
+    
+    $session = new Session();
+    $refer = $session->get('branchRefer');
+    $referURL = $this->getReferURL($refer, $owner, $mod, $branch);
 
     $form = $this->createFormBuilder()->getForm();
 
@@ -202,7 +198,22 @@ class BranchController extends Controller
       'owner' => $owner,
       'mod' => $mod,
       'branch' => $branch,
-      'form' => $form->createView()
+      'form' => $form->createView(),
+      'referURL' => $referURL
     ));
+  }
+  
+  private function getReferURL($refer, $owner, $mod, $branch)
+  {
+    if($refer == 'fromDetails')
+    {
+      $referURL = $this->generateUrl('hlp_nebula_branch_details', array('branch' => $branch->getBranchId(), 'mod' => $mod->getModId(), 'owner' => $owner->getNameCanonical()));
+    }
+    else
+    {
+      $referURL = $this->generateUrl('hlp_nebula_mod_branches', array('mod' => $mod->getModId(), 'owner' => $owner->getNameCanonical()));
+    }
+    
+    return $referURL;
   }
 }

@@ -54,7 +54,7 @@ class ModController extends Controller
     $owner = $mod->getOwner();
     
     $session = new Session();
-    $session->set('branchEditRefer', 'fromList');
+    $session->set('branchRefer', 'fromList');
     
     $branchesPerPage = 10;
     $branchesAll = $mod->getBranches()->toArray();
@@ -79,7 +79,7 @@ class ModController extends Controller
     $owner = $mod->getOwner();
     
     $session = new Session();
-    $session->set('modEditRefer', 'fromDetails');
+    $session->set('modRefer', 'fromDetails');
   
     return $this->render('HLPNebulaBundle:AdvancedUI:mod_details.html.twig', array('owner' => $owner, 'mod' => $mod));
   }
@@ -131,16 +131,8 @@ class ModController extends Controller
     }
     
     $session = new Session();
-    $refer = $session->get('modEditRefer');
-    
-    if($refer == 'fromDetails')
-    {
-      $referURL = $this->generateUrl('hlp_nebula_mod_details', array('mod' => $mod->getModId(), 'owner' => $owner->getNameCanonical()));
-    }
-    else
-    {
-      $referURL = $this->generateUrl('hlp_nebula_owner_mods', array('owner' => $owner->getNameCanonical()));
-    }
+    $refer = $session->get('modRefer');
+    $referURL = $this->getReferURL($refer, $owner, $mod);
 
     $form = $this->createForm(new FSModEditType(), $mod);
 
@@ -171,6 +163,10 @@ class ModController extends Controller
     if (false === $this->get('security.context')->isGranted('add', $owner)) {
         throw new AccessDeniedException('Unauthorised access!');
     }
+    
+    $session = new Session();
+    $refer = $session->get('modRefer');
+    $referURL = $this->getReferURL($refer, $owner, $mod);
 
     $form = $this->createFormBuilder()->getForm();
 
@@ -187,8 +183,22 @@ class ModController extends Controller
     return $this->render('HLPNebulaBundle:AdvancedUI:delete_mod.html.twig', array(
       'owner' => $owner,
       'mod' => $mod,
-      'form' => $form->createView()
+      'form' => $form->createView(),
+      'referURL' => $referURL
     ));
   }
   
+  private function getReferURL($refer, $owner, $mod)
+  {
+    if($refer == 'fromDetails')
+    {
+      $referURL = $this->generateUrl('hlp_nebula_mod_details', array('mod' => $mod->getModId(), 'owner' => $owner->getNameCanonical()));
+    }
+    else
+    {
+      $referURL = $this->generateUrl('hlp_nebula_owner_mods', array('owner' => $owner->getNameCanonical()));
+    }
+    
+    return $referURL;
+  }
 }

@@ -20,7 +20,7 @@
     <p class="lead"><small class="text-muted">from mod </small>{{ mod.title }}</p>
     <p class="lead"><small class="text-muted">as </small>{{ owner.name }}</p>
     <hr/>
-    <p class="lead"><small class="text-muted">or </small><a href="{{ path('hlp_nebula_mod', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}" class="btn btn-default">Cancel</a></p>
+    <p class="lead"><small class="text-muted">or </small><a href="{{ referURL }}" class="btn btn-default">Cancel</a></p>
   </div>
   <div class="col-sm-9">
     <form action="{{ path('hlp_nebula_delete_branch', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}" method="post" class="mainForm row">
