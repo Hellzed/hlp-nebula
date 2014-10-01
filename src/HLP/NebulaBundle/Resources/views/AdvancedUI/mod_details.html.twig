@@ -1,0 +1,39 @@
+{% extends "HLPNebulaBundle:AdvancedUI:mod.html.twig" %}
+
+{% block mod_tab %}
+<h5><span class="glyphicon glyphicon-link"></span> Unique mod URL (redirects to the latest build in the default branch)</h5>
+<input class="form-control" type="text" value="{# {{ url('hlp_nebula_fs2mod', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': '1.2.3'}) }}.json #}" readonly>
+<br/>
+<h5><span class="glyphicon glyphicon-paperclip"></span> Mod metadata</h5>
+<div class="well">
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Unique ID&nbsp;:</strong></p><p class="col-xs-10">{{ mod.modId }}</p>
+  </div>
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Title&nbsp;:</strong></p><p class="col-xs-10">{{ mod.title }}</p>
+  </div>
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Release date&nbsp;:</strong></p><p class="col-xs-10">{{ mod.firstRelease|date("d M Y") }}</p>
+  </div>
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Description&nbsp;:</strong></p><p class="col-xs-10">{{ mod.description }}</p>
+  </div>
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Features&nbsp;:</strong></p><p class="col-xs-10">N/A</p>
+  </div>
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Authors&nbsp;:</strong></p><p class="col-xs-10">N/A</p>
+  </div>
+</div>
+
+{% if is_granted('add', owner) %}
+<br/>
+<h5><span class="glyphicon glyphicon-tasks"></span> Actions</h5>
+<div class="well">
+  <p>
+    <a href="{{ path('hlp_nebula_edit_mod', {'owner': owner.usernameCanonical, 'mod': mod.modId}) }}" class="btn btn-default pull-left"><span class="glyphicon glyphicon-pencil"></span> Edit mod metadata&nbsp;</a>&nbsp;
+    <a href="{{ path('hlp_nebula_delete_mod', {'owner': owner.usernameCanonical, 'mod': mod.modId}) }}" class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span> Delete this mod&nbsp;</a>
+  </p>
+</div>
+{% endif %}
+{% endblock %}
