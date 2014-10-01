@@ -112,7 +112,7 @@ class ModController extends Controller
       
       $request->getSession()->getFlashBag()->add('success', "New branch <strong>".$branch->getName()."</strong> successfully created.");
 
-      return $this->redirect($this->generateUrl('hlp_nebula_mod', array('owner' => $owner->getNameCanonical(), 'mod' => $mod->getModId())));
+      return $this->redirect($this->generateUrl('hlp_nebula_branch', array('owner' => $owner->getNameCanonical(), 'mod' => $mod->getModId(), 'branch' => $branch->getBranchId())));
     }
     
     return $this->render('HLPNebulaBundle:AdvancedUI:new_branch.html.twig', array(
