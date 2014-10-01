@@ -30,7 +30,7 @@
       <li class=""><a href="{{ path('hlp_nebula_build_data', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}"><h4 class="titletab">Generated data</h4></a></li>
     </ul>
   {% block build_tab %}
-    <h5><span class="glyphicon glyphicon-link"></span> Unique URL</h5>
+    <h5><span class="glyphicon glyphicon-link"></span> Unique build URL</h5>
     <p class="help-block">Copy this line to HLP-Knossos repository settings, or use the client of your choice.</p>
     <input class="form-control" type="text" value="{{ url('hlp_nebula_fs2mod', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}.json" readonly>
     <br/>

@@ -28,7 +28,7 @@
   <div class="col-sm-9">
     <ul class="mainTabs nav nav-tabs" role="tablist">
       <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_mod_branches' %}active{% endif %}"><a href="{{ path('hlp_nebula_mod_branches', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}"><h4 class="titletab">Branches</h4></a></li>
-      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_mod_metadata' %}active{% endif %}"><a href="{{ path('hlp_nebula_mod_metadata', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}"><h4 class="titletab">Mod metadata</h4></a></li>
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_mod_details' %}active{% endif %}"><a href="{{ path('hlp_nebula_mod_details', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}"><h4 class="titletab">Mod details</h4></a></li>
       <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_mod_activity' %}active{% endif %}"><a href="{{ path('hlp_nebula_mod_activity', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}"><h4 class="titletab">Activity</h4></a></li>
     </ul>
     

@@ -17,7 +17,7 @@
   <div class="col-sm-3">
     <h2>{{ branch.name }}</h2>
     <hr/>
-    <p class="text-muted"><span class="glyphicon glyphicon-time"></span> Latest build on {% if branch.builds[0] is defined %}{{ branch.builds[0].updated|date("d M Y") }}{% else %}Empty branch !{% endif %}</p>
+    <p class="text-muted"><span class="glyphicon glyphicon-time"></span> {% if branch.builds[0] is defined %}Latest build on {{ branch.builds[0].updated|date("d M Y") }}{% else %}No update found : empty branch !{% endif %}</p>
     <hr/>
     <div class="row">
       <div class="col-md-4 text-center"><p class="lead">{{ branch.nbBuilds }}<br/><small class="text-muted">build{% if branch.nbBuilds > 1 %}s{% endif %}</small></p></div>

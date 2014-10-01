@@ -30,6 +30,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 use HLP\NebulaBundle\Entity\OwnerInterface;
 use HLP\NebulaBundle\Entity\User;
@@ -48,6 +49,9 @@ class OwnerController extends Controller
     if ($page < 1) {
       throw $this->createNotFoundException("Page ".$page." does not exist.");
     }
+    
+    $session = new Session();
+    $session->set('modEditRefer', 'fromList');
     
     $modsPerPage = 10;
     $modsAll = $owner->getMods()->toArray();

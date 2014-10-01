@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 use HLP\NebulaBundle\Entity\FSMod;
 use HLP\NebulaBundle\Entity\Branch;
@@ -51,7 +52,10 @@ class ModController extends Controller
     }
     
     $owner = $mod->getOwner();
-       
+    
+    $session = new Session();
+    $session->set('branchEditRefer', 'fromList');
+    
     $branchesPerPage = 10;
     $branchesAll = $mod->getBranches()->toArray();
     $nbPages = ceil(count($branchesAll)/$branchesPerPage);
@@ -70,11 +74,14 @@ class ModController extends Controller
       'nbPages' => $nbPages));
   }
   
-  public function metadataAction(FSMod $mod)
+  public function detailsAction(FSMod $mod)
   {
     $owner = $mod->getOwner();
+    
+    $session = new Session();
+    $session->set('modEditRefer', 'fromDetails');
   
-    return $this->render('HLPNebulaBundle:AdvancedUI:mod_metadata.html.twig', array('owner' => $owner, 'mod' => $mod));
+    return $this->render('HLPNebulaBundle:AdvancedUI:mod_details.html.twig', array('owner' => $owner, 'mod' => $mod));
   }
   
   public function activityAction(FSMod $mod)
@@ -122,6 +129,18 @@ class ModController extends Controller
     if (false === $this->get('security.context')->isGranted('add', $owner)) {
         throw new AccessDeniedException('Unauthorised access!');
     }
+    
+    $session = new Session();
+    $refer = $session->get('modEditRefer');
+    
+    if($refer == 'fromDetails')
+    {
+      $referURL = $this->generateUrl('hlp_nebula_mod_details', array('mod' => $mod->getModId(), 'owner' => $owner->getNameCanonical()));
+    }
+    else
+    {
+      $referURL = $this->generateUrl('hlp_nebula_owner_mods', array('owner' => $owner->getNameCanonical()));
+    }
 
     $form = $this->createForm(new FSModEditType(), $mod);
 
@@ -134,13 +153,14 @@ class ModController extends Controller
       
       $request->getSession()->getFlashBag()->add('success', "Mod <strong>".$mod->getTitle()."</strong> successfully edited.");
 
-      return $this->redirect($this->generateUrl('hlp_nebula_owner', array('owner' => $owner->getNameCanonical())));
+      return $this->redirect($referURL);
     }
 
     return $this->render('HLPNebulaBundle:AdvancedUI:edit_mod.html.twig', array(
       'owner' => $owner,
       'mod' => $mod,
-      'form' => $form->createView()
+      'form' => $form->createView(),
+      'referURL' => $referURL
     ));
   }
   

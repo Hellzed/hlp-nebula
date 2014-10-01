@@ -20,7 +20,7 @@
     <p class="lead"><small class="text-muted">of mod </small>{{ mod.title }}</p>
     <p class="lead"><small class="text-muted">as </small>{{ owner.name }}</p>
     <hr/>
-    <p class="lead"><small class="text-muted">or </small><a href="{{ path('hlp_nebula_mod', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}" class="btn btn-danger">Cancel</a></p>
+    <p class="lead"><small class="text-muted">or </small><a href="{{ referURL }}" class="btn btn-danger">Cancel</a></p>
   </div>
   <div class="col-sm-9">
   {% include "HLPNebulaBundle:AdvancedUI:form_branch.html.twig" %}

@@ -165,6 +165,7 @@ $(document).ready(function() {
           $depPkgInput.autocomplete( "search", "");
         }
       });
+
     });
   }
    

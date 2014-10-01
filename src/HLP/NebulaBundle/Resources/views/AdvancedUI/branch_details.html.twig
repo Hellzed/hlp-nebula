@@ -1,6 +1,30 @@
 {% extends "HLPNebulaBundle:AdvancedUI:branch.html.twig" %}
 
 {% block branch_tab %}
-<h5><span class="glyphicon glyphicon-link"></span> Unique branch URL (redirects to the latest build in the branch)</h5>
-<input class="form-control" type="text" value="{{ url('hlp_nebula_fs2mod', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': '1.2.3'}) }}.json" readonly>
+<h5><span class="glyphicon glyphicon-link"></span> Unique branch URL (redirects to the latest build in this branch)</h5>
+<input class="form-control" type="text" value="{# {{ url('hlp_nebula_fs2mod', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': '1.2.3'}) }}.json #}" readonly>
+<br/>
+<h5><span class="glyphicon glyphicon-paperclip"></span> Branch metadata</h5>
+<div class="well">
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Unique ID&nbsp;:</strong></p><p class="col-xs-10">{{ branch.branchId }}</p>
+  </div>
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Title&nbsp;:</strong></p><p class="col-xs-10">{{ branch.name }}</p>
+  </div>
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Notes&nbsp;:</strong></p><p class="col-xs-10">{{ branch.notes }}</p>
+  </div>
+</div>
+
+{% if is_granted('add', owner) %}
+<br/>
+<h5><span class="glyphicon glyphicon-tasks"></span> Actions</h5>
+<div class="well">
+  <p>
+    <a href="{{ path('hlp_nebula_edit_branch', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}" class="btn btn-default pull-left"><span class="glyphicon glyphicon-pencil"></span> Edit branch metadata&nbsp;</a>&nbsp;
+    <a href="{{ path('hlp_nebula_delete_branch', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}" class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span> Delete branch&nbsp;</a>
+  </p>
+</div>
+{% endif %}
 {% endblock %}

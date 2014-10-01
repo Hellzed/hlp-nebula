@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 use HLP\NebulaBundle\Entity\FSMod;
 use HLP\NebulaBundle\Entity\Branch;
@@ -85,6 +86,9 @@ class BranchController extends Controller
     $mod = $branch->getMod();
     $owner = $mod->getOwner();
     
+    $session = new Session();
+    $session->set('branchEditRefer', 'fromDetails');
+    
     return $this->render('HLPNebulaBundle:AdvancedUI:branch_details.html.twig', array('owner' => $owner, 'mod' => $mod, 'branch' => $branch));
   }
   
@@ -138,6 +142,18 @@ class BranchController extends Controller
     if (false === $this->get('security.context')->isGranted('add', $owner)) {
         throw new AccessDeniedException('Unauthorised access!');
     }
+    
+    $session = new Session();
+    $refer = $session->get('branchEditRefer');
+    
+    if($refer == 'fromDetails')
+    {
+      $referURL = $this->generateUrl('hlp_nebula_branch_details', array('branch' => $branch->getBranchId(), 'mod' => $mod->getModId(), 'owner' => $owner->getNameCanonical()));
+    }
+    else
+    {
+      $referURL = $this->generateUrl('hlp_nebula_mod_branches', array('mod' => $mod->getModId(), 'owner' => $owner->getNameCanonical()));
+    }
 
     $form = $this->createForm(new BranchEditType(), $branch);
 
@@ -149,14 +165,15 @@ class BranchController extends Controller
       
       $request->getSession()->getFlashBag()->add('success', "Branch <strong>".$branch->getName()."</strong> successfully edited.");
 
-      return $this->redirect($this->generateUrl('hlp_nebula_mod', array('mod' => $mod->getModId(), 'owner' => $owner->getNameCanonical())));
+      return $this->redirect($referURL);
     }
 
     return $this->render('HLPNebulaBundle:AdvancedUI:edit_branch.html.twig', array(
       'owner' => $owner,
       'mod' => $mod,
       'branch' => $branch,
-      'form' => $form->createView()
+      'form' => $form->createView(),
+      'referURL' => $referURL
     ));
   }
   

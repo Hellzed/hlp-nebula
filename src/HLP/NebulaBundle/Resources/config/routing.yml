@@ -67,9 +67,9 @@ hlp_nebula_mod_branches:
     requirements:
         page: \d*
     
-hlp_nebula_mod_metadata:
+hlp_nebula_mod_details:
     path:     /nebula/{owner}/{mod}/details
-    defaults: { _controller: HLPNebulaBundle:Mod:metadata }
+    defaults: { _controller: HLPNebulaBundle:Mod:details }
     
 hlp_nebula_mod_activity:
     path:     /nebula/{owner}/{mod}/activity
