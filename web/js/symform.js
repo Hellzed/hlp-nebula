@@ -27,6 +27,7 @@ $(document).ready(function() {
         $index[$fieldId] = 0;
         if ( $generatedChildren.length > 0 ) {
           $generatedChildren.each(function(index) {
+
              $generatedIndex = $(this).attr('id').split("_").pop(-1);
              
              if ( $generatedIndex >= $index[$fieldId]) {
@@ -93,7 +94,6 @@ $(document).ready(function() {
     findCollections($prototype);
     findSelect($prototype);
     findDepId($prototype);
-    findDepPkgs($prototype);
   }
   
   function findSelect($element) {
@@ -145,8 +145,8 @@ $(document).ready(function() {
   
   function findDepPkgs($element) {
     $element.find('.depPkgItem').each(function(index) {
-      $depPkgInput = $(this).find('input');
-      $currentModSearch = $depPkgInput.closest('.well').find('[id$="depId"]').val();
+      var $depPkgInput = $(this).find('input');
+      var $currentModSearch = $depPkgInput.closest('.well').find('[id$="depId"]').val();
       
       $depPkgInput.autocomplete({
             source : 'http://localhost/Symfony/web/app_dev.php/nebula/ajax/'+$currentModSearch+'/search_packages',
