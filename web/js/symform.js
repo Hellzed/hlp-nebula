@@ -27,7 +27,6 @@ $(document).ready(function() {
         $index[$fieldId] = 0;
         if ( $generatedChildren.length > 0 ) {
           $generatedChildren.each(function(index) {
-             alert($(this).attr('id'));
              $generatedIndex = $(this).attr('id').split("_").pop(-1);
              
              if ( $generatedIndex >= $index[$fieldId]) {
