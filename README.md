@@ -28,7 +28,10 @@ On **Ubuntu**, use command :
    database_password: yourpassword
    ```
    
-5. **Install Symfony "vendors"**:  (you may need to use ```sudo``` on Ubuntu desktop) ```php composer.phar install```
+5. **Install Symfony "vendors"** (you may need to use ```sudo``` on Ubuntu desktop) :
+   ```bash
+   php composer.phar install
+   ```
 6. **Allow Symfony to write** to its ```app/cache``` and ```app/logs``` :
    ```bash
    sudo chmod 777 -R app/cache
