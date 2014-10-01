@@ -18,26 +18,33 @@ On **Ubuntu**, use command : ```sudo apt-get install apache2 php5 mysql-server l
 1. If you have not done it yet, **download** the [latest version of HLP-Nebula](https://github.com/Hellzed/hlp-nebula).
 2. **Move** its root ```Symfony``` folder directly to your **Apache2 host folder**, and select ```Symfony``` as your **current working directory**.
 3. **Rename** ```app/config/parameters.yml.dist``` to ```app/config/parameters.yml```
-4. **Edit** ```app/config/parameters.yml``` and set change these settings :  
-    ```database_host: 127.0.0.1  
-    database_port: null  
-    database_name: symfony  
-    database_user: root  
-    database_password: yourpassword```
+4. **Edit** ```app/config/parameters.yml``` and set change these settings :
+   ```yaml
+   database_host: 127.0.0.1
+   database_port: null
+   database_name: symfony
+   database_user: root
+   database_password: yourpassword
+   ```
+    
 5. **Install Symfony "vendors"**:  (you may need to use ```sudo``` on Ubuntu desktop) ```php composer.phar install```
-6. **Allow Symfony to write** to its ```app/cache``` and ```app/logs``` :  
-    ```sudo chmod 777 -R app/cache
-   sudo chmod 777 -R app/logs```
-7. **Initialise Doctrine2 ORM**, **Symfony2**'s database component (and register HLP-Nebula objects in Doctrine2) :  
-    ```php app/console doctrine:database:create
-    php app/console doctrine:schema:update --force```
+6. **Allow Symfony to write** to its ```app/cache``` and ```app/logs``` :
+   ```bash
+   sudo chmod 777 -R app/cache
+   sudo chmod 777 -R app/logs
+   ```
+7. **Initialise Doctrine2 ORM**, **Symfony2**'s database component (and register HLP-Nebula objects in Doctrine2) :
+   ```bash
+   php app/console doctrine:database:create
+   php app/console doctrine:schema:update --force
+   ```
 
 If **Symfony2** is installed at your Apache2 host folder root, this link should now work :
-(http://localhost/Symfony/web/app_dev.php/nebula/)
+[localhost/Symfony/web/app_dev.php/nebula](http://localhost/Symfony/web/app_dev.php/nebula/)
 
 ## Quick start
 
-1. **Register** on this page (http://localhost/Symfony/web/app_dev.php/nebula/register)
+1. **Register** on this page [localhost/Symfony/web/app_dev.php/nebula/register](http://localhost/Symfony/web/app_dev.php/nebula/register)
 2. Once connected, access your **personal mod repository** by clicking the link on the right side of the nav bar.
 
 ## Client (FreeSpace 2 mod downloader/installer/launcher)
