@@ -41,7 +41,7 @@ On **Ubuntu**, use command :
    php app/console doctrine:schema:update --force
    ```
 
-If **Symfony2** is installed at your Apache2 host folder root, this link should now work :
+If **Symfony2** is installed at your **Apache2 host folder root**, this link should now work :
 [localhost/Symfony/web/app_dev.php/nebula](http://localhost/Symfony/web/app_dev.php/nebula/)
 
 ## Quick start
