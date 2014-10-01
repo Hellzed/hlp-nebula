@@ -1,5 +1,6 @@
 {% extends "HLPNebulaBundle:AdvancedUI:branch.html.twig" %}
 
 {% block branch_tab %}
-<h5><span class="glyphicon glyphicon-link"></span> Unique URL</h5>
+<h5><span class="glyphicon glyphicon-link"></span> Unique branch URL (redirects to the latest build in the branch)</h5>
+<input class="form-control" type="text" value="{{ url('hlp_nebula_fs2mod', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': '1.2.3'}) }}.json" readonly>
 {% endblock %}

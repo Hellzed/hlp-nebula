@@ -1,5 +1,7 @@
 {% form_theme form 'HLPNebulaBundle:AdvancedUI:form_theme.html.twig' %}
 
+<div id="ajaxVars" depModURL="{{ path('hlp_nebula_ajax_mods') }}" depPkgURL="{{ path('hlp_nebula_ajax_packages', {'mod': '$currentModSearch'}) }}"></div>
+
 {{ form_start(form, {'attr': {'class': 'mainForm row'}}) }}
   {{ form_errors(form) }}
   <h4><span class="glyphicon glyphicon-asterisk"></span> Build details</h4>

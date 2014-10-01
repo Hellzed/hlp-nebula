@@ -5,6 +5,9 @@ $(document).ready(function() {
   var $form = $('form');
   var $index = new Array();
   
+  var $ajaxDepModURL = $('#ajaxVars').attr('depModURL');
+  var $ajaxDepPkgURL = $('#ajaxVars').attr('depPkgURL');
+  
   findCollections($form);
   findSelect($form);
   findDepId($form);
@@ -131,7 +134,7 @@ $(document).ready(function() {
       if($strippedId == 'depId' && typeof $container !== undefined && $container !== false) {
       
         $(this).autocomplete({
-            source : 'http://localhost/Symfony/web/app_dev.php/nebula/ajax/search_mods',
+            source : $ajaxDepModURL,
             minLength: 1,
             delay: 200,
         });
@@ -149,7 +152,7 @@ $(document).ready(function() {
       var $currentModSearch = $depPkgInput.closest('.well').find('[id$="depId"]').val();
       
       $depPkgInput.autocomplete({
-            source : 'http://localhost/Symfony/web/app_dev.php/nebula/ajax/'+$currentModSearch+'/search_packages',
+            source : $ajaxDepPkgURL.replace("%24currentModSearch", $currentModSearch),
             minLength: 0,
             delay: 200
 
