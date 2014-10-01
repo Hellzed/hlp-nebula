@@ -33,11 +33,11 @@ On **Ubuntu**, use command : ```sudo apt-get install apache2 php5 mysql-server l
     php app/console doctrine:schema:update --force```
 
 If **Symfony2** is installed at your Apache2 host folder root, this link should now work :
-http://localhost/Symfony/web/app_dev.php/nebula/
+(http://localhost/Symfony/web/app_dev.php/nebula/)
 
 ## Quick start
 
-1. **Register** on this page http://localhost/Symfony/web/app_dev.php/nebula/register
+1. **Register** on this page (http://localhost/Symfony/web/app_dev.php/nebula/register)
 2. Once connected, access your **personal mod repository** by clicking the link on the right side of the nav bar.
 
 ## Client (FreeSpace 2 mod downloader/installer/launcher)
