@@ -6,6 +6,9 @@
   <hr/>
   <div class="form-group">
     {{ form_label(form.versionMajor, "Version*") }}
+    <p class="help-block">
+      A build version number must be unique <em>across the branches of your mod</em>. Use <a target="_blank" href='http://semver.org/'>Semantic Versioning <span class="glyphicon glyphicon-link"></span></a>.
+    </p>
     {{ form_errors(form.versionMajor) }}
     {{ form_errors(form.versionMinor) }}
     {{ form_errors(form.versionPatch) }}
@@ -66,7 +69,7 @@
   <div class="form-group clearfix">
     <div class="clearfix">{{ form_label(form.actions, "Actions") }}
       <p class="help-block">
-        Actions allow to <em>move</em> or <em>delete</em> files after install. You should consider relying on the client to preserve the integrity of the mod instead of using this method.
+        Actions allow to <em>move</em> or <em>delete</em> files after install. Instead of using this method, you should consider relying on the <em>software client</em> to preserve the <em>integrity</em> and <em>cleanness</em> of the mod on the user's computer
         <br/>Actions are used to ensure <em>compatibility with legacy clients</em> that do not support automatic mod folder cleaning after update.
       </p>
     </div>

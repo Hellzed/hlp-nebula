@@ -120,28 +120,27 @@ class User extends BaseUser implements OwnerInterface
   {
       return $this->usernameCanonical;
   }
-  
 
-    /**
-     * Set joined
-     *
-     * @param \DateTime $joined
-     * @return User
-     */
-    public function setJoined($joined)
-    {
-        $this->joined = $joined;
+  /**
+   * Set joined
+   *
+   * @param \DateTime $joined
+   * @return User
+   */
+  public function setJoined($joined)
+  {
+      $this->joined = $joined;
 
-        return $this;
-    }
+      return $this;
+  }
 
-    /**
-     * Get joined
-     *
-     * @return \DateTime 
-     */
-    public function getJoined()
-    {
-        return $this->joined;
-    }
+  /**
+   * Get joined
+   *
+   * @return \DateTime 
+   */
+  public function getJoined()
+  {
+      return $this->joined;
+  }
 }

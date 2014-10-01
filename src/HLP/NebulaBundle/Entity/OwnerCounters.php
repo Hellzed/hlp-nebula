@@ -17,6 +17,9 @@ trait OwnerCounters {
    */
   private $nbBuilds = null;
   
+  // Double check the final class can run getMods()
+  abstract public function getMods();
+  
   /**
    * Return the number of tags related to the blog post.
    *
