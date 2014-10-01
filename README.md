@@ -11,7 +11,8 @@ This project has two main goals :
 ## Dependencies
 
 To run **HLP-Nebula**, the first thing you need is a working **LAMP environment**.
-On **Ubuntu**, use command : ```sudo apt-get install apache2 php5 mysql-server libapache2-mod-php5 php5-mysql php5-gd```
+On **Ubuntu**, use command :  
+```sudo apt-get install apache2 php5 mysql-server libapache2-mod-php5 php5-mysql php5-gd```
 
 ## Install
 
@@ -26,13 +27,14 @@ On **Ubuntu**, use command : ```sudo apt-get install apache2 php5 mysql-server l
    database_user: root
    database_password: yourpassword
    ```
-    
+   
 5. **Install Symfony "vendors"**:  (you may need to use ```sudo``` on Ubuntu desktop) ```php composer.phar install```
 6. **Allow Symfony to write** to its ```app/cache``` and ```app/logs``` :
    ```bash
    sudo chmod 777 -R app/cache
    sudo chmod 777 -R app/logs
    ```
+   
 7. **Initialise Doctrine2 ORM**, **Symfony2**'s database component (and register HLP-Nebula objects in Doctrine2) :
    ```bash
    php app/console doctrine:database:create
@@ -44,7 +46,7 @@ If **Symfony2** is installed at your Apache2 host folder root, this link should 
 
 ## Quick start
 
-1. **Register** on this page [localhost/Symfony/web/app_dev.php/nebula/register](http://localhost/Symfony/web/app_dev.php/nebula/register)
+1. **Register** on this page : [localhost/Symfony/web/app_dev.php/nebula/register](http://localhost/Symfony/web/app_dev.php/nebula/register)
 2. Once connected, access your **personal mod repository** by clicking the link on the right side of the nav bar.
 
 ## Client (FreeSpace 2 mod downloader/installer/launcher)
