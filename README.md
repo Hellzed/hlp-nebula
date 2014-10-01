@@ -6,7 +6,7 @@ This project has two main goals :
 * Provide a **release management tool** for **modders**
 * Make **mod download and install** process **easier to players**
 
-**HLP-Nebula** is mostly written in PHP, as a [Symfony2](http://symfony.com/) framework bundle.
+**HLP-Nebula** is mostly written in **PHP**, as a [**Symfony2**](http://symfony.com/) framework bundle.
 
 ## Dependencies
 
@@ -54,13 +54,13 @@ If **Symfony2** is installed at your **Apache2 host folder root**, this link sho
 
 ## Client (FreeSpace 2 mod downloader/installer/launcher)
 
-**HLP-Nebula** is developed jointly with [**Knossos**](https://github.com/ngld/knossos), but any FreeSpace 2 mod downloader/installer implementing this [schema](https://github.com/ngld/knossos/blob/develop/converter/schema.txt) can become a client ([ALPHA](http://www.hard-light.net/forums/index.php?topic=88119.0) FreeSpace 2 launcher developer contributed to the JSON format).
+**HLP-Nebula** is developed jointly with [**Knossos**](https://github.com/ngld/knossos), but any FreeSpace 2 mod downloader/installer implementing this [schema](https://github.com/ngld/knossos/blob/develop/converter/schema.txt) can become a client ([**ALPHA**](http://www.hard-light.net/forums/index.php?topic=88119.0) FreeSpace 2 launcher developer contributed to the JSON format).
 
 **HLP-Nebula** could add ome _limited_ support for legacy TXT mod repository configuration files, if needed.
 
 ## Development
 
-HLP-Nebula is in _active development_. It is still missing a lot of features.
+**HLP-Nebula** is in _active development_. It is still missing a lot of features.
 The official [development thread](http://www.hard-light.net/forums/index.php?topic=86364) is found on [**Hard Light Productions**](www.hard-light.com), FreeSpace 2 community.
 
 ###To-do list :###
