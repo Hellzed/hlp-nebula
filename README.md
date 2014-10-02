@@ -16,7 +16,7 @@ On **Ubuntu**, use command :
 
 ## Install
 
-1. If you have not done it yet, **download** the [latest version of HLP-Nebula](https://github.com/Hellzed/hlp-nebula).
+1. If you have not done it yet, **download** the [latest version of **HLP-Nebula**](https://github.com/Hellzed/hlp-nebula).
 2. **Move** its root ```Symfony``` folder directly to your **Apache2 host folder**, and select ```Symfony``` as your **current working directory**.
 3. **Rename** ```app/config/parameters.yml.dist``` to ```app/config/parameters.yml```
 4. **Edit** ```app/config/parameters.yml``` and change these settings :

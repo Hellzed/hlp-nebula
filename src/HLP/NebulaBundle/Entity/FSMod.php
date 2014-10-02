@@ -29,6 +29,7 @@ namespace HLP\NebulaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * FSMod
@@ -437,6 +438,21 @@ class FSMod
     return $this->nbBuilds;
   }
   
-  
+  /**
+   * @Assert\Callback
+   */
+  public function forbiddenWords(ExecutionContextInterface $context)
+  {
+    $forbiddenWords = Array('mods','profile','activity');
+    
+    if(in_array($this->modId, $forbiddenWords)) {
+      $context->addViolationAt(
+          'modId',
+          'Mod ID is a forbidden word ("'.$this->modId.'") !',
+          array(),
+          null
+          );
+     }
+  }
     
 }

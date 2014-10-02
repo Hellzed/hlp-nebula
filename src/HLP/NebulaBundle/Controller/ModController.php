@@ -125,7 +125,7 @@ class ModController extends Controller
       
       $request->getSession()
               ->getFlashBag()
-              ->add('success', "New branch <strong>".$branch->getName()."</strong> successfully created.");
+              ->add('success', 'New branch <strong>"'.$branch->getName().'" (id: '.$branch->getBranchId().')</strong> successfully created.');
 
       return $this->redirect($this->generateUrl('hlp_nebula_branch', array(
         'owner'  => $owner,
@@ -164,7 +164,7 @@ class ModController extends Controller
       
       $request->getSession()
               ->getFlashBag()
-              ->add('success', "Mod <strong>".$mod->getTitle()."</strong> successfully edited.");
+              ->add('success', 'Mod <strong>"'.$mod->getTitle().'" (id: '.$mod->getModId().')</strong> has been successfully edited.');
 
       return $this->redirect($referURL);
     }
@@ -200,7 +200,7 @@ class ModController extends Controller
 
       $request->getSession()
               ->getFlashBag()
-              ->add('success', "Mod <strong>".$mod->getTitle()."</strong> has been deleted.");
+              ->add('success', 'Mod <strong>"'.$mod->getTitle().'" (id: '.$mod->getModId().')</strong> has been deleted.');
       
       return $this->redirect($this->generateUrl('hlp_nebula_owner', array('owner' => $owner)));
     }

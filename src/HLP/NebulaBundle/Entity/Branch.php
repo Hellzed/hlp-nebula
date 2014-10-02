@@ -29,6 +29,7 @@ namespace HLP\NebulaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Branch
@@ -283,5 +284,22 @@ class Branch
     }
 
     return $this->nbBuilds;
+  }
+  
+  /**
+   * @Assert\Callback
+   */
+  public function forbiddenWords(ExecutionContextInterface $context)
+  {
+    $forbiddenWords = Array('branches','details','activity');
+    
+    if(in_array($this->branchId, $forbiddenWords)) {
+      $context->addViolationAt(
+          'branchId',
+          'Branch ID is a forbidden word ("'.$this->branchId.'") !',
+          array(),
+          null
+          );
+     }
   }
 }

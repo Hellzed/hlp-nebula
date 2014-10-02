@@ -138,13 +138,20 @@ class BranchController extends Controller
       
       $request->getSession()
               ->getFlashBag()
-              ->add('success', "New build <strong>version ".$build->getVersion()."</strong> successfully created.");
+              ->add('success', 'New build <strong>version '.$build->getVersion().'</strong> successfully created.');
 
       return $this->redirect($this->generateUrl('hlp_nebula_branch', array(
         'owner'  => $owner,
         'mod'    => $mod,
         'branch' => $branch
       )));
+    }
+    
+    if ((!$form->isValid()) && $request->isMethod('POST') )
+    {
+      $request->getSession()
+              ->getFlashBag()
+              ->add('error', '<strong>Invalid data !</strong> Please check this form again.');
     }
     
     return $this->render('HLPNebulaBundle:AdvancedUI:new_build.html.twig', array(
@@ -179,7 +186,7 @@ class BranchController extends Controller
       
       $request->getSession()
               ->getFlashBag()
-              ->add('success', "Branch <strong>".$branch->getName()."</strong> successfully edited.");
+              ->add('success', 'Branch <strong>"'.$branch->getName().'" (id: '.$branch->getBranchId().')</strong> has been successfully edited.');
 
       return $this->redirect($referURL);
     }
@@ -219,7 +226,7 @@ class BranchController extends Controller
 
       $request->getSession()
               ->getFlashBag()
-              ->add('success', "Branch <strong>".$branch->getName()."</strong> has been deleted.");
+              ->add('success', 'Branch <strong>"'.$branch->getName().'" (id: '.$branch->getBranchId().')</strong> has been deleted.');
       
       return $this->redirect($this->generateUrl('hlp_nebula_mod', array(
         'mod'   => $mod,

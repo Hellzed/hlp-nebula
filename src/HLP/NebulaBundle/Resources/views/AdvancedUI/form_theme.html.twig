@@ -2,6 +2,16 @@
 
 {# Generic fields #}
 
+{% block form_errors -%}
+  {% if errors|length > 0 -%}
+  <ul>
+    {%- for error in errors -%}
+    <li class="text-danger">{{ error.message }}</li>
+    {%- endfor -%}
+  </ul>
+  {%- endif %}
+{%- endblock form_errors %}
+
 {% block form_row %}
     {% spaceless %}
     <div class="form-group">
@@ -231,7 +241,7 @@
             <div class="form-group">
                 {{ form_label(form.isArchive, "Unpack") }}
                 {{ form_errors(form.isArchive) }}
-                &nbsp;{{ form_widget(form.isArchive) }}<p class="help-block">Disable this to keep the client from unpacking a downloaded archive. <em>(example : an direct VP file download)</em></p>
+                &nbsp;{{ form_widget(form.isArchive) }}<p class="help-block">Disable this to keep the client from unpacking a downloaded archive. <em>(example : a direct VP file download)</em></p>
             </div>
             <hr class="card-hr"/>
             <div class="text-center">

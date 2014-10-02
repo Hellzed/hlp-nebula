@@ -4,6 +4,7 @@
 
 {{ form_start(form, {'attr': {'class': 'mainForm row'}}) }}
   {{ form_errors(form) }}
+  {% include "HLPNebulaBundle:AdvancedUI:flashbox.html.twig" %}
   <h4><span class="glyphicon glyphicon-asterisk"></span> Build details</h4>
   <hr/>
   <div class="form-group">

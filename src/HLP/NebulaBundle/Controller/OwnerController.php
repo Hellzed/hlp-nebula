@@ -100,7 +100,7 @@ class OwnerController extends Controller
       
       $request->getSession()
               ->getFlashBag()
-              ->add('success', "New mod <strong>".$mod->getTitle()."</strong> successfully created.");
+              ->add('success', 'New mod <strong>"'.$mod->getTitle().'" (id: '.$mod->getModId().')</strong> successfully created.');
 
       return $this->redirect($this->generateUrl('hlp_nebula_mod', array(
         'owner' => $owner,

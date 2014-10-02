@@ -121,6 +121,13 @@ class BuildController extends Controller
       )));
     }
     
+    if ((!$form->isValid()) && $request->isMethod('POST') )
+    {
+      $request->getSession()
+              ->getFlashBag()
+              ->add('error', '<strong>Invalid data !</strong> Please check this form again.');
+    }
+    
     return $this->render('HLPNebulaBundle:AdvancedUI:copy_and_update_build.html.twig', array(
       'owner'  => $owner,
       'mod'    => $mod,

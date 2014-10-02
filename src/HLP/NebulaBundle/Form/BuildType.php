@@ -48,6 +48,7 @@ class BuildType extends AbstractType
             ->add('folder',             'text',     array('required' => false))
             ->add('packages',           'collection', array(
                     'type'            => new PackageType(),
+                    'error_bubbling'  => false,
                     'allow_add'       => true,
                     'allow_delete'    => true,
                     'prototype'       => true,
@@ -56,6 +57,7 @@ class BuildType extends AbstractType
                 )
             ->add('actions',            'collection', array(
                     'type'            => new ActionType(),
+                    'error_bubbling'  => false,
                     'allow_add'       => true,
                     'allow_delete'    => true,
                     'prototype'       => true,

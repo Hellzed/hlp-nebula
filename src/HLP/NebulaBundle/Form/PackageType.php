@@ -50,6 +50,7 @@ class PackageType extends AbstractType
                 )
             ->add('envVars',        'collection', array(
                     'type'            => new EnvVarType(),
+                    'error_bubbling'  => false,
                     'allow_add'       => true,
                     'allow_delete'    => true,
                     'by_reference'    => false,
@@ -58,6 +59,7 @@ class PackageType extends AbstractType
                 )
             ->add('dependencies',   'collection', array(
                     'type'            => new DependencyType(),
+                    'error_bubbling'  => false,
                     'allow_add'       => true,
                     'allow_delete'    => true,
                     'by_reference'    => false,
@@ -66,6 +68,7 @@ class PackageType extends AbstractType
                 )
             ->add('files',          'collection', array(
                     'type'            => new FileType(),
+                    'error_bubbling'  => false,
                     'allow_add'       => true,
                     'allow_delete'    => true,
                     'by_reference'    => false,

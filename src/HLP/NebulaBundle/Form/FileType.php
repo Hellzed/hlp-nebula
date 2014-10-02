@@ -42,6 +42,7 @@ class FileType extends AbstractType
             ->add('filename',   'text')
             ->add('dest',       'text',         array('required' => false))
             ->add('urls',       'collection',   array('type'            => 'url',
+                                                      'error_bubbling'  => false,
                                                       'allow_add'       => true,
                                                       'allow_delete'    => true,
                                                       'prototype'       => true,
