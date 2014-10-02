@@ -64,10 +64,10 @@ class OwnerController extends Controller
     $modsList = array_slice($modsAll, ($page-1)*$modsPerPage, $modsPerPage);
     
     return $this->render('HLPNebulaBundle:AdvancedUI:modder_mods.html.twig', array(
-      'owner' => $owner,
+      'owner'    => $owner,
       'modsList' => $modsList,
-      'page' => $page,
-      'nbPages' => $nbPages));
+      'page'     => $page,
+      'nbPages'  => $nbPages));
   }
   
   public function profileAction(OwnerInterface $owner)
@@ -90,19 +90,27 @@ class OwnerController extends Controller
     $mod->setOwner($owner);
     $form = $this->createForm(new FSModType(), $mod);
     
-    if ($form->handleRequest($request)->isValid()) {
-      $em = $this->getDoctrine()->getManager();
+    if ($form->handleRequest($request)->isValid())
+    {
+      $em = $this->getDoctrine()
+                 ->getManager();
+                 
       $em->persist($mod);
       $em->flush();
       
-      $request->getSession()->getFlashBag()->add('success', "New mod <strong>".$mod->getTitle()."</strong> successfully created.");
+      $request->getSession()
+              ->getFlashBag()
+              ->add('success', "New mod <strong>".$mod->getTitle()."</strong> successfully created.");
 
-      return $this->redirect($this->generateUrl('hlp_nebula_mod', array('owner' => $owner->getNameCanonical(), 'mod' => $mod->getModId())));
+      return $this->redirect($this->generateUrl('hlp_nebula_mod', array(
+        'owner' => $owner,
+        'mod'   => $mod
+      )));
     }
     
     return $this->render('HLPNebulaBundle:AdvancedUI:new_mod.html.twig', array(
       'owner' => $owner,
-      'form' => $form->createView()
+      'form'  => $form->createView()
     ));
   }
 }

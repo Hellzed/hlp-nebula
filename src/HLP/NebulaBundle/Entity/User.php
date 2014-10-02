@@ -67,6 +67,11 @@ class User extends BaseUser implements OwnerInterface
       $this->mods = new \Doctrine\Common\Collections\ArrayCollection();
       $this->joined = new \Datetime;
   }
+  
+  public function __toString()
+  {
+      return $this->usernameCanonical;
+  }
 
   /**
    * Get id

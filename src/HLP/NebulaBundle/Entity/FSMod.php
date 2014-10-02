@@ -282,6 +282,11 @@ class FSMod
         $this->branches = new \Doctrine\Common\Collections\ArrayCollection();
         $this->firstRelease = new \Datetime();
     }
+    
+    public function __toString()
+    {
+        return $this->modId;
+    }
 
     /**
      * Add branches

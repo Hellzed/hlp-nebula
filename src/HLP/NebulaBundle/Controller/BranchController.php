@@ -44,7 +44,11 @@ class BranchController extends Controller
 {
   public function indexAction($owner, $mod, $branch)
   {
-    return $this->redirect($this->generateUrl('hlp_nebula_branch_builds', array('owner' => $owner, 'mod' => $mod, 'branch' => $branch)), 301);
+    return $this->redirect($this->generateUrl('hlp_nebula_branch_builds', array(
+      'owner'  => $owner,
+      'mod'    => $mod,
+      'branch' => $branch
+    )), 301);
   }
   
   //IMPLICIT : string to Branch parameter conversion, with custom ParamConverter
@@ -72,12 +76,12 @@ class BranchController extends Controller
     $buildsList = array_slice($buildsAll, ($page-1)*$buildsPerPage, $buildsPerPage);
     
     return $this->render('HLPNebulaBundle:AdvancedUI:branch_builds.html.twig', array(
-      'owner' => $owner,
-      'mod' => $mod,
-      'branch' => $branch,
+      'owner'      => $owner,
+      'mod'        => $mod,
+      'branch'     => $branch,
       'buildsList' => $buildsList,
-      'page' => $page,
-      'nbPages' => $nbPages
+      'page'       => $page,
+      'nbPages'    => $nbPages
     ));
   }
   
@@ -89,7 +93,11 @@ class BranchController extends Controller
     $session = new Session();
     $session->set('branchRefer', 'fromDetails');
     
-    return $this->render('HLPNebulaBundle:AdvancedUI:branch_details.html.twig', array('owner' => $owner, 'mod' => $mod, 'branch' => $branch));
+    return $this->render('HLPNebulaBundle:AdvancedUI:branch_details.html.twig', array(
+      'owner'  => $owner,
+      'mod'    => $mod,
+      'branch' => $branch
+    ));
   }
   
   public function activityAction(Branch $branch)
@@ -97,7 +105,11 @@ class BranchController extends Controller
     $mod = $branch->getMod();
     $owner = $mod->getOwner();
     
-    return $this->render('HLPNebulaBundle:AdvancedUI:branch_activity.html.twig', array('owner' => $owner, 'mod' => $mod, 'branch' => $branch));
+    return $this->render('HLPNebulaBundle:AdvancedUI:branch_activity.html.twig', array(
+      'owner'  => $owner,
+      'mod'    => $mod,
+      'branch' => $branch
+    ));
   }
   
   public function newBuildAction(Request $request, Branch $branch)
@@ -116,18 +128,27 @@ class BranchController extends Controller
 
     $form->handleRequest($request);
 
-    if ($form->isValid()) {
-      $em = $this->getDoctrine()->getManager();
+    if ($form->isValid())
+    {
+      $em = $this->getDoctrine()
+                 ->getManager();
+                 
       $em->persist($build);
       $em->flush();
       
-      $request->getSession()->getFlashBag()->add('success', "New build <strong>version ".$build->getVersion()."</strong> successfully created.");
+      $request->getSession()
+              ->getFlashBag()
+              ->add('success', "New build <strong>version ".$build->getVersion()."</strong> successfully created.");
 
-      return $this->redirect($this->generateUrl('hlp_nebula_branch', array('owner' => $owner, 'mod' => $mod->getModId(), 'branch' => $branch->getBranchId())));
+      return $this->redirect($this->generateUrl('hlp_nebula_branch', array(
+        'owner'  => $owner,
+        'mod'    => $mod,
+        'branch' => $branch
+      )));
     }
     
     return $this->render('HLPNebulaBundle:AdvancedUI:new_build.html.twig', array(
-      'owner' => $owner,
+      'owner'  => $owner,
       'mod'    => $mod,
       'branch' => $branch,
       'form'   => $form->createView()
@@ -151,20 +172,23 @@ class BranchController extends Controller
 
     if ($form->handleRequest($request)->isValid()) {
       
-      $em = $this->getDoctrine()->getManager();
+      $em = $this->getDoctrine()
+                 ->getManager();
 
       $em->flush();
       
-      $request->getSession()->getFlashBag()->add('success', "Branch <strong>".$branch->getName()."</strong> successfully edited.");
+      $request->getSession()
+              ->getFlashBag()
+              ->add('success', "Branch <strong>".$branch->getName()."</strong> successfully edited.");
 
       return $this->redirect($referURL);
     }
 
     return $this->render('HLPNebulaBundle:AdvancedUI:edit_branch.html.twig', array(
-      'owner' => $owner,
-      'mod' => $mod,
-      'branch' => $branch,
-      'form' => $form->createView(),
+      'owner'    => $owner,
+      'mod'      => $mod,
+      'branch'   => $branch,
+      'form'     => $form->createView(),
       'referURL' => $referURL
     ));
   }
@@ -182,23 +206,32 @@ class BranchController extends Controller
     $refer = $session->get('branchRefer');
     $referURL = $this->getReferURL($refer, $owner, $mod, $branch);
 
-    $form = $this->createFormBuilder()->getForm();
+    $form = $this->createFormBuilder()
+                 ->getForm();
 
-    if ($form->handleRequest($request)->isValid()) {
-      $em = $this->getDoctrine()->getManager();
+    if ($form->handleRequest($request)->isValid())
+    {
+      $em = $this->getDoctrine()
+                 ->getManager();
+                 
       $em->remove($branch);
       $em->flush();
 
-      $request->getSession()->getFlashBag()->add('success', "Branch <strong>".$branch->getName()."</strong> has been deleted.");
+      $request->getSession()
+              ->getFlashBag()
+              ->add('success', "Branch <strong>".$branch->getName()."</strong> has been deleted.");
       
-      return $this->redirect($this->generateUrl('hlp_nebula_mod', array('mod' => $mod->getModId(), 'owner' => $owner->getNameCanonical())));
+      return $this->redirect($this->generateUrl('hlp_nebula_mod', array(
+        'mod'   => $mod,
+        'owner' => $owner
+      )));
     }
 
     return $this->render('HLPNebulaBundle:AdvancedUI:delete_branch.html.twig', array(
-      'owner' => $owner,
-      'mod' => $mod,
-      'branch' => $branch,
-      'form' => $form->createView(),
+      'owner'    => $owner,
+      'mod'      => $mod,
+      'branch'   => $branch,
+      'form'     => $form->createView(),
       'referURL' => $referURL
     ));
   }
@@ -207,11 +240,18 @@ class BranchController extends Controller
   {
     if($refer == 'fromDetails')
     {
-      $referURL = $this->generateUrl('hlp_nebula_branch_details', array('branch' => $branch->getBranchId(), 'mod' => $mod->getModId(), 'owner' => $owner->getNameCanonical()));
+      $referURL = $this->generateUrl('hlp_nebula_branch_details', array(
+        'branch' => $branch,
+        'mod'    => $mod,
+        'owner'  => $owner
+      ));
     }
     else
     {
-      $referURL = $this->generateUrl('hlp_nebula_mod_branches', array('mod' => $mod->getModId(), 'owner' => $owner->getNameCanonical()));
+      $referURL = $this->generateUrl('hlp_nebula_mod_branches', array(
+        'mod'   => $mod,
+        'owner' => $owner
+      ));
     }
     
     return $referURL;

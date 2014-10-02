@@ -42,7 +42,10 @@ class ModController extends Controller
 {
   public function indexAction($owner, $mod)
   {
-    return $this->redirect($this->generateUrl('hlp_nebula_mod_branches', array('owner' => $owner, 'mod' => $mod)), 301);
+    return $this->redirect($this->generateUrl('hlp_nebula_mod_branches', array(
+      'owner' => $owner,
+      'mod'   => $mod
+    )), 301);
   }
   
   public function branchesAction(FSMod $mod, $page)
@@ -67,11 +70,12 @@ class ModController extends Controller
     $branchesList = array_slice($branchesAll, ($page-1)*$branchesPerPage, $branchesPerPage);
     
     return $this->render('HLPNebulaBundle:AdvancedUI:mod_branches.html.twig', array(
-      'owner' => $owner,
-      'mod' => $mod,
+      'owner'        => $owner,
+      'mod'          => $mod,
       'branchesList' => $branchesList,
-      'page' => $page,
-      'nbPages' => $nbPages));
+      'page'         => $page,
+      'nbPages'      => $nbPages
+    ));
   }
   
   public function detailsAction(FSMod $mod)
@@ -81,14 +85,20 @@ class ModController extends Controller
     $session = new Session();
     $session->set('modRefer', 'fromDetails');
   
-    return $this->render('HLPNebulaBundle:AdvancedUI:mod_details.html.twig', array('owner' => $owner, 'mod' => $mod));
+    return $this->render('HLPNebulaBundle:AdvancedUI:mod_details.html.twig', array(
+      'owner' => $owner,
+      'mod'   => $mod
+    ));
   }
   
   public function activityAction(FSMod $mod)
   {
     $owner = $mod->getOwner();
   
-    return $this->render('HLPNebulaBundle:AdvancedUI:mod_activity.html.twig', array('owner' => $owner, 'mod' => $mod));
+    return $this->render('HLPNebulaBundle:AdvancedUI:mod_activity.html.twig', array(
+      'owner' => $owner,
+      'mod'   => $mod
+    ));
   }
   
   public function newBranchAction(Request $request, FSMod $mod)
@@ -105,18 +115,27 @@ class ModController extends Controller
 
     $form->handleRequest($request);
 
-    if ($form->isValid()) {
-      $em = $this->getDoctrine()->getManager();
+    if ($form->isValid())
+    {
+      $em = $this->getDoctrine()
+                 ->getManager();
+                 
       $em->persist($branch);
       $em->flush();
       
-      $request->getSession()->getFlashBag()->add('success', "New branch <strong>".$branch->getName()."</strong> successfully created.");
+      $request->getSession()
+              ->getFlashBag()
+              ->add('success', "New branch <strong>".$branch->getName()."</strong> successfully created.");
 
-      return $this->redirect($this->generateUrl('hlp_nebula_branch', array('owner' => $owner->getNameCanonical(), 'mod' => $mod->getModId(), 'branch' => $branch->getBranchId())));
+      return $this->redirect($this->generateUrl('hlp_nebula_branch', array(
+        'owner'  => $owner,
+        'mod'    => $mod,
+        'branch' => $branch
+      )));
     }
     
     return $this->render('HLPNebulaBundle:AdvancedUI:new_branch.html.twig', array(
-      'owner' => $owner,
+      'owner'  => $owner,
       'mod'    => $mod,
       'form'   => $form->createView()
     ));
@@ -136,22 +155,24 @@ class ModController extends Controller
 
     $form = $this->createForm(new FSModEditType(), $mod);
 
-    if ($form->handleRequest($request)->isValid()) {
-      //$request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
+    if ($form->handleRequest($request)->isValid())
+    {
 
       $em = $this->getDoctrine()->getManager();
 
       $em->flush();
       
-      $request->getSession()->getFlashBag()->add('success', "Mod <strong>".$mod->getTitle()."</strong> successfully edited.");
+      $request->getSession()
+              ->getFlashBag()
+              ->add('success', "Mod <strong>".$mod->getTitle()."</strong> successfully edited.");
 
       return $this->redirect($referURL);
     }
 
     return $this->render('HLPNebulaBundle:AdvancedUI:edit_mod.html.twig', array(
-      'owner' => $owner,
-      'mod' => $mod,
-      'form' => $form->createView(),
+      'owner'    => $owner,
+      'mod'      => $mod,
+      'form'     => $form->createView(),
       'referURL' => $referURL
     ));
   }
@@ -170,20 +191,24 @@ class ModController extends Controller
 
     $form = $this->createFormBuilder()->getForm();
 
-    if ($form->handleRequest($request)->isValid()) {
-      $em = $this->getDoctrine()->getManager();
+    if ($form->handleRequest($request)->isValid())
+    {
+      $em = $this->getDoctrine()
+                 ->getManager();
       $em->remove($mod);
       $em->flush();
 
-      $request->getSession()->getFlashBag()->add('success', "Mod <strong>".$mod->getTitle()."</strong> has been deleted.");
+      $request->getSession()
+              ->getFlashBag()
+              ->add('success', "Mod <strong>".$mod->getTitle()."</strong> has been deleted.");
       
-      return $this->redirect($this->generateUrl('hlp_nebula_owner', array('owner' => $owner->getNameCanonical())));
+      return $this->redirect($this->generateUrl('hlp_nebula_owner', array('owner' => $owner)));
     }
 
     return $this->render('HLPNebulaBundle:AdvancedUI:delete_mod.html.twig', array(
-      'owner' => $owner,
-      'mod' => $mod,
-      'form' => $form->createView(),
+      'owner'    => $owner,
+      'mod'      => $mod,
+      'form'     => $form->createView(),
       'referURL' => $referURL
     ));
   }
@@ -192,11 +217,14 @@ class ModController extends Controller
   {
     if($refer == 'fromDetails')
     {
-      $referURL = $this->generateUrl('hlp_nebula_mod_details', array('mod' => $mod->getModId(), 'owner' => $owner->getNameCanonical()));
+      $referURL = $this->generateUrl('hlp_nebula_mod_details', array(
+        'mod'   => $mod,
+        'owner' => $owner
+      ));
     }
     else
     {
-      $referURL = $this->generateUrl('hlp_nebula_owner_mods', array('owner' => $owner->getNameCanonical()));
+      $referURL = $this->generateUrl('hlp_nebula_owner_mods', array('owner' => $owner));
     }
     
     return $referURL;

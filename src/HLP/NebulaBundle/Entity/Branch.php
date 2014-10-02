@@ -230,6 +230,11 @@ class Branch
     {
         $this->builds = new \Doctrine\Common\Collections\ArrayCollection();
     }
+    
+    public function __toString()
+    {
+      return $this->branchId;
+    }
 
     /**
      * Add builds

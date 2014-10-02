@@ -481,6 +481,11 @@ class Build
         $this->actions = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
+    public function __toString()
+    {
+      return $this->getVersion();
+    }
+    
     public function __clone()
     {
          if ($this->id) {
