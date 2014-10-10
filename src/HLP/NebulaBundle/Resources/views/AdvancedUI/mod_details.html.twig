@@ -2,7 +2,9 @@
 
 {% block mod_tab %}
 <h5><span class="glyphicon glyphicon-link"></span> Unique mod URL (redirects to the latest build in the default branch)</h5>
-<input class="form-control" type="text" value="{# {{ url('hlp_nebula_fs2mod', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': '1.2.3'}) }}.json #}" readonly>
+{% if mod.nbBranches == 0 %}<p class="text-danger">&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-warning-sign"></span>&nbsp;This mod has no available branche.</p>{% endif %}
+{% if mod.nbBuilds == 0 %}<p class="text-danger">&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-warning-sign"></span>&nbsp;This mod has no available build.</p>{% endif %}
+<input class="form-control" type="text" value="{{ url('hlp_nebula_fs2mod', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': 'default', 'build': 'current'}) }}.json" readonly>
 <br/>
 <h5><span class="glyphicon glyphicon-paperclip"></span> Mod metadata</h5>
 <div class="well">
@@ -19,10 +21,10 @@
     <p class="col-xs-2 text-right"><strong>Description&nbsp;:</strong></p><p class="col-xs-10">{{ mod.description }}</p>
   </div>
   <div class="row">
-    <p class="col-xs-2 text-right"><strong>Features&nbsp;:</strong></p><p class="col-xs-10">N/A</p>
+    <p class="col-xs-2 text-right"><strong>Features&nbsp;:</strong></p><p class="col-xs-10">{% for feature in mod.features %}> {{ feature }}</br>{% else %}N/A{% endfor %}</p>
   </div>
   <div class="row">
-    <p class="col-xs-2 text-right"><strong>Authors&nbsp;:</strong></p><p class="col-xs-10">N/A</p>
+    <p class="col-xs-2 text-right"><strong>Authors&nbsp;:</strong></p><p class="col-xs-10">{% for author in mod.authors %}> {{ author.name }}{% if author.website != 'null' %} ( <a href="{{ author.website }}">{{ author.website }}</a> ){% endif %}</br>{% else %}N/A{% endfor %}</p>
   </div>
 </div>
 {% if is_granted('add', owner) %}

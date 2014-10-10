@@ -45,7 +45,7 @@
             <!--<li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_homepage' %}active{% endif %}"><a href="{{ path('hlp_nebula_homepage') }}">Home</a></li>!-->
             <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_get_started' %}active{% endif %}"><a href="{{ path('hlp_nebula_get_started') }}">Get started</a></li>
             <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_all_mods' %}active{% endif %}"><a href="{{ path('hlp_nebula_all_mods') }}">Mods</a></li>
-            <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_all_modders' %}active{% endif %}"><a href="{{ path('hlp_nebula_all_owners') }}">Modders & Teams</a></li>
+            <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_all_owners' %}active{% endif %}"><a href="{{ path('hlp_nebula_all_owners') }}">Modders & Teams</a></li>
             <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_all_activity' %}active{% endif %}"><a href="{{ path('hlp_nebula_all_activity') }}">Activity</a></li>
           </ul>
           {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}

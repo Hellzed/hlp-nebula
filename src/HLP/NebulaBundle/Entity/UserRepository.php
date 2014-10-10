@@ -56,4 +56,16 @@ class UserRepository extends EntityRepository
     return $qb->getQuery()
               ->getOneOrNullResult();
   }
+  
+  public function findAllUsersWithMods()
+  {
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('i')
+       ->from('HLPNebulaBundle:User', 'i')
+       ->leftJoin('i.mods', 'm')
+       ->addSelect('m');
+       
+    return $qb->getQuery()
+              ->getResult();
+  }
 }

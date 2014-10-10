@@ -52,6 +52,10 @@ class BranchConverter implements ParamConverterInterface
     $ownerNameCanonical = $request->attributes->get('owner');
     $modId = $request->attributes->get('mod');
     $branchId = $request->attributes->get('branch');
+    if($branchId == 'default')
+    {
+      $branchId = null;
+    }
     $branch = $this->repository->findSingleBranch($ownerNameCanonical, $modId, $branchId);
     
     if (null === $branch) {

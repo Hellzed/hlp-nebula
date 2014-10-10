@@ -1,0 +1,9 @@
+{% extends "HLPNebulaBundle:AdvancedUI:process.html.twig" %}
+
+{% block process_widget %}
+  <br/>
+  <div class="mainForm" id="progress-container">
+    
+  </div>
+  <div class="mainForm" style="margin-top:15px;"><hr/><a id="finaliseButton" href="{{ path('hlp_nebula_process_finalise', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}" class="btn btn-primary" disabled>Finalise build</a></div>
+{% endblock %}

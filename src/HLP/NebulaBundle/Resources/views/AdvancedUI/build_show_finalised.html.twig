@@ -1,0 +1,6 @@
+{% extends "HLPNebulaBundle:AdvancedUI:build.html.twig" %}
+
+{% block build_tab %}
+    <h5><span class="glyphicon glyphicon-paperclip"></span> Finalised JSON configuration</h5>
+    <pre>{% if data != 'null' %}{{ data|raw }}{% else %}Build failed, no generated data !{% endif %}</pre>
+{% endblock %}

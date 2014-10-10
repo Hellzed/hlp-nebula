@@ -42,7 +42,6 @@ class BranchType extends AbstractType
             ->add('branchId',   'text')
             ->add('name',       'text')
             ->add('notes',      'textarea',   array('required' => false))
-            ->add('isDefault',  'checkbox',   array('required' => false))
         ;
     }
     

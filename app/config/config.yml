@@ -33,7 +33,7 @@ twig:
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    bundles:        [ ]
+    bundles:        ["HLPNebulaBundle" ]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
@@ -74,3 +74,9 @@ fos_user:
     db_driver:     orm                        
     firewall_name: main                       
     user_class:    HLP\NebulaBundle\Entity\User
+    registration:
+        confirmation:
+            enabled:    true
+    from_email:
+        address:        noreply@hlp-nebula.org
+        sender_name:    Nebula

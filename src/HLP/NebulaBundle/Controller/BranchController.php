@@ -139,11 +139,12 @@ class BranchController extends Controller
       $request->getSession()
               ->getFlashBag()
               ->add('success', 'New build <strong>version '.$build->getVersion().'</strong> successfully created.');
-
-      return $this->redirect($this->generateUrl('hlp_nebula_branch', array(
+              
+      return $this->redirect($this->generateUrl('hlp_nebula_process', array(
         'owner'  => $owner,
         'mod'    => $mod,
-        'branch' => $branch
+        'branch' => $branch,
+        'build'  => $build
       )));
     }
     

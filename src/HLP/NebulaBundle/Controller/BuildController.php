@@ -29,6 +29,7 @@ namespace HLP\NebulaBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -61,9 +62,27 @@ class BuildController extends Controller
                         ->get('hlpnebula.json_builder');
                         
     $data = $jsonBuilder->createFromBuild($build);
-    $data = Array('mods' => Array($data));
+    //$data = Array('mods' => Array($data));
     
-    return $this->render('HLPNebulaBundle:AdvancedUI:build.html.twig', array(
+    return $this->render('HLPNebulaBundle:AdvancedUI:build_show.html.twig', array(
+      'owner'  => $owner,
+      'mod'    => $mod,
+      'branch' => $branch,
+      'build'  => $build,
+      'data'   => $data
+    ));
+  }
+  
+  public function showFinalisedAction(Build $build)
+  {
+    $branch = $build->getBranch();
+    $mod = $branch->getMod();
+    $owner = $mod->getOwner();
+                        
+    $data = json_encode(json_decode($build->getGeneratedJSON()), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    //$data = Array('mods' => Array($data));
+    
+    return $this->render('HLPNebulaBundle:AdvancedUI:build_show_finalised.html.twig', array(
       'owner'  => $owner,
       'mod'    => $mod,
       'branch' => $branch,
@@ -74,14 +93,16 @@ class BuildController extends Controller
   
   public function rawAction(Build $build)
   {
-    $jsonBuilder = $this->container
-                        ->get('hlpnebula.json_builder');
-                        
-    $data = $jsonBuilder->createFromBuild($build);
-    $data = Array('mods' => Array($data));
+  
+    if (null == $build->getGeneratedJSON() && $build->getIsFailed()) {
+        throw new NotFoundHttpException("No JSON data for this build, validation failed.");
+    }
     
-    $response = new JsonResponse();
-    $response->setData($data);
+    if (null == $build->getGeneratedJSON() && !$build->getIsFailed()) {
+        throw new NotFoundHttpException("No JSON data for this build, validation not started.");
+    }
+    
+    $response = new Response($build->getGeneratedJSON());
     $response->headers
              ->set('Content-Type', 'application/json');
     
@@ -112,12 +133,15 @@ class BuildController extends Controller
       $em->persist($newBuild);
       $em->flush();
       
-      $request->getSession()->getFlashBag()->add('success', "New build <strong>version ".$newBuild->getVersion()."</strong> successfully created from <strong>version ".$build->getVersion()."</strong>.");
+      $request->getSession()
+              ->getFlashBag()
+              ->add('success', "New build <strong>version ".$newBuild->getVersion()."</strong> successfully created from <strong>version ".$build->getVersion()."</strong>.");
 
-      return $this->redirect($this->generateUrl('hlp_nebula_branch', array(
+      return $this->redirect($this->generateUrl('hlp_nebula_process', array(
         'owner'  => $owner,
         'mod'    => $mod,
-        'branch' => $branch
+        'branch' => $branch,
+        'build'  => $newBuild
       )));
     }
     
@@ -135,6 +159,191 @@ class BuildController extends Controller
       'build'  => $build,
       'form'   => $form->createView()
     ));
+  }
+  
+  public function processAction(Build $build)
+  {
+    $branch = $build->getBranch();
+    $mod = $branch->getMod();
+    $owner = $mod->getOwner();
+    
+    if (false === $this->get('security.context')->isGranted('add', $owner)) {
+        throw new AccessDeniedException('Unauthorised access!');
+    }
+    
+    if(($build->getIsFailed() == false) && ($build->getIsReady() == false))
+    {
+      if($build->getConverterTicket() == null)
+      {
+        $jsonBuilder = $this->container
+                            ->get('hlpnebula.json_builder');
+        
+        $data = $jsonBuilder->createFromBuild($build, false);
+        $data = json_encode(Array('mods' => Array($data)));
+        
+        $ks = $this->container
+                   ->get('hlpnebula.knossos_server_connect');
+                   
+        $webhook = $this->generateUrl('hlp_nebula_process_finalise', array(
+            'owner'  => $owner,
+            'mod'    => $mod,
+            'branch' => $branch,
+            'build'  => $build
+        ), true);
+        
+        $ksresponse = json_decode($ks->sendData($data, $webhook));
+        
+        
+        if($ksresponse)
+        {
+          $build->setConverterToken($ksresponse->token);
+          $build->setConverterTicket($ksresponse->ticket);
+          
+          $em = $this->getDoctrine()
+                     ->getManager();
+                     
+          $em->flush();
+        }
+        else
+        {
+          return $this->render('HLPNebulaBundle:AdvancedUI:process_error.html.twig', array(
+            'owner'  => $owner,
+            'mod'    => $mod,
+            'branch' => $branch,
+            'build'  => $build,
+          ));
+        }
+      }
+      
+      $ksticket = $build->getConverterTicket();
+      
+      return $this->render('HLPNebulaBundle:AdvancedUI:process_build.html.twig', array(
+        'owner'  => $owner,
+        'mod'    => $mod,
+        'branch' => $branch,
+        'build'  => $build,
+        'ksticket' => $ksticket
+      ));
+    }
+    
+    return $this->redirect($this->generateUrl('hlp_nebula_build', array(
+        'owner'  => $owner,
+        'mod'    => $mod,
+        'branch' => $branch,
+        'build'  => $build
+    )));
+  }
+  
+  public function processFinaliseAction(Request $request, Build $build)
+  {
+    $branch = $build->getBranch();
+    $mod = $branch->getMod();
+    $owner = $mod->getOwner();
+    
+    if(($build->getIsFailed() == false) && ($build->getIsReady() == false))
+    {
+      if($build->getConverterTicket() != null)
+      {
+        $ks = $this->container
+                   ->get('hlpnebula.knossos_server_connect');
+        
+        $ksresponse = json_decode($ks->retrieveData($build->getConverterTicket(), $build->getConverterToken()));
+        
+        if($ksresponse)
+        {
+          if($ksresponse->finished == true)
+          {
+            if($ksresponse->success == true)
+            {
+              $build->setGeneratedJSON($ksresponse->json);
+              $build->setIsReady(true);
+              $request->getSession()
+                      ->getFlashBag()
+                      ->add('success', "Build <strong>version ".$build->getVersion()."</strong> has been successfully validated.");
+            }
+            else
+            {
+              $build->setIsFailed(true);
+              $request->getSession()
+                      ->getFlashBag()
+                      ->add('warning', "Build <strong>version ".$build->getVersion()."</strong> validation has failed.");
+            }
+            
+            $em = $this->getDoctrine()
+                       ->getManager();
+                       
+            $em->flush();
+          }
+          else
+          {
+            return $this->redirect($this->generateUrl('hlp_nebula_process', array(
+                'owner'  => $owner,
+                'mod'    => $mod,
+                'branch' => $branch,
+                'build'  => $build
+            )));
+          }
+        }
+        else
+        {
+          return $this->render('HLPNebulaBundle:AdvancedUI:process_error.html.twig', array(
+            'owner'  => $owner,
+            'mod'    => $mod,
+            'branch' => $branch,
+            'build'  => $build,
+          ));
+        }
+      }
+    }
+    
+    if (($build->getIsFailed() == true) && ($request->getMethod() == 'POST'))
+    {
+      $response = new Response(json_encode(array('cancelled' => true)));
+      $response->headers
+               ->set('Content-Type', 'application/json');
+               
+      return $response;
+    }
+    
+    return $this->redirect($this->generateUrl('hlp_nebula_build', array(
+        'owner'  => $owner,
+        'mod'    => $mod,
+        'branch' => $branch,
+        'build'  => $build
+    )));
+  }
+  
+  public function processForceFailAction(Request $request, Build $build)
+  {
+    $branch = $build->getBranch();
+    $mod = $branch->getMod();
+    $owner = $mod->getOwner();
+    
+    if (false === $this->get('security.context')->isGranted('add', $owner)) {
+        throw new AccessDeniedException('Unauthorised access!');
+    }
+    
+    if(($build->getIsFailed() == false) && ($build->getIsReady() == false))
+    {
+      $build->setIsFailed(true);
+      
+      $em = $this->getDoctrine()
+                 ->getManager();
+                   
+      $em->flush();
+      
+      $request->getSession()
+              ->getFlashBag()
+              ->add('warning', "Build <strong>version ".$build->getVersion()."</strong> has been marked as failed. Processing canceled.");
+              
+    }
+    
+    return $this->redirect($this->generateUrl('hlp_nebula_build', array(
+        'owner'  => $owner,
+        'mod'    => $mod,
+        'branch' => $branch,
+        'build'  => $build
+    )));
   }
   
   public function deleteAction(Request $request, Build $build)

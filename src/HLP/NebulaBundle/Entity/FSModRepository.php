@@ -59,4 +59,18 @@ class FSModRepository extends EntityRepository
     return $qb->getQuery()
               ->getOneOrNullResult();
   }
+  
+  public function findAllModsWithOwners()
+  {
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('m')
+       ->from('HLPNebulaBundle:FSMod', 'm')
+       ->leftJoin('m.userAsOwner', 'uo')
+       ->addSelect('uo')
+       ->leftJoin('m.teamAsOwner', 'to')
+       ->addSelect('to');
+       
+    return $qb->getQuery()
+              ->getResult();
+  }
 }

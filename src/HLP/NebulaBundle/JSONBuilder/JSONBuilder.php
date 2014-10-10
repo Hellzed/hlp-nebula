@@ -27,14 +27,22 @@ permissions and limitations under the Licence.
 // src/HLP/NebulaBundle/JSONBuilder/JSONBuilder.php
 
 namespace HLP\NebulaBundle\JSONBuilder;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class JSONBuilder
 {
+  protected $request;
+  
+  public function setRequest(RequestStack $request_stack)
+  {
+    $this->request = $request_stack->getCurrentRequest();
+  }
+    
   /**
    * @param object $build
    * @return array
    */
-  public function createFromBuild(\HLP\NebulaBundle\Entity\Build $build)
+  public function createFromBuild(\HLP\NebulaBundle\Entity\Build $build, $finalise = true)
   {
     $branch = $build->getBranch();
     $mod = $branch->getMod();
@@ -47,6 +55,10 @@ class JSONBuilder
     
     if($mod->getDescription()) {
       $data['description'] = $mod->getDescription();
+    }
+    
+    if($mod->getLogo()) {
+      $data['logo'] = str_replace("/app_dev.php", "", $this->request->getUriForPath('/uploads/img/')).$mod->getLogo()->getId().'.'.$mod->getLogo()->getUrl();
     }
     
     if($build->getNotes() || $branch->getNotes() || $mod->getNotes()) {
@@ -140,6 +152,13 @@ class JSONBuilder
       }
     }
     
-    return $data;
+    if($finalise)
+    {
+      return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    }
+    else
+    {
+      return $data;
+    }
   }
 }

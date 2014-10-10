@@ -35,6 +35,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use HLP\NebulaBundle\Entity\OwnerInterface;
 use HLP\NebulaBundle\Entity\User;
 use HLP\NebulaBundle\Entity\FSMod;
+use HLP\NebulaBundle\Entity\Branch;
 use HLP\NebulaBundle\Form\FSModType;
 
 class OwnerController extends Controller
@@ -92,19 +93,29 @@ class OwnerController extends Controller
     
     if ($form->handleRequest($request)->isValid())
     {
+      $defaultBranch = new Branch;
+      $defaultBranch->setBranchId("master");
+      $defaultBranch->setName("Master");
+      $defaultBranch->setNotes("This is a default branch, created automatically on mod creation.");
+      $defaultBranch->setMod($mod);
+      $defaultBranch->setIsDefault(true);
+      
       $em = $this->getDoctrine()
                  ->getManager();
                  
       $em->persist($mod);
+      $em->persist($defaultBranch);
+      
       $em->flush();
       
       $request->getSession()
               ->getFlashBag()
-              ->add('success', 'New mod <strong>"'.$mod->getTitle().'" (id: '.$mod->getModId().')</strong> successfully created.');
+              ->add('success', 'New mod <strong>"'.$mod->getTitle().'" (id: '.$mod->getModId().')</strong> successfully created.<br/><hr/>A default branch has been created for this mod : <strong>"'.$defaultBranch->getName().'" (id: '.$defaultBranch->getBranchId().')</strong>.');
 
-      return $this->redirect($this->generateUrl('hlp_nebula_mod', array(
-        'owner' => $owner,
-        'mod'   => $mod
+      return $this->redirect($this->generateUrl('hlp_nebula_branch', array(
+        'owner'  => $owner,
+        'mod'    => $mod,
+        'branch' => $defaultBranch
       )));
     }
     

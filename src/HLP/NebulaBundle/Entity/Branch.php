@@ -84,13 +84,6 @@ class Branch
     private $notes;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="isDefault", type="boolean")
-     */
-    private $isDefault;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
@@ -98,6 +91,13 @@ class Branch
      * @Assert\Length(max=255)
      */
     private $name;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="is_default", type="boolean", nullable=true)
+     */
+    private $isDefault;
 
 
     /**
@@ -157,29 +157,6 @@ class Branch
     }
 
     /**
-     * Set isDefault
-     *
-     * @param boolean $isDefault
-     * @return Branch
-     */
-    public function setIsDefault($isDefault)
-    {
-        $this->isDefault = $isDefault;
-
-        return $this;
-    }
-
-    /**
-     * Get isDefault
-     *
-     * @return boolean 
-     */
-    public function getIsDefault()
-    {
-        return $this->isDefault;
-    }
-
-    /**
      * Set name
      *
      * @param string $name
@@ -230,6 +207,7 @@ class Branch
     public function __construct()
     {
         $this->builds = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->isDefault = false;
     }
     
     public function __toString()
@@ -291,7 +269,7 @@ class Branch
    */
   public function forbiddenWords(ExecutionContextInterface $context)
   {
-    $forbiddenWords = Array('branches','details','activity');
+    $forbiddenWords = Array('branches','details','activity','default');
     
     if(in_array($this->branchId, $forbiddenWords)) {
       $context->addViolationAt(
@@ -302,4 +280,27 @@ class Branch
           );
      }
   }
+
+    /**
+     * Set isDefault
+     *
+     * @param boolean $isDefault
+     * @return Branch
+     */
+    public function setIsDefault($isDefault)
+    {
+        $this->isDefault = $isDefault;
+
+        return $this;
+    }
+
+    /**
+     * Get isDefault
+     *
+     * @return boolean 
+     */
+    public function getIsDefault()
+    {
+        return $this->isDefault;
+    }
 }

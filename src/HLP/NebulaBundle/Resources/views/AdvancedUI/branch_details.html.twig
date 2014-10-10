@@ -2,7 +2,8 @@
 
 {% block branch_tab %}
 <h5><span class="glyphicon glyphicon-link"></span> Unique branch URL (redirects to the latest build in this branch)</h5>
-<input class="form-control" type="text" value="{# {{ url('hlp_nebula_fs2mod', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': '1.2.3'}) }}.json #}" readonly>
+{% if branch.nbBuilds == 0 %}<p class="text-danger">&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-warning-sign"></span>&nbsp;This branch has no available build.</p>{% endif %}
+<input class="form-control" type="text" value="{{ url('hlp_nebula_fs2mod', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': 'current'}) }}.json" readonly>
 <br/>
 <h5><span class="glyphicon glyphicon-paperclip"></span> Branch metadata</h5>
 <div class="well">

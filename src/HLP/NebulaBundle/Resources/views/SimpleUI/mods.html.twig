@@ -1,0 +1,91 @@
+{% extends "HLPNebulaBundle::catalogue_layout.html.twig" %}
+
+{% block title %}
+  Mods - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid mods-container">
+  <div class="row category">
+    <h3 class="category-title">The Essentials</h3>
+  </div>
+  <div class="row category-content">
+    <div class="col-sm-4">
+      <img src="{{ asset('img/FSU-MVP.bmp') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">MediaVPs 2014 <a class="btn btn-success btn-xs playbutton" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+    <div class="col-sm-4">
+      <img src="{{ asset('img/fsport-mediavps.bmp') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">FreeSpace Port <a class="btn btn-success btn-xs playbutton" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+    <div class="col-sm-4">
+      <img src="{{ asset('img/fsport-str.bmp') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">Silent Threat : Reborn <a class="btn btn-success btn-xs playbutton" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+  </div>
+  <div class="row category" style="margin-top: 25px;">
+    <h3 class="category-title" style="margin-top: 10px;">Highlights</h3>
+  </div>
+  <div class="row category-content">
+    <div class="col-sm-3">
+      <img src="{{ asset('img/bplogo.bmp') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">Blue Planet : Age of Aquarius <a class="btn btn-success btn-xs playbutton" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+    <div class="col-sm-3">
+      <img src="{{ asset('img/bp2logo.bmp') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">Blue Planet : War in Heaven <a class="btn btn-success btn-xs playbutton" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+    <div class="col-sm-3">
+      <img src="{{ asset('img/vassago_small.bmp') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">Vassago's Dirge <a class="btn btn-success btn-xs playbutton" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+    <div class="col-sm-3">
+      <img src="{{ asset('img/Synclogo.bmp') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">Sync <a class="btn btn-success btn-xs playbutton" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+  </div>
+  <div class="row category" style="margin-top: 25px;">
+    <h3 class="category-title" style="margin-top: 10px;">New releases</h3>
+  </div>
+  <div class="row category-content">
+    <div class="col-sm-3">
+      <img src="{{ asset('img/bta.bmp') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">Between the Ashes <a class="btn btn-success btn-xs playbutton" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+    <div class="col-sm-3">
+      <img src="{{ asset('img/jad22xabitmap.bmp') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">JAD : Extreme Arcade <a class="btn btn-success btn-xs playbutton" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+    <div class="col-sm-3">
+      <img src="{{ asset('img/SA_small.png') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">Diaspora : Shattered Armistice <a class="btn btn-success btn-xs playbutton" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+    <div class="col-sm-3">
+      <img src="{{ asset('img/fsport.bmp') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">FreeSpace Port<a class="btn btn-success playbutton btn-xs" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+  </div>
+  <div class="row category" style="margin-top: 25px;">
+    <h3 class="category-title" style="margin-top: 10px;">Highlights</h3>
+  </div>
+  <div class="row category-content">
+    <div class="col-sm-3">
+      <img src="{{ asset('img/bplogo.bmp') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">Blue Planet : Age of Aquarius <a class="btn btn-success btn-xs playbutton" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+    <div class="col-sm-3">
+      <img src="{{ asset('img/bp2logo.bmp') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">Blue Planet : War in Heaven <a class="btn btn-success btn-xs playbutton" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+    <div class="col-sm-3">
+      <img src="{{ asset('img/vassago_small.bmp') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">Vassago's Dirge <a class="btn btn-success btn-xs playbutton" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+    <div class="col-sm-3">
+      <img src="{{ asset('img/Synclogo.bmp') }}" alt="First slide"  class="catImg">
+      <h4 class="mod-title">Sync <a class="btn btn-success btn-xs playbutton" href="#" role="button"><span class="glyphicon glyphicon-play"></span>Play</a></h4>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

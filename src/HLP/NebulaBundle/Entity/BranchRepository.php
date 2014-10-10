@@ -36,7 +36,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class BranchRepository extends EntityRepository
 {
-  public function findSingleBranch($ownerNameCanonical, $modId, $branchId)
+  public function findSingleBranch($ownerNameCanonical, $modId, $branchId = null)
   {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('b')
@@ -51,16 +51,38 @@ class BranchRepository extends EntityRepository
        ->addSelect('u')
        ->where('uo.usernameCanonical = :nameCanonical OR to.nameCanonical = :nameCanonical')
        ->andWhere('m.modId = :modId')
-       ->andWhere('b.branchId = :branchId')
        ->orderBy('u.versionMajor', 'DESC')
        ->addOrderBy('u.versionMinor', 'DESC')
        ->addOrderBy('u.versionPatch', 'DESC')
        ->addOrderBy('u.versionPreRelease', 'DESC')
        ->setParameter('nameCanonical', $ownerNameCanonical)
-       ->setParameter('modId', $modId)
-       ->setParameter('branchId', $branchId);
-
+       ->setParameter('modId', $modId);
+    
+    if(isset($branchId))
+    {
+      $qb->andWhere('b.branchId = :branchId')
+         ->setParameter('branchId', $branchId);
+    }
+    else
+    {
+      $qb->andWhere('b.isDefault = true');
+    }
+    
+    
     return $qb->getQuery()
               ->getOneOrNullResult();
+  }
+  
+  public function getBranchFromMod($id)
+  {
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('b')
+       ->from('HLPNebulaBundle:Branch', 'b')
+       ->leftJoin('b.mod', 'm')
+       ->where('m.id = :id')
+       ->orderBy('b.isDefault', 'DESC')
+       ->setParameter('id', $id);
+       
+    return $qb;
   }
 }

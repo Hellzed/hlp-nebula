@@ -15,13 +15,21 @@
     <input id="modId_disabled"class="form-control" type="text" value="{{ mod.modId }}" disabled>
   {% endif %}
   </div>
+  {% if form.defaultBranch is defined %}
+  <div class="form-group">
+    {{ form_label(form.defaultBranch, "Default branch") }}
+    {{ form_errors(form.defaultBranch) }}
+    {{ form_widget(form.defaultBranch) }}
+  </div>
+  {% endif %}
   <div class="form-group">
     {{ form_label(form.notes, "Notes") }}
+    <p class="help-block">Notes are intended for other <em>modders</em> and <em>developers</em>, they contain optional <em>technical informations</em>. For your mod <em>description</em>, use <strong>"Description"</strong> field.</p>
     {{ form_errors(form.notes) }}
     {{ form_widget(form.notes) }}
   </div>
   <br/>
-  <h4><span class="glyphicon glyphicon-star-empty"></span> Mod public information</h4>
+  <h4><span class="glyphicon glyphicon-star-empty"></span> Public informations</h4>
   <hr/>
   <div class="form-group">
     {{ form_label(form.title, "Mod title*") }}
@@ -50,6 +58,47 @@
           </div>
       </div>
   </div>
+  <div class="form-group clearfix">
+      {{ form_label(form.authors, "Authors") }}
+      {{ form_errors(form.authors) }}
+      {{ form_widget(form.authors) }}
+      <div class="col-sm-4 cardspacer">
+        <div class="well well-sm text-center form-ph">
+          <button class="btn btn-primary addButton" type="button">Add author</button>
+        </div>
+      </div>
+  </div>
+  <br/>
+  <h4><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;Catalogue search</h4>
+  <hr/>
+  <div class="form-group">
+    {{ form_label(form.categories, "Categories") }}
+    {{ form_errors(form.categories) }}
+    {{ form_widget(form.categories) }}
+  </div>
+  <div class="form-group">
+    {{ form_label(form.keywords, "Keywords") }}
+    <p class="help-block">Keywords will help the players finding your mod in the built-in search engine. Use a <em>comma (",") delimited list</em>.</p>
+    {{ form_errors(form.keywords) }}
+    {{ form_widget(form.keywords) }}
+  </div>
+  <br/>
+  <h4><span class="glyphicon glyphicon-camera"></span>&nbsp;&nbsp;Gallery</h4>
+  <hr/>
+  <div class="form-group">
+    <div class="clearfix">{{ form_label(form.logo.file, "Logo*") }}
+    {{ form_errors(form.logo.file) }}</div>
+    <p class="help-block">A logo is a required <em>255 x 112</em> image.</p>
+    
+    <p class="well">{% if mod.logo.url is defined %}<img src="{{ app.request.uriForPath('/uploads/img/') | replace({'/app_dev.php': ''}) }}{{ mod.logo.id }}.{{ mod.logo.url }}">
+    {% endif %}
+    
+    {{ form_widget(form.logo.file, { 'attr':{ 'style':'margin-top:5px;border:none;box-shadow:none;padding:0px;'}}) }}</p>
+  </div>
   {{ form_rest(form) }}
-  <button type="submit" class="btn btn-success">Submit</button>
+  <br/>
+  <hr/>
+  <div class="text-center">
+    <button type="submit" class="btn btn-success" style="width:100px;">Submit</button>
+  </div>
 {{ form_end(form) }}

@@ -1,0 +1,46 @@
+{% extends "HLPNebulaBundle::layout.html.twig" %}
+
+{% block title %}
+  {{ owner.name }} / {{ mod.title }} / {{ branch.name }} / Processing - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <ol class="breadcrumb">
+    <li><a href="{{ path('hlp_nebula_homepage') }}">Nebula</a></li>
+    <li><a href="{{ path('hlp_nebula_owner', {'owner': owner.nameCanonical}) }}">{{ owner.name }}</a></li>
+    <li><a href="{{ path('hlp_nebula_mod', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}">{{ mod.title }}</a></li>
+    <li><a href="{{ path('hlp_nebula_branch', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}">{{ branch.name }}</a></li>
+    <li href="active">Processing build : {{ mod.modId }}_{{ build.version }}</li>
+  </ol>
+</div>
+<div class="row">
+  <div class="col-sm-3">
+    <h2>
+      <small>Processing build :</small>
+      <br/>{{ mod.modId }}_<wbr>{{ build.version }}
+    </h2>
+    <hr/>
+    <p class="lead"><small class="text-muted">in branch </small>{{ branch.name }}</p>
+    <p class="lead"><small class="text-muted">of mod </small>{{ mod.title }}</p>
+    <p class="lead"><small class="text-muted">as </small>{{ owner.name }}</p>
+    <hr/>
+    <p class="lead"><a href="{{ path('hlp_nebula_process_force_fail', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}" class="btn btn-danger">Cancel</a><br/><small class="text-muted">(mark this build as "failed")</small></p>
+  </div>
+  <div class="col-sm-9">
+    {% block process_widget %}
+    {% endblock %}
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://s1.nebula.tproxy.de/static/converter.js"></script>
+    <script type="text/javascript">
+    var cv = new Converter('ws://s1.nebula.tproxy.de/ws/converter', {{ ksticket }});
+    cv.bootstrap_ui($('#progress-container'));
+    cv.on('done', function (success) {
+      $('#finaliseButton').removeAttr('disabled');
+    });
+    cv.connect();
+    </script>
+  </div>
+</div>
+{% endblock %}

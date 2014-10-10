@@ -58,6 +58,21 @@
         </select>
 {%- endblock choice_widget_collapsed %}
 
+{% block choice_widget_expanded %}
+{% spaceless %}
+    <div class="clearfix">
+        <div {{ block('widget_container_attributes') }}>
+        {% for child in form %}
+            <div class="col-xs-4 text-muted">
+                {{ form_widget(child) }}&nbsp;
+                {{ form_label(child) }}
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock choice_widget_expanded %}
+
 
 {# Special fields #}
 {# FIRST LEVEL IS IN THE BASE FORM #}
@@ -66,59 +81,61 @@
 {% block _hlp_nebulabundle_build_packages_entry_row %}
     {% spaceless %}
     <div class="nospacer" id="{{ id }}">
-        <div class="panel panel-default" >
-            <div class="panel-heading form-inline">
-                #{{ form_label(form) }}&#160;-&#160;
-                {{ form_errors(form) }}
-                {{ form_errors(form.name) }}
-                {{ form_errors(form.status) }}
-                {{ form_label(form.name, "Package name* :") }}&#160;
-                {{ form_widget(form.name, {'attr':{'pattern':'^[\\w]+[-\\w]*$', 'title': 'Package name : spaces and special characters not allowed, hyphen (\"-\") not allowed at the beginning of the name. Underscores (\"_\") allowed.' }}) }}&#160;
-                {{ form_label(form.status, "Status :") }}&#160;
-                {{ form_widget(form.status) }}
-            </div>
-            <div class="panel-body">
-                <div class="form-group">
-                    {{ form_label(form.notes) }}
-                    {{ form_errors(form.notes) }}
-                    {{ form_widget(form.notes) }}
+        <div class="nospacer">
+            <div class="panel panel-default" >
+                <div class="panel-heading form-inline">
+                    #{{ form_label(form) }}&#160;-&#160;
+                    {{ form_errors(form) }}
+                    {{ form_errors(form.name) }}
+                    {{ form_errors(form.status) }}
+                    {{ form_label(form.name, "Package name* :") }}&#160;
+                    {{ form_widget(form.name, {'attr':{'pattern':'^[\\w]+[-\\w]*$', 'title': 'Package name : spaces and special characters not allowed, hyphen (\"-\") not allowed at the beginning of the name. Underscores (\"_\") allowed.' }}) }}&#160;
+                    {{ form_label(form.status, "Status :") }}&#160;
+                    {{ form_widget(form.status) }}
                 </div>
-                <hr/>
-                <div class="form-group clearfix">
-                    {{ form_label(form.envVars, "Client requirements") }}
-                    {{ form_errors(form.envVars) }}
-                    {{ form_widget(form.envVars) }}
-                    <div class="col-sm-4 cardspacer">
-                      <div class="well well-sm text-center form-ph">
-                        <button class="btn btn-primary addButton" type="button">Add client req.</button>
-                      </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        {{ form_label(form.notes) }}
+                        {{ form_errors(form.notes) }}
+                        {{ form_widget(form.notes) }}
+                    </div>
+                    <hr/>
+                    <div class="form-group clearfix">
+                        {{ form_label(form.envVars, "Client requirements") }}
+                        {{ form_errors(form.envVars) }}
+                        {{ form_widget(form.envVars) }}
+                        <div class="col-sm-4 cardspacer">
+                          <div class="well well-sm text-center form-ph">
+                            <button class="btn btn-primary addButton" type="button">Add client req.</button>
+                          </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="form-group clearfix">
+                        {{ form_label(form.dependencies, "Dependencies") }}
+                        {{ form_errors(form.dependencies) }}
+                        {{ form_widget(form.dependencies) }}
+                        <div class="col-sm-4 cardspacer">
+                          <div class="well well-sm text-center form-ph">
+                            <button class="btn btn-primary addButton" type="button">Add dependency</button>
+                          </div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="form-group clearfix">
+                        {{ form_label(form.files, "Files") }}
+                        {{ form_errors(form.files) }}
+                        {{ form_widget(form.files) }}
+                        <div class="col-sm-4 cardspacer">
+                          <div class="well well-sm text-center form-ph">
+                            <button class="btn btn-primary addButton" type="button">Add file</button>
+                          </div>
+                        </div>
                     </div>
                 </div>
-                <hr/>
-                <div class="form-group clearfix">
-                    {{ form_label(form.dependencies, "Dependencies") }}
-                    {{ form_errors(form.dependencies) }}
-                    {{ form_widget(form.dependencies) }}
-                    <div class="col-sm-4 cardspacer">
-                      <div class="well well-sm text-center form-ph">
-                        <button class="btn btn-primary addButton" type="button">Add dependency</button>
-                      </div>
-                    </div>
+                <div class="panel-footer text-center">
+                    <button class="btn btn-danger rmButton" type="button">Remove package</button>
                 </div>
-                <hr/>
-                <div class="form-group clearfix">
-                    {{ form_label(form.files, "Files") }}
-                    {{ form_errors(form.files) }}
-                    {{ form_widget(form.files) }}
-                    <div class="col-sm-4 cardspacer">
-                      <div class="well well-sm text-center form-ph">
-                        <button class="btn btn-primary addButton" type="button">Add file</button>
-                      </div>
-                    </div>
-                </div>
-            </div>
-            <div class="panel-footer text-center">
-                <button class="btn btn-danger rmButton" type="button">Remove package</button>
             </div>
         </div>
     </div>  
@@ -128,32 +145,34 @@
 {% block _hlp_nebulabundle_build_actions_entry_row %}
     {% spaceless %}
     <div class="col-sm-4 cardspacer" id="{{ id }}">
-        <div class="well well-sm">
-            {{ form_row(form.type) }}
-            <div class="form-group">
-                {{ form_label(form.paths, "Paths*") }}
-                {{ form_errors(form.paths) }}
-                {{ form_widget(form.paths) }}
-                <div class="nospacer">
+        <div class="nospacer">
+            <div class="well well-sm">
+                {{ form_row(form.type) }}
+                <div class="form-group">
+                    {{ form_label(form.paths, "Paths*") }}
+                    {{ form_errors(form.paths) }}
+                    {{ form_widget(form.paths) }}
                     <div class="nospacer">
-                        <button class="btn btn-default addButton" type="button" style="width: 100%;">Add path</button>
+                        <div class="nospacer">
+                            <button class="btn btn-default addButton" type="button" style="width: 100%;">Add path</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group" {% if form.type.vars.value is same as('delete') %}hidden="hidden"{% endif %}>
-                {{ form_label(form.dest, "Files destination") }}
-                {{ form_errors(form.dest) }}
-                {{ form_widget(form.dest) }}
-            </div>
-            
-            <div class="form-group">
-                {{ form_label(form.glob, "Enable glob pattern matching") }}
-                {{ form_errors(form.glob) }}
-                &nbsp;{{ form_widget(form.glob) }}
-            </div>
-            <hr class="card-hr"/>
-            <div class="text-center">
-                <button class="btn btn-danger rmButton" type="button">Remove action</button>
+                <div class="form-group" {% if form.type.vars.value is same as('delete') %}hidden="hidden"{% endif %}>
+                    {{ form_label(form.dest, "Files destination") }}
+                    {{ form_errors(form.dest) }}
+                    {{ form_widget(form.dest) }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form_label(form.glob, "Enable glob pattern matching") }}
+                    {{ form_errors(form.glob) }}
+                    &nbsp;{{ form_widget(form.glob) }}
+                </div>
+                <hr class="card-hr"/>
+                <div class="text-center">
+                    <button class="btn btn-danger rmButton" type="button">Remove action</button>
+                </div>
             </div>
         </div>
     </div>
@@ -166,12 +185,14 @@
 {% block _hlp_nebulabundle_build_packages_entry_envVars_entry_row %}
     {% spaceless %}
     <div class="col-sm-4 cardspacer" id="{{ id }}">
-        <div class="well well-sm">
-            {{ form_row(form.type) }}
-            {{ form_row(form.value) }}
-            <hr class="card-hr"/>
-            <div class="text-center">
-                <button class="btn btn-danger rmButton" type="button">Remove client req.</button>
+        <div class="nospacer">
+            <div class="well well-sm">
+                {{ form_row(form.type) }}
+                {{ form_row(form.value) }}
+                <hr class="card-hr"/>
+                <div class="text-center">
+                    <button class="btn btn-danger rmButton" type="button">Remove client req.</button>
+                </div>
             </div>
         </div>
      </div>
@@ -181,33 +202,35 @@
 {% block _hlp_nebulabundle_build_packages_entry_dependencies_entry_row %}
     {% spaceless %}
     <div class="col-sm-4 cardspacer" id="{{ id }}">
-        <div class="well well-sm">
-            <div class="form-group">
-                {{ form_label(form.depId, "Mod ID*") }}
-                {{ form_errors(form.depId) }}
-                {{ form_widget(form.depId,  {'attr':{'pattern':'^[\\w]+[-\\w]*$', 'title': 'Dependency mod ID : spaces and special characters not allowed, hyphen (\"-\") not allowed at the beginning of the mod ID. Underscores (\"_\") allowed.' }}) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.version, "Version*") }}
-                <p class="help-block">Use <a target="_blank" href='https://getcomposer.org/doc/01-basic-usage.md#package-versions'>Composer format <span class="glyphicon glyphicon-link"></span></a>.</p>
-                {{ form_errors(form.version) }}
-                {{ form_widget(form.version) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.depPkgs, "Required packages") }}
-                <p class="help-block">Add a package name here <em>only</em> if you want to <em>force</em> the installation of a <em>recommended</em> or <em>optional</em> package from a dependency mod.
-                <br/>This setting has no effect on <em>required</em> packages.</p>
-                {{ form_errors(form.depPkgs) }}
-                {{ form_widget(form.depPkgs) }}
-                <div class="nospacer">
+        <div class="nospacer">
+            <div class="well well-sm">
+                <div class="form-group">
+                    {{ form_label(form.depId, "Mod ID*") }}
+                    {{ form_errors(form.depId) }}
+                    {{ form_widget(form.depId,  {'attr':{'pattern':'^[\\w]+[-\\w]*$', 'title': 'Dependency mod ID : spaces and special characters not allowed, hyphen (\"-\") not allowed at the beginning of the mod ID. Underscores (\"_\") allowed.' }}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.version, "Version*") }}
+                    <p class="help-block">Use <a target="_blank" href='https://getcomposer.org/doc/01-basic-usage.md#package-versions'>Composer format <span class="glyphicon glyphicon-link"></span></a>.</p>
+                    {{ form_errors(form.version) }}
+                    {{ form_widget(form.version) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.depPkgs, "Required packages") }}
+                    <p class="help-block">Add a package name here <em>only</em> if you want to <em>force</em> the installation of a <em>recommended</em> or <em>optional</em> package from a dependency mod.
+                    <br/>This setting has no effect on <em>required</em> packages.</p>
+                    {{ form_errors(form.depPkgs) }}
+                    {{ form_widget(form.depPkgs) }}
                     <div class="nospacer">
-                        <button class="btn btn-default addButton" type="button" style="width: 100%;">Add package</button>
+                        <div class="nospacer">
+                            <button class="btn btn-default addButton" type="button" style="width: 100%;">Add package</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <hr class="card-hr"/>
-            <div class="text-center">
-                <button class="btn btn-danger rmButton" type="button">Remove dependency</button>
+                <hr class="card-hr"/>
+                <div class="text-center">
+                    <button class="btn btn-danger rmButton" type="button">Remove dependency</button>
+                </div>
             </div>
         </div>
     </div>
@@ -217,35 +240,38 @@
 {% block _hlp_nebulabundle_build_packages_entry_files_entry_row %}
     {% spaceless %}
     <div class="col-sm-4 cardspacer" id="{{ id }}">
-        <div class="well well-sm">
-            <div class="form-group">
-                {{ form_label(form.filename, "File name*") }}
-                {{ form_errors(form.filename) }}
-                {{ form_widget(form.filename) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.urls, "Download URLs*") }}
-                {{ form_errors(form.urls) }}
-                {{ form_widget(form.urls) }}
-                <div class="nospacer">
+        <div class="nospacer">
+            <div class="well well-sm">
+                <div class="form-group">
+                    {{ form_label(form.filename, "File name*") }}
+                    {{ form_errors(form.filename) }}
+                    {{ form_widget(form.filename) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.urls, "Download URLs*") }}
+                    <p class="help-block">Only <em>direct download links</em> are allowed.</p>
+                    {{ form_errors(form.urls) }}
+                    {{ form_widget(form.urls) }}
                     <div class="nospacer">
-                        <button class="btn btn-default addButton" type="button" style="width: 100%;">Add mirror</button>
+                        <div class="nospacer">
+                            <button class="btn btn-default addButton" type="button" style="width: 100%;">Add mirror</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(form.dest, "File destination") }}
-                {{ form_errors(form.dest) }}
-                {{ form_widget(form.dest, {'attr':{'pattern':'^([\\\/]?[^\0\\\/:\*\?"<>\|]+)*[\\\/]?$', 'title': 'Must be a valid relative path.' }}) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.isArchive, "Unpack") }}
-                {{ form_errors(form.isArchive) }}
-                &nbsp;{{ form_widget(form.isArchive) }}<p class="help-block">Disable this to keep the client from unpacking a downloaded archive. <em>(example : a direct VP file download)</em></p>
-            </div>
-            <hr class="card-hr"/>
-            <div class="text-center">
-                <button class="btn btn-danger rmButton" type="button">Remove file</button>
+                <div class="form-group">
+                    {{ form_label(form.dest, "File destination") }}
+                    {{ form_errors(form.dest) }}
+                    {{ form_widget(form.dest, {'attr':{'pattern':'^([\\\/]?[^\0\\\/:\*\?"<>\|]+)*[\\\/]?$', 'title': 'Must be a valid relative path.' }}) }}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.isArchive, "Unpack") }}
+                    {{ form_errors(form.isArchive) }}
+                    &nbsp;{{ form_widget(form.isArchive) }}<p class="help-block">Disable this to keep the client from unpacking a downloaded archive. <em>(example : a direct VP file download)</em></p>
+                </div>
+                <hr class="card-hr"/>
+                <div class="text-center">
+                    <button class="btn btn-danger rmButton" type="button">Remove file</button>
+                </div>
             </div>
         </div>
     </div>
@@ -258,7 +284,11 @@
         <div class="nospacer dynlistItem">
             <div class="sr-only">{{ form_label(form, "Path") }}</div>
             <div class="input-group">
-                {{ form_widget(form, {'attr':{'pattern':'^([\\\/]?[^\0\\\/:\*\?"<>\|]+)*[\\\/]?$', 'title': 'Must be a valid relative path.' }}) }}<span class="input-group-btn"><button class="btn btn-warning rmButton" type="button"><span class="glyphicon glyphicon-remove"><span><span class="sr-only">Remove path</span></button></span>
+                {{ form_widget(form, {'attr':{'pattern':'^([\\\/]?[^\0\\\/:\*\?"<>\|]+)*[\\\/]?$', 'title': 'Must be a valid relative path.' }}) }}
+                <span class="input-group-btn">
+                    <button class="btn btn-warning rmButton" type="button"><span class="glyphicon glyphicon-remove"><span><span class="sr-only">Remove path</span>
+                    </button>
+                </span>
             </div>
         </div>
     </div>
@@ -274,7 +304,11 @@
         <div class="nospacer dynlistItem">
             <div class="sr-only">{{ form_label(form, "URL") }}</div>
             <div class="input-group">
-                {{ form_widget(form) }}<span class="input-group-btn"><button class="btn btn-warning rmButton" type="button"><span class="glyphicon glyphicon-remove"><span><span class="sr-only">Remove URL</span></button></span>
+                {{ form_widget(form) }}
+                <span class="input-group-btn">
+                    <button class="btn btn-warning rmButton" type="button"><span class="glyphicon glyphicon-remove"><span><span class="sr-only">Remove URL</span>
+                    </button>
+                </span>
             </div>
         </div>
     </div>
@@ -287,7 +321,11 @@
         <div class="nospacer dynlistItem depPkgItem">
             <div class="sr-only">{{ form_label(form, "Required package") }}</div>
             <div class="input-group">
-                {{ form_widget(form, {'attr':{'pattern':'^[\\w]+[-\\w]*$', 'title': 'Dependency package name : spaces and special characters not allowed, hyphen (\"-\") not allowed at the beginning of the name. Underscores (\"_\") allowed.' }}) }}<span class="input-group-btn"><button class="btn btn-warning rmButton" type="button"><span class="glyphicon glyphicon-remove"><span><span class="sr-only">Remove package</span></button></span>
+                {{ form_widget(form, {'attr':{'pattern':'^[\\w]+[-\\w]*$', 'title': 'Dependency package name : spaces and special characters not allowed, hyphen (\"-\") not allowed at the beginning of the name. Underscores (\"_\") allowed.' }}) }}
+                <span class="input-group-btn">
+                    <button class="btn btn-warning rmButton" type="button"><span class="glyphicon glyphicon-remove"><span><span class="sr-only">Remove package</span>
+                    </button>
+                </span>
             </div>
         </div>
     </div>
@@ -302,7 +340,11 @@
         <div class="nospacer dynlistItem">
             <div class="sr-only">{{ form_label(form, "Feature") }}</div>
             <div class="input-group">
-                {{ form_widget(form) }}<span class="input-group-btn"><button class="btn btn-warning rmButton" type="button"><span class="glyphicon glyphicon-remove"><span><span class="sr-only">Remove feature</span></button></span>
+                {{ form_widget(form) }}
+                <span class="input-group-btn">
+                    <button class="btn btn-warning rmButton" type="button"><span class="glyphicon glyphicon-remove"><span><span class="sr-only">Remove feature</span>
+                    </button>
+                </span>
             </div>
         </div>
     </div>
@@ -312,6 +354,29 @@
 {% block _hlp_nebulabundle_fsmod_edit_features_entry_row %}
     {% spaceless %}
          {{- block('_hlp_nebulabundle_fsmod_features_entry_row') -}}
+    {% endspaceless %}
+{% endblock %}
+
+{% block _hlp_nebulabundle_fsmod_authors_entry_row %}
+    {% spaceless %}
+    <div class="col-sm-4 cardspacer" id="{{ id }}">
+        <div class="nospacer">
+            <div class="well well-sm">
+                {{ form_row(form.name) }}
+                {{ form_row(form.website) }}
+                <hr class="card-hr"/>
+                <div class="text-center">
+                    <button class="btn btn-danger rmButton" type="button">Remove author</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endspaceless %}
+{% endblock %}
+
+{% block _hlp_nebulabundle_fsmod_edit_authors_entry_row %}
+    {% spaceless %}
+         {{- block('_hlp_nebulabundle_fsmod_authors_entry_row') -}}
     {% endspaceless %}
 {% endblock %}
 

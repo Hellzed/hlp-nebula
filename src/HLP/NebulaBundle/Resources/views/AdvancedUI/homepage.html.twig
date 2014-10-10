@@ -5,5 +5,18 @@
 {% endblock %}
 
 {% block body %}
-Homepage
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <div class="jumbotron text-center">
+      <h1>Welcome to<br/>the <span class="text-info">Nebula</span>, Terran !</h1>
+      <p>A next generation <span class="text-info">FreeSpace 2 Open</span> mod publishing platform.</p><br/>
+      <p><a class="btn btn-primary btn-lg" role="button" href="{{ path('hlp_nebula_get_started') }}">Get started</a></p>
+    </div>
+    <br/>
+    <h2>Learn more</h2>
+    <hr/>
+    <p><strong class="text-info">Nebula</strong> is hosted on <a href="https://github.com/Hellzed/hlp-nebula">github:hellzed/hlp-nebula</a>.<br/>
+    This project is developed jointly with the <strong class="text-info">Knossos client</strong> (a FreeSpace 2 Open mod installer/launcher), also hosted : <a href="https://github.com/ngld/knossos">github:ngld/knossos</a>.</p>
+  </div>
+</div>
 {% endblock %}

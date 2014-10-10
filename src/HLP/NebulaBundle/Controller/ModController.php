@@ -157,7 +157,19 @@ class ModController extends Controller
 
     if ($form->handleRequest($request)->isValid())
     {
-
+      
+      foreach($mod->getBranches() as $branch)
+      {
+        $branch->setIsDefault(false);
+      }
+      
+      $defaultBranch = $form->get('defaultBranch')->getData();
+      
+      if($defaultBranch)
+      {
+        $defaultBranch->setIsDefault(true);
+      }
+      
       $em = $this->getDoctrine()->getManager();
 
       $em->flush();

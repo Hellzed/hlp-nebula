@@ -5,5 +5,34 @@
 {% endblock %}
 
 {% block body %}
-  Modders
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+  <p class="lead">There {% if moddersList|length > 1 %}are{% else %}is{% endif %} {% if moddersList|length == 0 %}no{% else %}<span class="text-info">{{ moddersList|length }}</span>{% endif %} registered modder{% if moddersList|length > 1 %}s{% endif %}.</p>
+{% for modder in moddersList %}
+  {% if loop.first %}
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Modder name</th>
+          <th>Personal repository</th>
+          <th>Joined on</th>
+        </tr>
+      </thead>
+      <tbody>
+  {% endif %}
+        <tr>
+          <td>{{ modder.username }}</td>
+          <td><a href="{{ path('hlp_nebula_owner', {'owner': modder.nameCanonical}) }}">{{ modder.mods|length }} mods</a></td>
+          <td>{{ modder.joined|date("d M Y") }}</td>
+        </tr>
+  {% if loop.last %}
+      </tbody>
+    </table>
+  {% endif %}
+{% else %}
+<p class="lead">No mod found.</p>
+{% endfor %}
+
+  </div>
+</div>
 {% endblock %}

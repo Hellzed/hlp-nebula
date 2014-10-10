@@ -1,0 +1,14 @@
+{% extends "HLPNebulaBundle:AdvancedUI:process.html.twig" %}
+
+{% block process_widget %}
+  <br/>
+  <div class="mainForm">
+    <h4 class="text-warning"><span class="glyphicon glyphicon-warning-sign"></span> Validation server unreachable !</h4>
+      <hr/>
+      <p class="well">
+        Please retry. If the problem persists, contact site support at Hard Light Productions.
+      </p>
+      <hr/>
+      <p><a href="{{ path('hlp_nebula_process', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}" class="btn btn-primary">Retry</a></p>
+  </div>
+{% endblock %}

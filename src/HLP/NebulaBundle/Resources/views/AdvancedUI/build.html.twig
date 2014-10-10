@@ -26,16 +26,20 @@
   </div>
   <div class="col-sm-9">
     <ul class="mainTabs nav nav-tabs" role="tablist">
-      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_build_data' %}active{% endif %}"><a href="{{ path('hlp_nebula_build_data', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}"><h4 class="titletab">Configuration data</h4></a></li>
-      <li class=""><a href="{{ path('hlp_nebula_build_data', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}"><h4 class="titletab">Generated data</h4></a></li>
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_build_data' %}active{% endif %}">
+        <a href="{{ path('hlp_nebula_build_data', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}">
+          <h4 class="titletab">Configuration data</h4>
+        </a>
+      </li>
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_build_data_finalised' %}active{% endif %}">
+        <a href="{{ path('hlp_nebula_build_data_finalised', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}">
+          <h4 class="titletab">Generated data</h4>
+        </a>
+      </li>
     </ul>
+  {% include "HLPNebulaBundle:AdvancedUI:flashbox.html.twig" %}
+    
   {% block build_tab %}
-    <h5><span class="glyphicon glyphicon-link"></span> Unique build URL</h5>
-    <p class="help-block">Copy this line to HLP-Knossos repository settings, or use the client of your choice.</p>
-    <input class="form-control" type="text" value="{{ url('hlp_nebula_fs2mod', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}.json" readonly>
-    <br/>
-    <h5><span class="glyphicon glyphicon-paperclip"></span> Raw JSON configuration</h5>
-    <pre>{{ data|json_encode(192) }}</pre>
   {% endblock %}
   </div>
 </div>

@@ -37,7 +37,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class BuildRepository extends EntityRepository
 {
-  public function findSingleBuild($ownerNameCanonical, $modId, $branchId, $versionMajor = null, $versionMinor = null, $versionPatch = null, $versionPreRelease = null, $versionMetadata = null)
+  public function findSingleBuild($ownerNameCanonical, $modId, $branchId = null, $versionMajor = null, $versionMinor = null, $versionPatch = null, $versionPreRelease = null, $versionMetadata = null)
   {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('u')
@@ -62,10 +62,18 @@ class BuildRepository extends EntityRepository
        ->addSelect('f')
        ->where('uo.usernameCanonical = :nameCanonical OR to.nameCanonical = :nameCanonical')
        ->andWhere('m.modId = :modId')
-       ->andWhere('b.branchId = :branchId')
        ->setParameter('nameCanonical', $ownerNameCanonical)
-       ->setParameter('modId', $modId)
-       ->setParameter('branchId', $branchId);
+       ->setParameter('modId', $modId);
+       
+    if(isset($branchId))
+    {
+      $qb->andWhere('b.branchId = :branchId')
+         ->setParameter('branchId', $branchId);
+    }
+    else
+    {
+      $qb->andWhere('b.isDefault = true');
+    }
        
     if(isset($versionMajor) && isset($versionMinor) && isset($versionPatch))
     {
@@ -98,7 +106,10 @@ class BuildRepository extends EntityRepository
     }
     else
     {
-      $qb->orderBy('u.updated', 'DESC')
+      $qb->andWhere('u.isReady = true')
+         ->orderBy('u.versionMajor', 'DESC')
+         ->addOrderBy('u.versionMinor', 'DESC')
+         ->addOrderBy('u.versionPatch', 'DESC')
          ->setMaxResults(1);
     }
 

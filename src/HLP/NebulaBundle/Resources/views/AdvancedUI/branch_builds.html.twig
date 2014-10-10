@@ -20,7 +20,11 @@
         <tr>
           <td><a href="{{ path('hlp_nebula_build', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}">{{ build.version }}</a></td>
           <td>{{ build.updated|date("d M Y") }}</td>
-          <td>test</td>
+          <td>
+          {% if build.isReady %}<span class="text-success"><span class="glyphicon glyphicon-ok"></span>&nbsp;Validated</span>{% endif %}
+          {% if build.isFailed %}<span class="text-warning"><span class="glyphicon glyphicon-remove"></span>&nbsp;Failed</span>{% endif %}
+          {% if not build.isReady and not build.isFailed %}<span class="text-info"><span class="glyphicon glyphicon-cog"></span>&nbsp;Processing...</span>{% endif %}
+          </td>
           {% if is_granted('add', owner) %}
             <td>
               <a href="{{ path('hlp_nebula_update_build', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}" class="btn btn-default btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-retweet"></span> Copy and update&nbsp;</a>&nbsp;

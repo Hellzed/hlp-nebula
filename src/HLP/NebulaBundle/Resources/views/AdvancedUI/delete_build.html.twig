@@ -10,7 +10,7 @@
     <li><a href="{{ path('hlp_nebula_homepage') }}">Nebula</a></li>
     <li><a href="{{ path('hlp_nebula_owner', {'owner': owner.nameCanonical}) }}">{{ owner.name }}</a></li>
     <li><a href="{{ path('hlp_nebula_mod', {'owner': owner.nameCanonical, 'mod': mod.modId}) }}">{{ mod.title }}</a></li>
-    <li><a href="{{ path('hlp_nebula_branch', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}">{{ mod.title }}</a></li>
+    <li><a href="{{ path('hlp_nebula_branch', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}">{{ branch.name }}</a></li>
     <li href="active">Delete build : <a href="{{ path('hlp_nebula_build', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}">{{ build.version }}</a></li>
   </ol>
 </div>

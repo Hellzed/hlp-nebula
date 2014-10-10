@@ -1,0 +1,71 @@
+body {
+  padding-top: 50px;
+  padding-bottom: 0px;
+  background: url(../../../hlp-bg.png) repeat-x scroll left top transparent;
+  background-attachment: fixed;
+  background-position: 0px 50px; 
+}
+
+h3 {
+  text-shadow: 1px 1px #080000; 
+}
+
+h4 {
+  text-shadow: 1px 1px #080000; 
+}
+
+.carousel .item {
+  height: 591px;
+}
+.navbar-fixed-top {
+  border: 0px;
+  box-shadow: 0px 0px 7px 5px rgba(0, 0, 0, 0.3);
+}
+
+.carousel-caption {
+  background-color:rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 60px;
+}
+
+.mods-container {
+  
+}
+
+.category {
+  background-color: rgba(0, 0, 0, 0.66);
+  color:white;
+  padding:0px;
+  padding-bottom:0px;
+  border-top:1px solid;
+  border-color: #080000;
+  box-shadow: 0px 5px 7px 2px rgba(0, 0, 0, 0.20);
+}
+
+.category-title {
+  margin-left:50px;
+}
+
+.category-content {
+  margin-top: 15px;
+  margin-bottom: 50px;
+  
+}
+
+.catImg {
+ width:100%;
+ box-shadow: 1px 5px 7px 0px rgba(0, 0, 0, 0.20);
+}
+
+.mod-title {
+  margin-top: 0px;
+  padding: 7px;
+  background-color: rgba(0, 0, 0, 0.66);
+  color:white;
+  box-shadow: 1px 5px 7px 0px rgba(0, 0, 0, 0.20);
+}
+
+.playbutton {
+  float: right;
+}

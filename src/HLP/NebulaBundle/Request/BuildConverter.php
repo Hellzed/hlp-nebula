@@ -2,7 +2,7 @@
 
 /*
 * Copyright 2014 HLP-Nebula authors, see NOTICE file
-4
+
 *
 * Licensed under the EUPL, Version 1.1 or – as soon they
 will be approved by the European Commission - subsequent
@@ -13,7 +13,7 @@ Licence.
 *
 *
 http://ec.europa.eu/idabc/eupl
-5
+
 *
 * Unless required by applicable law or agreed to in
 writing, software distributed under the Licence is
@@ -50,11 +50,28 @@ class BuildConverter implements ParamConverterInterface
     $ownerNameCanonical = $request->attributes->get('owner');
     $modId = $request->attributes->get('mod');
     $branchId = $request->attributes->get('branch');
+    
+    if($branchId == 'default')
+    {
+      $branchId = null;
+    }
+    
     $version = $request->attributes->get('build');
     
-    list($versionRest, $versionMetadata) = array_pad(explode('+', $version), 2, null);
-    list($versionMain, $versionPreRelease) = array_pad(explode('-', $versionRest), 2, null);
-    list($versionMajor, $versionMinor, $versionPatch) = explode('.', $versionMain);
+    if(!($version == 'current'))
+    {
+      list($versionRest, $versionMetadata) = array_pad(explode('+', $version), 2, null);
+      list($versionMain, $versionPreRelease) = array_pad(explode('-', $versionRest), 2, null);
+      list($versionMajor, $versionMinor, $versionPatch) = explode('.', $versionMain);
+    }
+    else
+    {
+      $versionMajor = null;
+      $versionMinor = null;
+      $versionPatch = null;
+      $versionPreRelease = null;
+      $versionMetadata = null;
+    }
     
     $build = $this->repository->findSingleBuild($ownerNameCanonical, $modId, $branchId, $versionMajor, $versionMinor, $versionPatch, $versionPreRelease, $versionMetadata);
     

@@ -145,6 +145,27 @@ class Build
      * @ORM\Column(name="isFailed", type="boolean")
      */
     private $isFailed;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="generated_JSON", type="text", nullable=true)
+     */
+    private $generatedJSON;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="converterToken", type="string", length=255, nullable=true)
+     */
+    private $converterToken;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="converterTicket", type="string", length=255, nullable=true)
+     */
+    private $converterTicket;
 
     /**
      * @var string
@@ -164,7 +185,6 @@ class Build
      * )
      */
     private $folder;
-
 
     /**
      * Get id
@@ -495,6 +515,9 @@ class Build
             $this->versionMetadata = null;
             $this->isReady = false;
             $this->isFailed = false;
+            $this->generatedJSON = null;
+            $this->converterToken = null;
+            $this->converterTicket = null;
             $this->updated = new \Datetime;
             
             $newPackages = new \Doctrine\Common\Collections\ArrayCollection();
@@ -600,5 +623,74 @@ class Build
             null
         );
       }
+    }
+
+    /**
+     * Set generatedJSON
+     *
+     * @param string $generatedJSON
+     * @return Build
+     */
+    public function setGeneratedJSON($generatedJSON)
+    {
+        $this->generatedJSON = $generatedJSON;
+
+        return $this;
+    }
+
+    /**
+     * Get generatedJSON
+     *
+     * @return string 
+     */
+    public function getGeneratedJSON()
+    {
+        return $this->generatedJSON;
+    }
+
+    /**
+     * Set converterToken
+     *
+     * @param string $converterToken
+     * @return Build
+     */
+    public function setConverterToken($converterToken)
+    {
+        $this->converterToken = $converterToken;
+
+        return $this;
+    }
+
+    /**
+     * Get converterToken
+     *
+     * @return string 
+     */
+    public function getConverterToken()
+    {
+        return $this->converterToken;
+    }
+
+    /**
+     * Set converterTicket
+     *
+     * @param string $converterTicket
+     * @return Build
+     */
+    public function setConverterTicket($converterTicket)
+    {
+        $this->converterTicket = $converterTicket;
+
+        return $this;
+    }
+
+    /**
+     * Get converterTicket
+     *
+     * @return string 
+     */
+    public function getConverterTicket()
+    {
+        return $this->converterTicket;
     }
 }

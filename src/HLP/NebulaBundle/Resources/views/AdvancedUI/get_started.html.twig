@@ -5,5 +5,20 @@
 {% endblock %}
 
 {% block body %}
-  Get Started
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <h2>Install <span class="text-info">Knossos</span> client</h2>
+    <hr/>
+    <p>The client is hosted on <a href="https://github.com/ngld/knossos">github</a>.</p>
+    <br/>
+    <h2>Add <span class="text-info">repositories</span> to your client update sources</h2>
+    <hr/>
+    <p>Once installed, add a <strong>mod, branch or build unique URL</strong> through the <strong>settings -> "Add" button</strong>.</p>
+    <br/>
+    <h2>Create you <span class="text-info">personal mod repository</span></h2>
+    <hr/>
+    <p>More information on Hard Light Productions forum : <a href="http://www.hard-light.net/forums/index.php?topic=86364.0">official Knossos and Nebula development thread.</a>{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}<br/><br/>You can already <a href="{{ path('hlp_nebula_owner', {'owner': app.user.usernameCanonical }) }}">access your personal mod repository</a>.{% endif %}</p>
+    <br/>
+  </div>
+</div>
 {% endblock %}

@@ -1,3 +1,17 @@
+# Catalogue site
+
+hlp_catalogue_homepage:
+    path:     /
+    defaults: { _controller: HLPNebulaBundle:Catalogue:index }
+    
+hlp_catalogue_highlights:
+    path:     /highlights
+    defaults: { _controller: HLPNebulaBundle:Catalogue:index }
+    
+hlp_catalogue_mods:
+    path:     /mods
+    defaults: { _controller: HLPNebulaBundle:Catalogue:mods }
+
 # Base Nebula (owners part) routes
 
 hlp_nebula_homepage:
@@ -127,12 +141,36 @@ hlp_nebula_build:
     defaults: { _controller: HLPNebulaBundle:Build:index }
     requirements:
         build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+        
+hlp_nebula_process:
+    path:     /nebula/{owner}/{mod}/{branch}/{build}/process
+    defaults: { _controller: HLPNebulaBundle:Build:process }
+    requirements:
+        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+        
+hlp_nebula_process_finalise:
+    path:     /nebula/{owner}/{mod}/{branch}/{build}/process_finalise
+    defaults: { _controller: HLPNebulaBundle:Build:processFinalise }
+    requirements:
+        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+        
+hlp_nebula_process_force_fail:
+    path:     /nebula/{owner}/{mod}/{branch}/{build}/process_force_fail
+    defaults: { _controller: HLPNebulaBundle:Build:processForceFail }
+    requirements:
+        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
 
 hlp_nebula_build_data:
     path:     /nebula/{owner}/{mod}/{branch}/{build}/show_data
     defaults: { _controller: HLPNebulaBundle:Build:show }
     requirements:
-        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+        build:  ^((\d+\.){2}\d+(\-\w+)?(\+\w+)?|current)$
+        
+hlp_nebula_build_data_finalised:
+    path:     /nebula/{owner}/{mod}/{branch}/{build}/show_data_finalised
+    defaults: { _controller: HLPNebulaBundle:Build:showFinalised }
+    requirements:
+        build:  ^((\d+\.){2}\d+(\-\w+)?(\+\w+)?|current)$
         
 hlp_nebula_update_build:
     path:     /nebula/{owner}/{mod}/{branch}/{build}/copy_and_update
@@ -146,9 +184,9 @@ hlp_nebula_delete_build:
     
 hlp_nebula_fs2mod:
     path:      /nebula/{owner}/{mod}/{branch}/{build}.{format}
-    defaults:  { _controller: HLPNebulaBundle:Build:raw, build: current , format: json }
+    defaults:  { _controller: HLPNebulaBundle:Build:raw, format: json }
     requirements:
-        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+        build:  ^((\d+\.){2}\d+(\-\w+)?(\+\w+)?|current)$
         format: json|txt
     
 remove_trailing_slash:

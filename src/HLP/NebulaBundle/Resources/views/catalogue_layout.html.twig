@@ -1,0 +1,129 @@
+{# src/app/Ressources/views/layout.html.twig #}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+    {% block title %}Nebula{% endblock %}
+    </title>
+    <link rel="icon" href="{{ asset('hlp.ico') }}">
+    <!-- Bootstrap -->
+    {% block stylesheets %}
+    <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap-theme.css') }}" rel="stylesheet">
+      {% stylesheets '@HLPNebulaBundle/Resources/public/css/catalogue-theme.css' filter='cssrewrite' %}
+      <link href="{{ asset_url }} " rel="stylesheet">
+      {% endstylesheets %}
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
+    {% endblock %}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nebula-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          
+          <a class="navbar-brand" href="{{ path('hlp_catalogue_homepage') }}" style="margin-top:-10px;" ><img src="{{ asset('hlp.png') }}" alt="Nebula icon" height="40" width="40" > Nebula</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="nebula-navbar-collapse">
+          <ul class="nav navbar-nav">
+            <!--<li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_homepage' %}active{% endif %}"><a href="{{ path('hlp_nebula_homepage') }}">Home</a></li>!-->
+            <li class="{% if app.request.attributes.get('_route') == 'hlp_catalogue_highlights' %}active{% endif %}"><a href="{{ path('hlp_catalogue_highlights') }}">Highlights</a></li>
+            <li class="{% if app.request.attributes.get('_route') == 'hlp_catalogue_mods' %}active{% endif %}"><a href="{{ path('hlp_catalogue_mods') }}">Mods</a></li>
+            <li class=""><a href="#">Community</a></li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="color:orange;">
+                Downloads <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" role="menu">
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-download-alt"></span>&nbsp;&nbsp;Download Knossos client</a></li>
+                <li role="presentation" class="text-muted"><small style="margin-left:43px;">Free mod manager !</small></li>
+                <li role="presentation" class="divider"></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="glyphicon glyphicon-shopping-cart"></span>&nbsp;&nbsp;Buy FreeSpace 2</a></li>
+                <li role="presentation" class="text-muted"><small style="margin-left:43px;">Buy on Steam or GOG.com</small></li>
+              </ul>
+            </li>
+          </ul>
+          <form class="navbar-form navbar-right" role="search">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search mod">
+            <span class="input-group-btn"><button type="submit" class="btn btn-default"><span class="sr-only">Search&nbsp;</span><span class="glyphicon glyphicon-search"></span></button></span>
+            </div>
+          </form>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+    
+    {% block body %}
+
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner">
+        <div class="item active">
+          <img src="{{ asset('imglol.jpg') }}" alt="First slide"  class="carImg">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Pew ! Pew !</h1>
+              <p>Note: If you're viewing this page via a <code>file://</code> URL, the "next" and "previous" Glyphicon buttons on the left and right might not load/display properly due to web browser security rules.</p>
+              <p><a class="btn btn-success" href="#" role="button">Play Now !</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="{{ asset('img1.png') }}" alt="Second slide" class="carImg">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>Another scary mod.</h1>
+              <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+              <p><a class="btn btn-success" href="#" role="button">Play Now !</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="{{ asset('img2.png') }}" alt="Third slide"  class="carImg">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>One more for good measure.</h1>
+              <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+              <p><a class="btn btn-success" href="#" role="button">Play Now !</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+      <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+    </div><!-- /.carousel -->
+    {% endblock %}
+    {% block javascripts %}
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-theme.min.js') }}"></script>
+    <script>$('.carousel').carousel({ interval: 10000 })
+    </script>
+    
+    {% endblock %}
+  </body>
+</html>

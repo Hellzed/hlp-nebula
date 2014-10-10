@@ -32,6 +32,7 @@
   </div>
   <div class="form-group">
     {{ form_label(form.notes, "Notes") }}
+    <p class="help-block">Notes are intended for other <em>modders</em> and <em>developers</em>, they contain optional <em>technical informations</em>.</p>
     {{ form_errors(form.notes) }}
     {{ form_widget(form.notes) }}
   </div>
@@ -72,9 +73,8 @@
   <div class="form-group clearfix">
     <div class="clearfix">{{ form_label(form.actions, "Actions") }}
       <p class="help-block">
-        Actions allow to <em>move</em> or <em>delete</em> files after install.
-        <br/><span class="glyphicon glyphicon-warning-sign"></span> Instead of using this method, you should consider relying on the <em>software client</em> to preserve the <em>integrity</em> and <em>cleanness</em> of the mod on the user's computer
-        <br/>Actions are used to ensure <em>compatibility with legacy clients</em> that do not support automatic mod folder cleaning after update.
+        Actions allow to <em>move</em> or <em>delete</em> files after install.<br/>
+        Use actions if one or more of your archives contains <em>subdirectories</em>, to move files from the extracted subdirectory to the mod installation path.
       </p>
     </div>
     {{ form_errors(form.actions) }}

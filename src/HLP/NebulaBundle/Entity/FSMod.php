@@ -2,7 +2,7 @@
 
 /*
 * Copyright 2014 HLP-Nebula authors, see NOTICE file
-4
+
 *
 * Licensed under the EUPL, Version 1.1 or – as soon they
 will be approved by the European Commission - subsequent
@@ -13,7 +13,7 @@ Licence.
 *
 *
 http://ec.europa.eu/idabc/eupl
-5
+
 *
 * Unless required by applicable law or agreed to in
 writing, software distributed under the Licence is
@@ -51,6 +51,17 @@ class FSMod
     private $nbBuilds = null;
     
     /**
+     * @ORM\OneToMany(targetEntity="HLP\NebulaBundle\Entity\Author", mappedBy="mod", cascade={"remove"}, cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $authors;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="HLP\NebulaBundle\Entity\Logo", cascade={"persist","remove"})
+     * @Assert\Valid
+     */
+    private $logo;
+    
+    /**
      * @ORM\OneToMany(targetEntity="HLP\NebulaBundle\Entity\Branch", mappedBy="mod", cascade={"remove"})
      */
     private $branches;
@@ -64,6 +75,11 @@ class FSMod
      * @ORM\ManyToOne(targetEntity="HLP\NebulaBundle\Entity\Team", inversedBy="mods")
      */
     private $teamAsOwner;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="HLP\NebulaBundle\Entity\Category", cascade={"persist"})
+     */
+    private $categories;
     
     /**
      * @var integer
@@ -126,7 +142,16 @@ class FSMod
      * })
      */
     private $features;
-
+    
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="keywords", type="array")
+     * @Assert\All({
+     *     @Assert\Length(max=255)
+     * })
+     */
+    private $keywords;
 
     /**
      * Get id
@@ -281,6 +306,7 @@ class FSMod
     public function __construct()
     {
         $this->branches = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->authors = new \Doctrine\Common\Collections\ArrayCollection();
         $this->firstRelease = new \Datetime();
     }
     
@@ -402,57 +428,185 @@ class FSMod
     
       // lib/model/doctrine/BlogPost.class.php
 
-  /**
-   * Return the number of tags related to the blog post.
-   *
-   * @return Integer
+    /**
+     * Return the number of tags related to the blog post.
+     *
+     * @return Integer
 
-   */
-  public function getNbBranches()
-  {
-    if (is_null($this->nbBranches))
+     */
+    public function getNbBranches()
     {
-      $this->nbBranches = $this->getBranches()->count();
-    }
-
-    return $this->nbBranches;
-  }
-  
-  /**
-   * Return the number of tags related to the blog post.
-   *
-   * @return Integer
-
-   */
-  public function getNbBuilds()
-  {
-    if (is_null($this->nbBuilds))
-    {
-      $this->nbBuilds = 0;
-      foreach($this->getBranches() as $branch)
+      if (is_null($this->nbBranches))
       {
-        $this->nbBuilds += $branch->getBuilds()->count();
+        $this->nbBranches = $this->getBranches()->count();
       }
+
+      return $this->nbBranches;
+    }
+    
+    /**
+     * Return the number of tags related to the blog post.
+     *
+     * @return Integer
+
+     */
+    public function getNbBuilds()
+    {
+      if (is_null($this->nbBuilds))
+      {
+        $this->nbBuilds = 0;
+        foreach($this->getBranches() as $branch)
+        {
+          $this->nbBuilds += $branch->getBuilds()->count();
+        }
+      }
+
+      return $this->nbBuilds;
+    }
+    
+    /**
+     * @Assert\Callback
+     */
+    public function forbiddenWords(ExecutionContextInterface $context)
+    {
+      $forbiddenWords = Array('mods','profile','activity');
+      
+      if(in_array($this->modId, $forbiddenWords)) {
+        $context->addViolationAt(
+            'modId',
+            'Mod ID is a forbidden word ("'.$this->modId.'") !',
+            array(),
+            null
+            );
+       }
+    }
+      
+
+    /**
+     * Add authors
+     *
+     * @param \HLP\NebulaBundle\Entity\Author $authors
+     * @return FSMod
+     */
+    public function addAuthor(\HLP\NebulaBundle\Entity\Author $authors)
+    {
+        $this->authors[] = $authors;
+        $authors->setMod($this);
+        return $this;
     }
 
-    return $this->nbBuilds;
-  }
-  
-  /**
-   * @Assert\Callback
-   */
-  public function forbiddenWords(ExecutionContextInterface $context)
-  {
-    $forbiddenWords = Array('mods','profile','activity');
-    
-    if(in_array($this->modId, $forbiddenWords)) {
-      $context->addViolationAt(
-          'modId',
-          'Mod ID is a forbidden word ("'.$this->modId.'") !',
-          array(),
-          null
-          );
-     }
-  }
-    
+    /**
+     * Remove authors
+     *
+     * @param \HLP\NebulaBundle\Entity\Author $authors
+     */
+    public function removeAuthor(\HLP\NebulaBundle\Entity\Author $authors)
+    {
+        $this->authors->removeElement($authors);
+        $authors->setMod(null);
+    }
+
+    /**
+     * Get authors
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAuthors()
+    {
+        return $this->authors;
+    }
+
+    /**
+     * Set keywords
+     *
+     * @param array $keywords
+     * @return FSMod
+     */
+    public function setKeywords($keywords)
+    {
+        $this->keywords = explode(',', $keywords);
+        
+        foreach($this->keywords as $key => $keyword)
+        {
+          $this->keywords[$key] = trim($keyword);
+        }
+        
+        $this->keywords = array_filter($this->keywords);
+        
+        return $this;
+    }
+
+    /**
+     * Get keywords
+     *
+     * @return array 
+     */
+    public function getKeywords()
+    {
+        $keywordsStr = '';
+        if(isset($this->keywords))
+        {
+          foreach($this->keywords as $keyword)
+          {
+            $keywordsStr .= $keyword.', ';
+          }
+        }
+        return $keywordsStr;
+    }
+
+    /**
+     * Add categories
+     *
+     * @param \HLP\NebulaBundle\Entity\Category $categories
+     * @return FSMod
+     */
+    public function addCategory(\HLP\NebulaBundle\Entity\Category $categories)
+    {
+        $this->categories[] = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Remove categories
+     *
+     * @param \HLP\NebulaBundle\Entity\Category $categories
+     */
+    public function removeCategory(\HLP\NebulaBundle\Entity\Category $categories)
+    {
+        $this->categories->removeElement($categories);
+    }
+
+    /**
+     * Get categories
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCategories()
+    {
+        return $this->categories;
+    }
+
+    /**
+     * Set logo
+     *
+     * @param \HLP\NebulaBundle\Entity\Logo $logo
+     * @return FSMod
+     */
+    public function setLogo(\HLP\NebulaBundle\Entity\Logo $logo = null)
+    {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * Get logo
+     *
+     * @return \HLP\NebulaBundle\Entity\Logo 
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
 }

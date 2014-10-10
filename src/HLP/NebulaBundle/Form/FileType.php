@@ -2,7 +2,7 @@
 
 /*
 * Copyright 2014 HLP-Nebula authors, see NOTICE file
-4
+
 *
 * Licensed under the EUPL, Version 1.1 or – as soon they
 will be approved by the European Commission - subsequent
@@ -13,7 +13,7 @@ Licence.
 *
 *
 http://ec.europa.eu/idabc/eupl
-5
+
 *
 * Unless required by applicable law or agreed to in
 writing, software distributed under the Licence is
@@ -28,6 +28,8 @@ namespace HLP\NebulaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class FileType extends AbstractType
@@ -47,9 +49,10 @@ class FileType extends AbstractType
                                                       'allow_delete'    => true,
                                                       'prototype'       => true,
                                                       'prototype_name'  => '__urls_prototype__'))
-            ->add('isArchive',  'checkbox',     array('required' => false,
-                                                      'attr' => array('checked'   => 'checked')))
+            ->add('isArchive',  'checkbox',     array('required' => false))
         ;
+        
+        
     }
     
     /**

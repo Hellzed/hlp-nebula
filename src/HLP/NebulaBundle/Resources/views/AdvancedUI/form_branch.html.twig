@@ -22,9 +22,14 @@
   </div>
   <div class="form-group">
     {{ form_label(form.notes, "Notes") }}
+    <p class="help-block">Notes are intended for other <em>modders</em> and <em>developers</em>, they contain optional <em>technical informations</em>.</p>
     {{ form_errors(form.notes) }}
     {{ form_widget(form.notes) }}
   </div>
   {{ form_rest(form) }}
-  <button type="submit" class="btn btn-success">Submit</button>
+  <br/>
+  <hr/>
+  <div class="text-center">
+    <button type="submit" class="btn btn-success" style="width:100px;">Submit</button>
+  </div>
 {{ form_end(form) }}

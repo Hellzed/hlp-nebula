@@ -44,7 +44,7 @@ $(document).ready(function() {
           var $rmButton = $(this).find('.rmButton');
     
           $rmButton.click(function(e) {
-                $(this).parent().parent().parent().remove();
+                $(this).parent().parent().parent().parent().remove();
                 return false;
               });
         });
@@ -81,6 +81,7 @@ $(document).ready(function() {
     //Make the prototype an HTML element
     $prototype = $($prototype);
     //Append it to the prototype storage div's parent
+    $prototype.find('[id$=isArchive]').attr('checked', 'checked');
 
     $field.children('div[data-prototype]').children(':last').before($prototype);
     //increment the fields index

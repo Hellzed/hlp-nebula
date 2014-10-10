@@ -43,12 +43,32 @@ class BaseController extends Controller
   
   public function modsAction()
   {
-    return $this->render('HLPNebulaBundle:AdvancedUI:all_mods.html.twig');
+    $repository = $this
+      ->getDoctrine()
+      ->getManager()
+      ->getRepository('HLPNebulaBundle:FSMod')
+    ;
+    
+    $modsList = $repository->findAllModsWithOwners();
+    
+    return $this->render('HLPNebulaBundle:AdvancedUI:all_mods.html.twig', array(
+      'modsList'  => $modsList
+    ));
   }
   
-  public function moddersAction()
+  public function ownersAction()
   {
-    return $this->render('HLPNebulaBundle:AdvancedUI:all_modders.html.twig');
+    $repository = $this
+      ->getDoctrine()
+      ->getManager()
+      ->getRepository('HLPNebulaBundle:User')
+    ;
+    
+    $moddersList = $repository->findAllUsersWithMods();
+    
+    return $this->render('HLPNebulaBundle:AdvancedUI:all_modders.html.twig', array(
+      'moddersList'  => $moddersList
+    ));
   }
   
   public function activityAction()
