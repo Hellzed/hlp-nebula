@@ -70,7 +70,7 @@ class Action
      * @Assert\All({
      *     @Assert\Length(max=255),
      *     @Assert\Regex(
-     *     pattern="/^([\\\/]?[^\0\\\/:\*\?\x22<>\|]+)*[\\\/]?$/",
+     *     pattern="/^([\\\/]?[^\0\\\/:\?\x22<>\|]+)*[\\\/]?$/",
      *     message="The action path must be a valid relative path."
      *     )
      * })

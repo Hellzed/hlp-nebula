@@ -284,7 +284,7 @@
         <div class="nospacer dynlistItem">
             <div class="sr-only">{{ form_label(form, "Path") }}</div>
             <div class="input-group">
-                {{ form_widget(form, {'attr':{'pattern':'^([\\\/]?[^\0\\\/:\*\?"<>\|]+)*[\\\/]?$', 'title': 'Must be a valid relative path.' }}) }}
+                {{ form_widget(form, {'attr':{'pattern':'^([\\\/]?[^\0\\\/:\?"<>\|]+)*[\\\/]?$', 'title': 'Must be a valid relative path.' }}) }}
                 <span class="input-group-btn">
                     <button class="btn btn-warning rmButton" type="button"><span class="glyphicon glyphicon-remove"><span><span class="sr-only">Remove path</span>
                     </button>
