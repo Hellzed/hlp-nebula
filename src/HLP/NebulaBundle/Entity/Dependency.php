@@ -68,8 +68,8 @@ class Dependency
      *
      * @ORM\Column(name="packages", type="array")
      * @Assert\All({
-     *     @Assert\Regex("/^[-\w]+$/", message="Special characters not allowed in the dependency package name."),
-     *     @Assert\Regex("/^-/", match=false, message="Dash not allowed at the beginning of a dependency package name."),
+     *     @Assert\Regex("/^[-\w ]+$/", message="Special characters not allowed in the dependency package name."),
+     *     @Assert\Regex("/^- /", match=false, message="Dash and space not allowed at the beginning of a dependency package name."),
      *     @Assert\Length(max=255)
      * })
      */

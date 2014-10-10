@@ -89,7 +89,7 @@
                     {{ form_errors(form.name) }}
                     {{ form_errors(form.status) }}
                     {{ form_label(form.name, "Package name* :") }}&#160;
-                    {{ form_widget(form.name, {'attr':{'pattern':'^[\\w]+[-\\w]*$', 'title': 'Package name : spaces and special characters not allowed, hyphen (\"-\") not allowed at the beginning of the name. Underscores (\"_\") allowed.' }}) }}&#160;
+                    {{ form_widget(form.name, {'attr':{'pattern':'^[\\w]+[-\\w ]*$', 'title': 'Package name : spaces and special characters not allowed, hyphen (\"-\") not allowed at the beginning of the name. Underscores (\"_\") allowed.' }}) }}&#160;
                     {{ form_label(form.status, "Status :") }}&#160;
                     {{ form_widget(form.status) }}
                 </div>
@@ -321,7 +321,7 @@
         <div class="nospacer dynlistItem depPkgItem">
             <div class="sr-only">{{ form_label(form, "Required package") }}</div>
             <div class="input-group">
-                {{ form_widget(form, {'attr':{'pattern':'^[\\w]+[-\\w]*$', 'title': 'Dependency package name : spaces and special characters not allowed, hyphen (\"-\") not allowed at the beginning of the name. Underscores (\"_\") allowed.' }}) }}
+                {{ form_widget(form, {'attr':{'pattern':'^[\\w]+[-\\w ]*$', 'title': 'Dependency package name : spaces and special characters not allowed, hyphen (\"-\") not allowed at the beginning of the name. Underscores (\"_\") allowed.' }}) }}
                 <span class="input-group-btn">
                     <button class="btn btn-warning rmButton" type="button"><span class="glyphicon glyphicon-remove"><span><span class="sr-only">Remove package</span>
                     </button>
