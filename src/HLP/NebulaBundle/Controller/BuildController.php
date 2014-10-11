@@ -296,9 +296,9 @@ class BuildController extends Controller
       }
     }
     
-    if (($build->getIsFailed() == true) && ($request->getMethod() == 'POST'))
-    {
-      $response = new Response(json_encode(array('cancelled' => true)));
+    if($request->getMethod() == 'POST')
+    {      
+      $response = new Response(json_encode(array('cancelled' => $build->getIsFailed())));
       $response->headers
                ->set('Content-Type', 'application/json');
                
