@@ -22,7 +22,7 @@
   {% endif %}
         <tr>
           <td>{{ modder.username }}</td>
-          <td><a href="{{ path('hlp_nebula_owner', {'owner': modder.nameCanonical}) }}">{{ modder.mods|length }} mods</a></td>
+          <td><a href="{{ path('hlp_nebula_owner', {'owner': modder.nameCanonical}) }}">{% if modder.mods|length == 0 %}Empty repository{% else %}{{ modder.mods|length }} mod{% if modder.mods|length > 1 %}s{% endif %}{% endif %}</a></td>
           <td>{{ modder.joined|date("d M Y") }}</td>
         </tr>
   {% if loop.last %}
@@ -30,7 +30,7 @@
     </table>
   {% endif %}
 {% else %}
-<p class="lead">No mod found.</p>
+<p class="lead">No modder found.</p>
 {% endfor %}
 
   </div>
