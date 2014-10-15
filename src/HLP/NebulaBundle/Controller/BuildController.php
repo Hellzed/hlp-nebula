@@ -39,6 +39,7 @@ use HLP\NebulaBundle\Entity\FSMod;
 use HLP\NebulaBundle\Entity\Branch;
 use HLP\NebulaBundle\Entity\Build;
 use HLP\NebulaBundle\Form\BuildType;
+use HLP\NebulaBundle\Form\BuildTransferType;
 
 class BuildController extends Controller
 {
@@ -153,6 +154,57 @@ class BuildController extends Controller
     }
     
     return $this->render('HLPNebulaBundle:AdvancedUI:copy_and_update_build.html.twig', array(
+      'owner'  => $owner,
+      'mod'    => $mod,
+      'branch' => $branch,
+      'build'  => $build,
+      'form'   => $form->createView()
+    ));
+  }
+  
+  public function transferAction(Request $request, Build $build)
+  {
+    $branch = $build->getBranch();
+    $mod = $branch->getMod();
+    $owner = $mod->getOwner();
+    
+    if (false === $this->get('security.context')->isGranted('add', $owner)) {
+        throw new AccessDeniedException('Unauthorised access!');
+    }
+    
+    $newBuild = clone $build;
+    
+    $form = $this->createForm(new BuildTransferType(), $newBuild);
+    
+    if ($form->handleRequest($request)->isValid())
+    {
+      
+      $em = $this->getDoctrine()
+                 ->getManager();
+                 
+      $em->persist($newBuild);
+      $em->flush();
+      
+      $request->getSession()
+              ->getFlashBag()
+              ->add('success', "New build <strong>version ".$newBuild->getVersion()."</strong> successfully created from <strong>version ".$build->getVersion()."</strong>.");
+
+      return $this->redirect($this->generateUrl('hlp_nebula_process', array(
+        'owner'  => $owner,
+        'mod'    => $mod,
+        'branch' => $newBuild->getBranch(),
+        'build'  => $newBuild
+      )));
+    }
+    
+    if ((!$form->isValid()) && $request->isMethod('POST') )
+    {
+      $request->getSession()
+              ->getFlashBag()
+              ->add('error', '<strong>Invalid data !</strong> Please check this form again.');
+    }
+    
+    return $this->render('HLPNebulaBundle:AdvancedUI:transfer_build.html.twig', array(
       'owner'  => $owner,
       'mod'    => $mod,
       'branch' => $branch,

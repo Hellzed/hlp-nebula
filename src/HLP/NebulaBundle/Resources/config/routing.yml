@@ -177,6 +177,12 @@ hlp_nebula_update_build:
     defaults: { _controller: HLPNebulaBundle:Build:newBuildFrom }
     requirements:
         build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+        
+hlp_nebula_transfer_build:
+    path:     /nebula/{owner}/{mod}/{branch}/{build}/copy_and_transfer
+    defaults: { _controller: HLPNebulaBundle:Build:transfer }
+    requirements:
+        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
 
 hlp_nebula_delete_build:
     path:     /nebula/{owner}/{mod}/{branch}/{build}/delete
