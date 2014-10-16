@@ -10,6 +10,7 @@
     <table class="table table-hover">
       <thead>
         <tr>
+          <th>Default</th>
           <th>Branch ID</th>
           <th>Branch name</th>
           <th>Last update</th>
@@ -19,6 +20,7 @@
       <tbody>
   {% endif %}
         <tr>
+          <td class="text-muted">{% if branch.isDefault %}&nbsp;&nbsp;<span class="glyphicon glyphicon-ok"></span><span class="sr-only">Default branch</span>{% endif %}</td>
           <td><a href="{{ path('hlp_nebula_branch', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}">{{ branch.branchId }}</a></td>
           <td>{{ branch.name }}</td>
           <td>{% if branch.builds[0] is defined %}{{ branch.builds[0].updated|date("d M Y") }}{% else %}Empty branch !{% endif %}</td>
