@@ -194,7 +194,7 @@ class Action
             $this->dest = null;
         }
         
-        if($this->dest === null)
+        if(($this->dest == null) && ($this->type == 'move'))
         {
           $this->dest = '';
         }
