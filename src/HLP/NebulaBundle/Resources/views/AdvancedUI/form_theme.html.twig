@@ -249,7 +249,8 @@
                 </div>
                 <div class="form-group">
                     {{ form_label(form.urls, "Download URLs*") }}
-                    <p class="help-block">Only <em>direct download links</em> are allowed.</p>
+                    <p class="help-block"><em>Direct download links</em> and <em><a href="http://www.mediafire.com/" target="_blank">MediaFire</a> links</em> are allowed.<br/>
+                    <span class="glyphicon glyphicon-warning-sign"></span>&nbsp;<em>Do not modify this file on the remote server(s) after current build is validated.</em></p>
                     {{ form_errors(form.urls) }}
                     {{ form_widget(form.urls) }}
                     <div class="nospacer">
