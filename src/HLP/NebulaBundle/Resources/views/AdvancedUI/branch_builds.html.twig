@@ -27,7 +27,7 @@
           </td>
           {% if is_granted('add', owner) %}
             <td>
-              <a href="{{ path('hlp_nebula_update_build', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}" class="btn btn-default btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-retweet"></span> Copy and update&nbsp;</a>&nbsp;
+              <a href="{{ path('hlp_nebula_update_build', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}" class="btn btn-default btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-retweet"></span> Copy & update&nbsp;</a>&nbsp;
               <a href="{{ path('hlp_nebula_transfer_build', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}" class="btn btn-default btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-transfer"></span> Transfer&nbsp;</a>&nbsp;
               <a href="{{ path('hlp_nebula_delete_build', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}" class="btn btn-danger btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-trash"></span> Delete&nbsp;</a>
             </td>

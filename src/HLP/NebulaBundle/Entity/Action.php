@@ -193,6 +193,11 @@ class Action
         if($this->type == 'delete') {
             $this->dest = null;
         }
+        
+        if($this->dest === null)
+        {
+          $this->dest = '';
+        }
         return $this;
     }
 
