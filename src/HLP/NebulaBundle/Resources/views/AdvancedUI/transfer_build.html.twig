@@ -18,11 +18,10 @@
 </div>
 <div class="row">
   <div class="col-sm-3">
-    <h2>New build</h2>
+    <h2><small>Transfer build </small>{{ build.version }}</h2>
     <hr/>
-    <p class="lead"><small class="text-muted">copied from </small>{{ mod.modId }}_<wbr>{{ build.version }}</p>
+    <p class="lead"><small class="text-muted">from branch </small>{{ branch.name }}</p>
     <hr/>
-    <p class="lead"><small class="text-muted">in branch </small>{{ branch.name }}</p>
     <p class="lead"><small class="text-muted">of mod </small>{{ mod.title }}</p>
     <p class="lead"><small class="text-muted">as </small>{{ owner.name }}</p>
     <hr/>
@@ -32,12 +31,21 @@
     {{ form_start(form, {'attr': {'class': 'mainForm row'}}) }}
   {{ form_errors(form) }}
   {% include "HLPNebulaBundle:AdvancedUI:flashbox.html.twig" %}
+  <h4><span class="glyphicon glyphicon-transfer"></span> Destination</h4>
+  <hr/>
+  <div class="form-group">
+    {{ form_label(form.branch, "Branch") }}
+    <p class="help-block">Chose a branch of your mod to transfer this build.</p>
+    {{ form_errors(form.branch) }}
+    {{ form_widget(form.branch) }}
+  </div>  
+  <br/>
   <h4><span class="glyphicon glyphicon-asterisk"></span> Build details</h4>
   <hr/>
   <div class="form-group">
     {{ form_label(form.versionMajor, "Version*") }}
     <p class="help-block">
-      A build version number must be unique <em>across the branches of your mod</em>. Use <a target="_blank" href='http://semver.org/'>Semantic Versioning <span class="glyphicon glyphicon-link"></span></a>.
+      A build version number must be unique <em>in the destination branch of your mod</em>. Use <a target="_blank" href='http://semver.org/'>Semantic Versioning <span class="glyphicon glyphicon-link"></span></a>.
     </p>
     {{ form_errors(form.versionMajor) }}
     {{ form_errors(form.versionMinor) }}
@@ -63,6 +71,7 @@
     {{ form_errors(form.notes) }}
     {{ form_widget(form.notes) }}
   </div>  
+  
   {{ form_rest(form) }}
   <div class="text-center">
     <button type="submit" class="btn btn-success" style="width:100px;">Submit</button>
