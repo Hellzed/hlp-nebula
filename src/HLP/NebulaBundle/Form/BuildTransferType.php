@@ -39,6 +39,7 @@ class BuildTransferType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $id = $builder->getData()->getBranch()->getMod()->getId();
+        $exclude = $builder->getData()->getBranch()->getId();
         $builder
             ->remove('folder')
             ->remove('packages')
@@ -47,8 +48,8 @@ class BuildTransferType extends AbstractType
               'class'    => 'HLPNebulaBundle:Branch',
               'expanded'   => false,
               'multiple' => false,
-              'query_builder' => function(\HLP\NebulaBundle\Entity\BranchRepository $repo) use($id) {
-                return $repo->getBranchFromMod($id);
+              'query_builder' => function(\HLP\NebulaBundle\Entity\BranchRepository $repo) use($id, $exclude) {
+                return $repo->getBranchFromMod($id, $exclude);
               }))
         ;
     }
