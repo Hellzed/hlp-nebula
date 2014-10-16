@@ -60,8 +60,8 @@ class BuildConverter implements ParamConverterInterface
     
     if(!($version == 'current'))
     {
-      list($versionRest, $versionMetadata) = array_pad(explode('+', $version), 2, null);
-      list($versionMain, $versionPreRelease) = array_pad(explode('-', $versionRest), 2, null);
+      list($versionRest, $versionMetadata) = array_pad(explode('+', $version, 2), 2, null);
+      list($versionMain, $versionPreRelease) = array_pad(explode('-', $versionRest, 2), 2, null);
       list($versionMajor, $versionMinor, $versionPatch) = explode('.', $versionMain);
     }
     else

@@ -140,49 +140,49 @@ hlp_nebula_build:
     path:     /nebula/{owner}/{mod}/{branch}/{build}
     defaults: { _controller: HLPNebulaBundle:Build:index }
     requirements:
-        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+        build:  ^(\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$
         
 hlp_nebula_process:
     path:     /nebula/{owner}/{mod}/{branch}/{build}/process
     defaults: { _controller: HLPNebulaBundle:Build:process }
     requirements:
-        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+        build:  ^(\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$
         
 hlp_nebula_process_finalise:
     path:     /nebula/{owner}/{mod}/{branch}/{build}/process_finalise
     defaults: { _controller: HLPNebulaBundle:Build:processFinalise }
     requirements:
-        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+        build:  ^(\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$
         
 hlp_nebula_process_force_fail:
     path:     /nebula/{owner}/{mod}/{branch}/{build}/process_force_fail
     defaults: { _controller: HLPNebulaBundle:Build:processForceFail }
     requirements:
-        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+        build:  ^(\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$
 
 hlp_nebula_build_data:
     path:     /nebula/{owner}/{mod}/{branch}/{build}/show_data
     defaults: { _controller: HLPNebulaBundle:Build:show }
     requirements:
-        build:  ^((\d+\.){2}\d+(\-\w+)?(\+\w+)?|current)$
+        build:  ^((\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?|current)$
         
 hlp_nebula_build_data_finalised:
     path:     /nebula/{owner}/{mod}/{branch}/{build}/show_data_finalised
     defaults: { _controller: HLPNebulaBundle:Build:showFinalised }
     requirements:
-        build:  ^((\d+\.){2}\d+(\-\w+)?(\+\w+)?|current)$
+        build:  ^((\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?|current)$
         
 hlp_nebula_update_build:
     path:     /nebula/{owner}/{mod}/{branch}/{build}/copy_and_update
     defaults: { _controller: HLPNebulaBundle:Build:newBuildFrom }
     requirements:
-        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+        build:  ^(\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$
         
 hlp_nebula_transfer_build:
     path:     /nebula/{owner}/{mod}/{branch}/{build}/copy_and_transfer
     defaults: { _controller: HLPNebulaBundle:Build:transfer }
     requirements:
-        build:  ^(\d+\.){2}\d+(\-\w+)?(\+\w+)?$
+        build:  ^(\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$
 
 hlp_nebula_delete_build:
     path:     /nebula/{owner}/{mod}/{branch}/{build}/delete
@@ -192,7 +192,7 @@ hlp_nebula_fs2mod:
     path:      /nebula/{owner}/{mod}/{branch}/{build}.{format}
     defaults:  { _controller: HLPNebulaBundle:Build:raw, format: json }
     requirements:
-        build:  ^((\d+\.){2}\d+(\-\w+)?(\+\w+)?|current)$
+        build:  ^((\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?|current)$
         format: json|txt
     
 remove_trailing_slash:

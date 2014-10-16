@@ -111,7 +111,7 @@ class Build
      *
      * @ORM\Column(name="versionPreRelease", type="string", length=255, nullable=true)
      * @Assert\Length(max=255)
-     * @Assert\Regex("/^\w+$/", message="Special characters not allowed in the pre-release field.")
+     * @Assert\Regex("/^[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*$/", message="Special characters not allowed in the pre-release field.")
      */
     private $versionPreRelease;
 
@@ -120,7 +120,7 @@ class Build
      *
      * @ORM\Column(name="versionMetadata", type="string", length=255, nullable=true)
      * @Assert\Length(max=255)
-     * @Assert\Regex("/^\w+$/", message="Special characters not allowed in the metadata.")
+     * @Assert\Regex("/^[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*$/", message="Special characters not allowed in the metadata.")
      */
     private $versionMetadata;
 
