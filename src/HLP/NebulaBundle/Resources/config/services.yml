@@ -6,7 +6,7 @@ services:
         
     hlpnebula.knossos_server_connect:
         class: HLP\NebulaBundle\KSConnect\KSConnect
-        arguments: ['http://s1.nebula.tproxy.de/api/converter/request', 'http://s1.nebula.tproxy.de/api/converter/retrieve', '<secret>']
+        arguments: ['http://%server%/api/converter/request', 'http://%server%/api/converter/retrieve', '<secret>']
         
     hlpnebula.paramconverter_modder:
         class: HLP\NebulaBundle\Request\OwnerConverter

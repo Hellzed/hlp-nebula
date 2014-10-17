@@ -1,6 +1,7 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
+    - { resource: "@HLPNebulaBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~
@@ -80,3 +81,6 @@ fos_user:
     from_email:
         address:        noreply@hlp-nebula.org
         sender_name:    Nebula
+
+hlp_nebula:
+    knossos_server: s1.nebula.tproxy.de
