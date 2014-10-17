@@ -69,9 +69,9 @@ The official [development thread](http://www.hard-light.net/forums/index.php?top
 * User management : DONE
 * Mod/branch/build registration : DONE
 * JSON repository config file generation : DONE
+* JSON repository validation (to enable md5sum checks on client side) : DONE
+* Main pages (getting started, mods/modders global list...) : WIP
 * User/mod/branch/build detail pages and activity log : WIP
-* JSON repository validation (to enable md5sum checks on client side) : WIP
-* Main pages (getting started, mods/modders global list...) : NOT STARTED
 
 **Players site :**
 * Everything : NOT STARTED
