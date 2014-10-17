@@ -1,7 +1,6 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
-    - { resource: "@HLPNebulaBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~
@@ -83,4 +82,4 @@ fos_user:
         sender_name:    Nebula
 
 hlp_nebula:
-    knossos_server: s1.nebula.tproxy.de
+    knossos_server: "%hlp_nebula_knossos_server%"
