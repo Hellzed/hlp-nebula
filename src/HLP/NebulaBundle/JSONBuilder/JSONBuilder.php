@@ -62,7 +62,7 @@ class JSONBuilder
     }
     
     if($build->getNotes() || $branch->getNotes() || $mod->getNotes()) {
-      $data['notes'] = 'MOD NOTES :\\n'.$mod->getNotes().'\\n\\nBRANCH NOTES :\\n'.$branch->getNotes().'\\n\\nBUILD NOTES :\\n'.$build->getNotes();
+      $data['notes'] = "MOD NOTES :\n".$mod->getNotes()."\n\nBRANCH NOTES :\n".$branch->getNotes()."\n\nBUILD NOTES :\n".$build->getNotes();
     }
     
     if($build->getFolder()) {
