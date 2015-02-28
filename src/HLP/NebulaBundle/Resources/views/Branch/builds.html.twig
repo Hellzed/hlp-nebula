@@ -1,0 +1,62 @@
+{% extends "HLPNebulaBundle:Branch:_layout.html.twig" %}
+
+{% block branch_tab %}
+  {% if is_granted('EDIT', meta) %}
+    <p class="well"><a href="{{ path('hlp_nebula_repository_build_create', {'meta': meta.metaId, 'branch': branch.branchId}) }}" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> New build</a></p>
+  {% endif %}
+{% if buildsList|length>0 %}
+<table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Version</th>
+          <th>Release date</th>
+          <th>Status</th>
+          {% if is_granted('EDIT', meta) %}<th>Actions</th>{% endif %}
+        </tr>
+      </thead>
+      <tbody>
+ 
+  {% for build in buildsList %}
+    
+  
+        <tr>
+          <td><a href="{{ path('hlp_nebula_repository_build', {'meta': meta.metaId, 'branch': branch.branchId, 'build': build.version}) }}">{{ build.version }}</a></td>
+          <td>{{ build.updated|date("d M Y") }}</td>
+          <td>
+          {% if build.isReady %}<span class="text-success"><span class="glyphicon glyphicon-ok"></span>&nbsp;Validated</span>{% endif %}
+          {% if build.isFailed %}<span class="text-warning"><span class="glyphicon glyphicon-remove"></span>&nbsp;Failed</span>{% endif %}
+          {% if not build.isReady and not build.isFailed %}<span class="text-info"><span class="glyphicon glyphicon-cog"></span>&nbsp;Processing...</span>{% endif %}
+          </td>
+          {% if is_granted('EDIT', meta) %}
+            <td>
+              {#<a href="{{ path('hlp_nebula_repository_build_update', {'meta': meta.metaId, 'branch': branch.branchId, 'build': build.version}) }}" class="btn btn-default btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-retweet"></span> Copy & update&nbsp;</a>&nbsp;
+              {% if branch.builds|length > 1 %}<a href="{{ path('hlp_nebula_transfer_build', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}" class="btn btn-default btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-transfer"></span> Transfer&nbsp;</a>&nbsp;{% endif %}
+              <a href="{{ path('hlp_nebula_delete_build', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}" class="btn btn-danger btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-trash"></span> Delete&nbsp;</a>#}
+            </td>
+          {% endif %}
+        </tr>
+{% endfor %}
+      </tbody>
+    </table>
+{% else %}
+<p class="lead">No build found.</p>
+{% endif %}
+
+{% if nbPages > 1 %}
+    <div class="text-center">
+      <ul class="pagination pagination-sm">
+        {% if page != 1 %}
+          <li><a href="{{ path('hlp_nebula_repository_branch_builds', {'meta': meta.metaId, 'branch': branch.branchId, 'page': page-1}) }}">&laquo;</a></li>
+        {% endif %}
+        {% for p in range(1, nbPages) %}
+          <li{% if p == page %} class="active"{% endif %}>
+            <a href="{{ path('hlp_nebula_repository_branch_builds', {'meta': meta.metaId, 'branch': branch.branchId, 'page': p}) }}">{{ p }}</a>
+          </li>
+        {% endfor %}
+        {% if page != nbPages %}
+          <li><a href="{{ path('hlp_nebula_repository_branch_builds', {'meta': meta.metaId, 'branch': branch.branchId, 'page': page+1}) }}">&raquo;</a></li>
+        {% endif %}
+      </ul>
+    </div>
+{% endif %}
+{% endblock %}

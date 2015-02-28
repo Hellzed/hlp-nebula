@@ -1,0 +1,30 @@
+{% extends "HLPNebulaBundle::layout.html.twig" %}
+
+{% block title %}
+  {{ owner.name }} - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <ol class="breadcrumb">
+    <li><a href="{{ path('hlp_nebula_homepage') }}">Nebula</a></li>
+    <li href="active">{{ owner.name }}</li>
+  </ol>
+</div>
+<div class="row">
+  <div class="col-sm-3">
+    {% block owner_menu %}
+    {% endblock %}
+  </div>
+  <div class="col-sm-9">
+    <ul class="mainTabs nav nav-tabs" role="tablist">
+      {% block owner_tablist %}
+      {% endblock %}
+    </ul>
+  {% include "HLPNebulaBundle:AdvancedUI:flashbox.html.twig" %}
+    
+  {% block owner_tab %}
+  {% endblock %}
+  </div>
+</div>
+{% endblock %}

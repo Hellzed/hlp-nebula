@@ -1,0 +1,96 @@
+{% form_theme form 'HLPNebulaBundle:AdvancedUI:form_theme.html.twig' %}
+
+<div id="ajaxVars" depModURL="{{ path('hlp_nebula_ajax_mods') }}" depPkgURL="{{ path('hlp_nebula_ajax_packages', {'mod': '$currentModSearch'}) }}"></div>
+
+{{ form_start(form, {'attr': {'class': 'mainForm row'}}) }}
+  {{ form_errors(form) }}
+  {% include "HLPNebulaBundle:AdvancedUI:flashbox.html.twig" %}
+  <h4><span class="glyphicon glyphicon-asterisk"></span> Build details</h4>
+  <hr/>
+  <div class="form-group">
+    {{ form_label(form.versionMajor, "Version*") }}
+    <p class="help-block">
+      A build version number must be unique <em>in this branch of your mod</em>. Use <a target="_blank" href='http://semver.org/'>Semantic Versioning <span class="glyphicon glyphicon-link"></span></a>.
+    </p>
+    {{ form_errors(form.versionMajor) }}
+    {{ form_errors(form.versionMinor) }}
+    {{ form_errors(form.versionPatch) }}
+    {{ form_errors(form.versionPreRelease) }}
+    {{ form_errors(form.versionMetadata) }}
+    <div class="form-inline well well-sm">
+      {{ form_label(form.versionMajor, "MAJOR : ") }}
+      {{ form_widget(form.versionMajor, { 'attr': {'style': 'width: 60px;','min':'0'} }) }}&#160;
+      {{ form_label(form.versionMinor, "MINOR : ") }}
+      {{ form_widget(form.versionMinor, { 'attr': {'style': 'width: 60px;','min':'0'} }) }}&#160;
+      {{ form_label(form.versionPatch, "PATCH : ") }}
+      {{ form_widget(form.versionPatch, { 'attr': {'style': 'width: 70px;','min':'0'} }) }}&#160;
+      {{ form_label(form.versionPreRelease, "Pre-release : ") }}
+      {{ form_widget(form.versionPreRelease, { 'attr': {'style': 'width: 95px;', 'pattern':'^[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*$'} }) }}&#160;
+      {{ form_label(form.versionMetadata, "Metadata : ") }}
+      {{ form_widget(form.versionMetadata, { 'attr': {'style': 'width: 95px;', 'pattern':'^[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*$'} }) }}
+    </div>
+  </div>
+  <div class="form-group">
+    {{ form_label(form.notes, "Notes") }}
+    <p class="help-block">Notes are intended for other <em>modders</em> and <em>developers</em>, they contain optional <em>technical informations</em>.</p>
+    {{ form_errors(form.notes) }}
+    {{ form_widget(form.notes) }}
+  </div>
+  <br/>
+  <h4><span class="glyphicon glyphicon-download-alt"></span> Installer data</h4>
+  <hr/>
+  <div class="form-group">
+    {{ form_label(form.folder, "Install folder") }}
+    <p class="help-block">This is the mod install path, relative to FreeSpace 2 install path. If not set, current default is : <strong>{{ meta.metaId }}/</strong>.</p>
+    {{ form_errors(form.folder) }}
+    {{ form_widget(form.folder, {'attr':{'pattern':'^([\\\/]?[^\0\\\/:\*\?"<>\|]+)*[\\\/]?$', 'title': 'The install folder must be a valid path, relative to FreeSpace 2 install folder.' }}) }}
+  </div>
+  <div class="form-group">
+    {{ form_label(form.packages, "Packages") }}
+    <p class="help-block">
+    Packages are your base mod "building blocks". They have a <em>name</em> and a <em>status</em> :
+      <dl style="margin-left: 25px; margin-bottom: 0px;">
+        <dt class="text-muted">Required</dt>
+        <dd class="text-muted">- These packages are <em>always</em> installed with the mod.</dd>
+        <dt class="text-muted">Recommended</dt>
+        <dd class="text-muted">- These pacakges are <em>automatically installed</em> with the mod by default. Users can skip their installation or remove them independantly from the mod.</dd>
+        <dt class="text-muted">Optional</dt>
+        <dd class="text-muted">- These pacakges are <em>not installed</em> with the mod by default. Users can add them to the mod during the install process, or install them afterwards.</dd>
+      </dl>
+      <br/>
+    </p>
+    {{ form_errors(form.packages) }}
+    {{ form_widget(form.packages) }}
+    <div class="nospacer">
+      <div class="well text-center">
+        <button class="btn btn-primary addButton" type="button">Add package</button>
+      </div>
+    </div>
+  </div>
+  <br/>
+  <h4><span class="glyphicon glyphicon-wrench"></span> Post-install scripting</h4>
+  <hr/>
+  <div class="form-group clearfix">
+    <div class="clearfix">{{ form_label(form.actions, "Actions") }}
+      <p class="help-block">
+        Actions allow to <em>move</em> or <em>delete</em> files after install.<br/>
+        Use actions if one or more of your archives contains <em>subdirectories</em>, to move files from the extracted subdirectory to the mod installation path.
+      </p>
+    </div>
+    {{ form_errors(form.actions) }}
+    {{ form_widget(form.actions) }}
+    <div class="col-sm-4 cardspacer">
+      <div class="well well-sm text-center form-ph">
+        <button class="btn btn-primary addButton" type="button">Add action</button>
+      </div>
+    </div>
+  </div>
+  <br/>
+  <h4><span class="glyphicon glyphicon-cloud-upload"></span> Validate this build</h4>
+  <hr/>
+  
+  {{ form_rest(form) }}
+  <div class="text-center">
+    <button type="submit" class="btn btn-success" style="width:100px;">Submit</button>
+  </div>
+{{ form_end(form) }}

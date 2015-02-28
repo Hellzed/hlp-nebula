@@ -1,0 +1,37 @@
+{% extends "HLPNebulaBundle:Meta:_layout.html.twig" %}
+
+{% block meta_tab %}
+{% if usersList|length>0 %}
+<div>
+  {% for user in usersList %}
+  <div >
+    <a href="{{ path('hlp_nebula_user', {'user': user.usernameCanonical}) }}">
+    {{ user.username }}
+    </a>
+  </div>
+
+
+  {% endfor %}
+</div>
+{% else %}
+<p class="lead">No owner found. Please contact an administrator.</p>
+{% endif %}
+
+{% if nbPages > 1 %}
+    <div class="text-center">
+      <ul class="pagination pagination-sm">
+        {% if page != 1 %}
+          <li><a href="{{ path('hlp_nebula_repository_meta_team', {'meta': meta.metaId, 'page': page-1}) }}">&laquo;</a></li>
+        {% endif %}
+        {% for p in range(1, nbPages) %}
+          <li{% if p == page %} class="active"{% endif %}>
+            <a href="{{ path('hlp_nebula_repository_meta_team', {'meta': meta.metaId, 'page': p}) }}">{{ p }}</a>
+          </li>
+        {% endfor %}
+        {% if page != nbPages %}
+          <li><a href="{{ path('hlp_nebula_repository_meta_team', {'meta': meta.metaId, 'page': page+1}) }}">&raquo;</a></li>
+        {% endif %}
+      </ul>
+    </div>
+{% endif %}
+{% endblock %}

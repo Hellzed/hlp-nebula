@@ -37,6 +37,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  * @ORM\Table(name="hlp_nebula_build")
  * @ORM\Entity(repositoryClass="HLP\NebulaBundle\Entity\BuildRepository")
  * @UniqueEntity(fields={"branch", "versionMajor", "versionMinor", "versionPatch", "versionPreRelease", "versionMetadata"},  ignoreNull=false, message="Same version error (across a mod branch).")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Build
 {
@@ -53,6 +54,12 @@ class Build
     private $actions;
     
     /**
+     * @ORM\ManyToOne(targetEntity="HLP\NebulaBundle\Entity\Meta", inversedBy="builds")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $meta;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="HLP\NebulaBundle\Entity\Branch", inversedBy="builds")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -66,6 +73,13 @@ class Build
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="version", type="string", length=255)
+     */
+    private $version;
     
     /**
      * @var integer
@@ -194,23 +208,6 @@ class Build
     public function getId()
     {
         return $this->id;
-    }
-    
-    public function getVersion()
-    {
-        $this->version = $this->versionMajor.'.'.$this->versionMinor.'.'.$this->versionPatch;
-        
-        if(isset($this->versionPreRelease))
-        {
-            $this->version .= '-'.$this->versionPreRelease;
-        }
-        
-        if(isset($this->versionMetadata))
-        {
-            $this->version .= '+'.$this->versionMetadata;
-        }
-        
-        return $this->version;
     }
     
     /**
@@ -692,5 +689,63 @@ class Build
     public function getConverterTicket()
     {
         return $this->converterTicket;
+    }
+
+    /**
+     * Set meta
+     *
+     * @param \HLP\NebulaBundle\Entity\Meta $meta
+     * @return Build
+     */
+    public function setMeta(\HLP\NebulaBundle\Entity\Meta $meta)
+    {
+        $this->meta = $meta;
+
+        return $this;
+    }
+
+    /**
+     * Get meta
+     *
+     * @return \HLP\NebulaBundle\Entity\Meta 
+     */
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+    public function getVersion()
+    {
+        if ($this->version == null) {
+            $this->setVersion();
+        }
+        
+        return $this->version;
+    }
+    
+    /**
+     * Set version
+     * 
+     * @return Build
+     *
+     * @ORM\PrePersist
+     */
+    public function setVersion()
+    {
+        if ($this->version == null) {
+            $this->version = $this->versionMajor.'.'.$this->versionMinor.'.'.$this->versionPatch;
+            
+            if(isset($this->versionPreRelease))
+            {
+                $this->version .= '-'.$this->versionPreRelease;
+            }
+            
+            if(isset($this->versionMetadata))
+            {
+                $this->version .= '+'.$this->versionMetadata;
+            }
+        }
+
+        return $this;
     }
 }

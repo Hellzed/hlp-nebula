@@ -1,0 +1,11 @@
+{% form_theme form 'HLPNebulaBundle:AdvancedUI:form_theme.html.twig' %}
+
+{{ form_start(form, {'attr': {'class': 'mainForm row'}}) }}
+  {{ form_errors(form) }}
+  {{ form_rest(form) }}
+  <br/>
+  <hr/>
+  <div class="text-center">
+    <button type="submit" class="btn btn-success" style="width:100px;">Submit</button>
+  </div>
+{{ form_end(form) }}

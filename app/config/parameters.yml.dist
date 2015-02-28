@@ -17,3 +17,7 @@ parameters:
     debug_toolbar:          true
     debug_redirects:        false
     use_assetic_controller: true
+    
+    hlp_nebula_knossos_server: s1.nebula.tproxy.de
+    hlp_nebula_knossos_apikey: ~
+    hlp_nebula_knossos_secure: false

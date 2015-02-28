@@ -1,0 +1,26 @@
+{% extends "HLPNebulaBundle::layout.html.twig" %}
+
+{% block title %}
+  New team - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <ol class="breadcrumb">
+    <li><a href="{{ path('hlp_nebula_homepage') }}">Nebula</a></li>
+    <li href="active">New team</li>
+  </ol>
+</div>
+<div class="row">
+  <div class="col-sm-3">
+    <h2><small>Create a </small>New team</h2>
+    <hr/>
+    <p class="lead"><small class="text-muted">as </small>{{ modder.name }}</p>
+    <hr/>
+    <p class="lead"><small class="text-muted">or </small><a href="{{ path('hlp_nebula_owner', {'owner': modder.nameCanonical }) }}" class="btn btn-danger">Cancel</a></p>
+  </div>
+  <div class="col-sm-9">
+  {% include "HLPNebulaBundle:AdvancedUI:form_team.html.twig" %}
+  </div>
+</div>
+{% endblock %}

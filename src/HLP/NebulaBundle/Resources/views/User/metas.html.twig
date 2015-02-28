@@ -1,0 +1,56 @@
+{% extends "HLPNebulaBundle:User:_layout.html.twig" %}
+
+{% block user_tab %}
+{% if user == app.user %}
+  <p class="well">
+    <a href="{{ path('hlp_nebula_repository_meta_create') }}" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> New mod</a>
+  </p>
+  {% endif %}
+{% if metasList|length>0 %}
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Mod ID</th>
+            <th>Title</th>
+            <th>First release</th>
+            {% if user == app.user %}<th>Actions</th>{% endif %}
+          </tr>
+        </thead>
+        <tbody>
+{% for meta in metasList %}
+          <tr>
+            <td><a href="{{ path('hlp_nebula_repository_meta', {'meta': meta.metaId}) }}">{{ meta.metaId }}</a></td>
+            <td>{{ meta.title }}</td>
+            <td>{{ meta.firstRelease|date("d M Y") }}</td>
+            {% if is_granted('EDIT', meta) %}
+            <td>
+              <a href="{{ path('hlp_nebula_repository_meta_update', {'meta': meta.metaId}) }}" class="btn btn-default btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-pencil"></span> Edit&nbsp;</a>&nbsp;
+              <a href="{{ path('hlp_nebula_repository_meta_delete', {'meta': meta.metaId}) }}" class="btn btn-danger btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-trash"></span> Delete&nbsp;</a>
+            </td>
+            {% endif %}
+          </tr>
+{% endfor %}
+      </tbody>
+    </table>
+{% else %}
+<p class="lead">No mod found.</p>
+{% endif %}
+  
+{% if nbPages > 1 %}
+    <div class="text-center">
+      <ul class="pagination pagination-sm">
+        {% if page != 1 %}
+          <li><a href="{{ path('hlp_nebula_user_metas', {'user': user.usernameCanonical, 'page': page-1}) }}">&laquo;</a></li>
+        {% endif %}
+        {% for p in range(1, nbPages) %}
+          <li{% if p == page %} class="active"{% endif %}>
+            <a href="{{ path('hlp_nebula_user_metas', {'user': user.usernameCanonical, 'page': p}) }}">{{ p }}</a>
+          </li>
+        {% endfor %}
+        {% if page != nbPages %}
+          <li><a href="{{ path('hlp_nebula_user_metas', {'user': user.usernameCanonical, 'page': page+1}) }}">&raquo;</a></li>
+        {% endif %}
+      </ul>
+    </div>
+{% endif %}
+{% endblock %}

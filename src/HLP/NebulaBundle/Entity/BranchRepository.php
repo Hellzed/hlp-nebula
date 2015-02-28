@@ -27,6 +27,7 @@ permissions and limitations under the Licence.
 namespace HLP\NebulaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * BranchRepository
@@ -36,6 +37,38 @@ use Doctrine\ORM\EntityRepository;
  */
 class BranchRepository extends EntityRepository
 {
+    public function findOneWithParent($parameters)
+    {
+        $queryBuilder = $this->createQueryBuilder('b')
+            ->leftJoin('b.meta', 'm')
+            ->addSelect('m')
+            ->where('m.metaId = :meta')
+            ->andWhere('b.branchId = :branchId')
+            ->setParameter('meta', $parameters['meta'])
+            ->setParameter('branchId', $parameters['branchId'])
+        ;
+        
+        return $queryBuilder->getQuery()
+            ->getOneOrNullResult();
+    }
+    
+    public function getBranches($meta, $page, $nbPerPage)
+    {
+        $query = $this->createQueryBuilder('b')
+            ->leftJoin('b.meta', 'm')
+            ->where('m = :meta')
+            ->setParameter('meta', $meta)
+            ->getQuery()
+        ;
+
+        $query
+            ->setFirstResult(($page-1) * $nbPerPage)
+            ->setMaxResults($nbPerPage)
+        ;
+
+        return new Paginator($query, true);
+    }
+    
   public function findSingleBranch($ownerNameCanonical, $modId, $branchId = null)
   {
     $qb = $this->_em->createQueryBuilder();
@@ -73,12 +106,27 @@ class BranchRepository extends EntityRepository
               ->getOneOrNullResult();
   }
   
+  public function findWithJoins($args)
+  {
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('b')
+       ->from('HLPNebulaBundle:Branch', 'b')
+       ->leftJoin('b.meta', 'm')
+       ->addSelect('m')
+       ->where('b.branchId = :branchId AND b.metaId = :metaId')
+       ->setParameter('branchId', $args['branchId'])
+       ->setParameter('metaId', $args['metaId']);
+    
+    return $qb->getQuery()
+              ->getOneOrNullResult();
+  }
+  
   public function getBranchFromMod($id, $exclude = null)
   {
     $qb = $this->_em->createQueryBuilder();
     $qb->select('b')
        ->from('HLPNebulaBundle:Branch', 'b')
-       ->leftJoin('b.mod', 'm')
+       ->leftJoin('b.meta', 'm')
        ->where('m.id = :id')
        ->orderBy('b.isDefault', 'DESC')
        ->setParameter('id', $id);

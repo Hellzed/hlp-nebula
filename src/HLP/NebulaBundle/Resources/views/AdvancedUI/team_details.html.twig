@@ -1,0 +1,17 @@
+{% extends "HLPNebulaBundle:AdvancedUI:team.html.twig" %}
+
+{% block owner_tab %}
+  <h5><span class="glyphicon glyphicon-user"></span> Description</h5>
+  <br/>
+  <p class="well">{{ owner.description }}</p>
+  <hr/>
+  <h5><span class="glyphicon glyphicon-thumbs-up"></span> Members</h5>
+  {% for userTeam in owner.userTeam %}
+  <a href="{{ path('hlp_nebula_owner', {'owner': userTeam.user.nameCanonical }) }}">{{ userTeam.user.name }}</a>
+  {% endfor %}
+  {% if is_granted('add', owner) %}
+    <p class="well">
+      <a href="{{ path('hlp_nebula_new_team') }}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> New team</a>
+    </p>
+  {% endif %}
+{% endblock %}

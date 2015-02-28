@@ -1,0 +1,38 @@
+{% extends "HLPNebulaBundle::layout.html.twig" %}
+
+{% block title %}
+    {{ meta.title }} - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <ol class="breadcrumb">
+    <li><a href="{{ path('hlp_nebula_workshop_home') }}">Browse mods</a></li>
+    <li href="active">{{ meta.title }}</li>
+  </ol>
+</div>
+<div class="row">
+  <div class="col-sm-3">
+    <h2>{{ meta.title }}</h2>
+    <hr/>
+    <p class="text-muted"><span class="glyphicon glyphicon-time"></span> First released on {{ meta.firstRelease|date("d M Y") }}</p>
+    <hr/>
+    <div class="row">
+      <div class="col-md-4 text-center"><p class="lead">{{ meta.nbBranches }}<br/><small class="text-muted">branch{% if meta.nbBranches > 1 %}es{% endif %}</small></p></div>
+      <div class="col-md-4 text-center"><p class="lead">{{ meta.nbBuilds }}<br/><small class="text-muted">build{% if meta.nbBuilds > 1 %}s{% endif %}</small></p></div>
+    </div>
+  </div>
+  <div class="col-sm-9">
+    <ul class="mainTabs nav nav-tabs" role="tablist">
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_repository_meta_branches' %}active{% endif %}"><a href="{{ path('hlp_nebula_repository_meta_branches', {'meta': meta.metaId}) }}"><h4 class="titletab">Branches</h4></a></li>
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_repository_meta_details' %}active{% endif %}"><a href="{{ path('hlp_nebula_repository_meta_details', {'meta': meta.metaId}) }}"><h4 class="titletab">Mod details</h4></a></li>
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_repository_meta_team' %}active{% endif %}"><a href="{{ path('hlp_nebula_repository_meta_team', {'meta': meta.metaId}) }}"><h4 class="titletab">Team</h4></a></li>
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_repository_meta_activity' %}active{% endif %}"><a href="{{ path('hlp_nebula_repository_meta_activity', {'meta': meta.metaId}) }}"><h4 class="titletab">Activity</h4></a></li>
+    </ul>
+    
+  {% include "HLPNebulaBundle:AdvancedUI:flashbox.html.twig" %}
+  {% block meta_tab %}
+  {% endblock %}
+  </div>
+</div>
+{% endblock %}

@@ -20,8 +20,9 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('hlp_nebula')
             ->children()
-                ->scalarNode('knossos_server')
-            ->end()
+                ->scalarNode('knossos_server')->end()
+                ->scalarNode('knossos_apikey')->end()
+                ->scalarNode('knossos_secure')->end()
         ->end();
 
         // Here you should define the parameters that are allowed to

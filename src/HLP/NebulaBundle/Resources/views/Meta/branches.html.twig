@@ -1,0 +1,59 @@
+{% extends "HLPNebulaBundle:Meta:_layout.html.twig" %}
+
+{% block meta_tab %}
+  {% if is_granted('EDIT', meta) %}
+    <p class="well"><a href="{{ path('hlp_nebula_repository_branch_create', {'meta': meta.metaId}) }}" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> New branch</a></p>
+  {% endif %}
+{% if branchesList|length>0 %}
+<table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Default</th>
+          <th>Branch ID</th>
+          <th>Branch name</th>
+          <th>Last update</th>
+          {% if is_granted('EDIT', meta) %}<th>Actions</th>{% endif %}
+        </tr>
+      </thead>
+      <tbody>
+ 
+  {% for branch in branchesList %}
+    
+  
+        <tr>
+          <td class="text-muted">{% if branch.isDefault %}&nbsp;&nbsp;<span class="glyphicon glyphicon-ok"></span><span class="sr-only">Default branch</span>{% endif %}</td>
+          <td><a href="{{ path('hlp_nebula_repository_branch', {'meta': meta.metaId, 'branch': branch.branchId}) }}">{{ branch.branchId }}</a></td>
+          <td>{{ branch.name }}</td>
+          <td>{% if branch.builds[0] is defined %}{{ branch.builds[0].updated|date("d M Y") }}{% else %}Empty branch !{% endif %}</td>
+          {% if is_granted('EDIT', meta) %}
+            <td>
+              <a href="{{ path('hlp_nebula_repository_branch_update', {'meta': meta.metaId, 'branch': branch.branchId}) }}" class="btn btn-default btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-pencil"></span> Edit&nbsp;</a>&nbsp;
+              <a href="{{ path('hlp_nebula_repository_branch_delete', {'meta': meta.metaId, 'branch': branch.branchId}) }}" class="btn btn-danger btn-xs" style="margin-top:-3px;margin-bottom:-2px;"><span class="glyphicon glyphicon-trash"></span> Delete&nbsp;</a>
+            </td>
+          {% endif %}
+        </tr>
+{% endfor %}
+      </tbody>
+    </table>
+{% else %}
+<p class="lead">No branch found.</p>
+{% endif %}
+
+{% if nbPages > 1 %}
+    <div class="text-center">
+      <ul class="pagination pagination-sm">
+        {% if page != 1 %}
+          <li><a href="{{ path('hlp_nebula_repository_meta_branches', {'meta': meta.metaId, 'page': page-1}) }}">&laquo;</a></li>
+        {% endif %}
+        {% for p in range(1, nbPages) %}
+          <li{% if p == page %} class="active"{% endif %}>
+            <a href="{{ path('hlp_nebula_repository_meta_branches', {'meta': meta.metaId, 'page': p}) }}">{{ p }}</a>
+          </li>
+        {% endfor %}
+        {% if page != nbPages %}
+          <li><a href="{{ path('hlp_nebula_repository_meta_branches', {'meta': meta.metaId, 'page': page+1}) }}">&raquo;</a></li>
+        {% endif %}
+      </ul>
+    </div>
+{% endif %}
+{% endblock %}

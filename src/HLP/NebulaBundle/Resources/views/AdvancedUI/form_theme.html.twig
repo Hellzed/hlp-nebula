@@ -335,7 +335,7 @@
 
 {# MOD #}
 
-{% block _hlp_nebulabundle_fsmod_features_entry_row %}
+{% block _hlp_nebulabundle_meta_features_entry_row %}
     {% spaceless %}
     <div class="nospacer" id="{{ id }}">
         <div class="nospacer dynlistItem">
@@ -352,13 +352,13 @@
     {% endspaceless %}
 {% endblock %}
 
-{% block _hlp_nebulabundle_fsmod_edit_features_entry_row %}
+{% block _hlp_nebulabundle_meta_edit_features_entry_row %}
     {% spaceless %}
-         {{- block('_hlp_nebulabundle_fsmod_features_entry_row') -}}
+         {{- block('_hlp_nebulabundle_meta_features_entry_row') -}}
     {% endspaceless %}
 {% endblock %}
 
-{% block _hlp_nebulabundle_fsmod_authors_entry_row %}
+{% block _hlp_nebulabundle_meta_authors_entry_row %}
     {% spaceless %}
     <div class="col-sm-4 cardspacer" id="{{ id }}">
         <div class="nospacer">
@@ -375,9 +375,9 @@
     {% endspaceless %}
 {% endblock %}
 
-{% block _hlp_nebulabundle_fsmod_edit_authors_entry_row %}
+{% block _hlp_nebulabundle_meta_edit_authors_entry_row %}
     {% spaceless %}
-         {{- block('_hlp_nebulabundle_fsmod_authors_entry_row') -}}
+         {{- block('_hlp_nebulabundle_meta_authors_entry_row') -}}
     {% endspaceless %}
 {% endblock %}
 

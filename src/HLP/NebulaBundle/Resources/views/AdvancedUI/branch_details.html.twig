@@ -23,8 +23,8 @@
 <h5><span class="glyphicon glyphicon-tasks"></span> Actions</h5>
 <div class="well">
   <p>
-    <a href="{{ path('hlp_nebula_edit_branch', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}" class="btn btn-default pull-left"><span class="glyphicon glyphicon-pencil"></span> Edit branch metadata&nbsp;</a>&nbsp;
-    <a href="{{ path('hlp_nebula_delete_branch', {'owner': owner.usernameCanonical, 'mod': mod.modId, 'branch': branch.branchId}) }}" class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span> Delete branch&nbsp;</a>
+    <a href="{{ path('hlp_nebula_repository_branch_update', {'meta': meta.metaId, 'branch': branch.branchId}) }}" class="btn btn-default pull-left"><span class="glyphicon glyphicon-pencil"></span> Edit branch metadata&nbsp;</a>&nbsp;
+    <a href="{{ path('hlp_nebula_repository_branch_delete', {'meta': meta.metaId, 'branch': branch.branchId}) }}" class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span> Delete branch&nbsp;</a>
   </p>
 </div>
 {% endif %}

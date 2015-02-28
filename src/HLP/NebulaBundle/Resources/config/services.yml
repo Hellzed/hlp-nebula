@@ -6,34 +6,4 @@ services:
         
     hlpnebula.knossos_server_connect:
         class: HLP\NebulaBundle\KSConnect\KSConnect
-        arguments: ['http://%server%/api/converter/request', 'http://%server%/api/converter/retrieve', '<secret>']
-        
-    hlpnebula.paramconverter_modder:
-        class: HLP\NebulaBundle\Request\OwnerConverter
-        arguments: [HLP\NebulaBundle\Entity\OwnerInterface, @doctrine.orm.entity_manager]
-        tags:
-            - { name: request.param_converter, priority: 20 }
-            
-    hlpnebula.paramconverter_mod:
-        class: HLP\NebulaBundle\Request\FSModConverter
-        arguments: [HLP\NebulaBundle\Entity\FSMod, @doctrine.orm.entity_manager]
-        tags:
-            - { name: request.param_converter, priority: 20 }
-            
-    hlpnebula.paramconverter_branch:
-        class: HLP\NebulaBundle\Request\BranchConverter
-        arguments: [HLP\NebulaBundle\Entity\Branch, @doctrine.orm.entity_manager]
-        tags:
-            - { name: request.param_converter, priority: 20 }
-            
-    hlpnebula.paramconverter_build:
-        class: HLP\NebulaBundle\Request\BuildConverter
-        arguments: [HLP\NebulaBundle\Entity\Build, @doctrine.orm.entity_manager]
-        tags:
-            - { name: request.param_converter, priority: 20 }
-            
-    security.access.post_voter:
-        class:      HLP\NebulaBundle\Security\Authorization\Voter\ModVoter
-        public:     false
-        tags:
-           - { name: security.voter }
+        arguments: ['%server%', '%key%', '%secure%']

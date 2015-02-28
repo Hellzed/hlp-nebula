@@ -1,0 +1,40 @@
+{% extends "HLPNebulaBundle:Meta:_layout.html.twig" %}
+
+{% block meta_tab %}
+<h5><span class="glyphicon glyphicon-link"></span> Unique mod URL (redirects to the latest build in the default branch)</h5>
+{% if meta.nbBranches == 0 %}<p class="text-danger">&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-warning-sign"></span>&nbsp;This mod has no available branche.</p>{% endif %}
+{% if meta.nbBuilds == 0 %}<p class="text-danger">&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-warning-sign"></span>&nbsp;This mod has no available build.</p>{% endif %}
+<input class="form-control" type="text" value="{{ url('hlp_nebula_fs2mod', {'mod': meta.metaId, 'branch': 'default', 'build': 'current'}) }}.json" readonly>
+<br/>
+<h5><span class="glyphicon glyphicon-paperclip"></span> Mod metadata</h5>
+<div class="well">
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Unique ID&nbsp;:</strong></p><p class="col-xs-10">{{ meta.metaId }}</p>
+  </div>
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Title&nbsp;:</strong></p><p class="col-xs-10">{{ meta.title }}</p>
+  </div>
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Release date&nbsp;:</strong></p><p class="col-xs-10">{{ meta.firstRelease|date("d M Y") }}</p>
+  </div>
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Description&nbsp;:</strong></p><p class="col-xs-10">{{ meta.description }}</p>
+  </div>
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Features&nbsp;:</strong></p><p class="col-xs-10">{% for feature in meta.features %}> {{ feature }}</br>{% else %}N/A{% endfor %}</p>
+  </div>
+  <div class="row">
+    <p class="col-xs-2 text-right"><strong>Authors&nbsp;:</strong></p><p class="col-xs-10">{% for author in meta.authors %}> {{ author.name }}{% if author.website != 'null' %} ( <a href="{{ author.website }}">{{ author.website }}</a> ){% endif %}</br>{% else %}N/A{% endfor %}</p>
+  </div>
+</div>
+{% if is_granted('EDIT', meta) %}
+<br/>
+<h5><span class="glyphicon glyphicon-tasks"></span> Actions</h5>
+<div class="well">
+  <p>
+    <a href="{{ path('hlp_nebula_repository_meta_update', {'meta': meta.metaId}) }}" class="btn btn-default pull-left"><span class="glyphicon glyphicon-pencil"></span> Edit mod metadata&nbsp;</a>&nbsp;
+    <a href="{{ path('hlp_nebula_repository_meta_delete', {'meta': meta.metaId}) }}" class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span> Delete this mod&nbsp;</a>
+  </p>
+</div>
+{% endif %}
+{% endblock %}

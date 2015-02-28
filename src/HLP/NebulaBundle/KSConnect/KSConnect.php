@@ -32,19 +32,43 @@ class KSConnect
   
   protected $retrieveURL;
   
+  protected $converterURL;
+  
+  protected $wsURL;
+  
   protected $APIkey;
   
   protected $ksconn;
   
-  public function __construct($sendURL, $retrieveURL, $APIkey)
+  public function __construct($server, $APIkey, $secure)
   {
-    $this->sendURL = $sendURL;
-    $this->retrieveURL = $retrieveURL;
+    $s = '';
+    
+    if($secure)
+    {
+      $s = 's';
+    }
+    
+    $this->sendURL = 'http'.$s.'://'.$server.'/api/converter/request';
+    $this->retrieveURL = 'http'.$s.'://'.$server.'/api/converter/retrieve';
+    $this->converterURL = 'http'.$s.'://'.$server.'/static/converter.js';
+    $this->wsURL = 'ws'.$s.'://'.$server.'/ws/converter';
+    
     $this->APIkey = $APIkey;
     
     $this->ksconn = curl_init();
     curl_setopt($this->ksconn, CURLOPT_FAILONERROR, true);
     curl_setopt($this->ksconn, CURLOPT_RETURNTRANSFER, true);
+  }
+  
+  public function getConverterURL()
+  {
+    return $this->converterURL;
+  }
+  
+  public function getWsURL()
+  {
+    return $this->wsURL;
   }
   
   public function sendData($data, $webhook)

@@ -27,7 +27,7 @@
     <p class="col-xs-2 text-right"><strong>Authors&nbsp;:</strong></p><p class="col-xs-10">{% for author in mod.authors %}> {{ author.name }}{% if author.website != 'null' %} ( <a href="{{ author.website }}">{{ author.website }}</a> ){% endif %}</br>{% else %}N/A{% endfor %}</p>
   </div>
 </div>
-{% if is_granted('add', owner) %}
+{% if is_granted('EDIT', mod) %}
 <br/>
 <h5><span class="glyphicon glyphicon-tasks"></span> Actions</h5>
 <div class="well">

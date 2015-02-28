@@ -6,4 +6,14 @@
     
   </div>
   <div class="mainForm" style="margin-top:15px;"><hr/><a id="finaliseButton" href="{{ path('hlp_nebula_process_finalise', {'owner': owner.nameCanonical, 'mod': mod.modId, 'branch': branch.branchId, 'build': build.version}) }}" class="btn btn-primary" disabled>Finalise build</a></div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ converter_url }}"></script>
+  <script type="text/javascript">
+  var cv = new Converter('{{ ws_url }}', {{ ksticket }});
+  cv.bootstrap_ui($('#progress-container'));
+  cv.on('done', function (success) {
+    $('#finaliseButton').removeAttr('disabled');
+  });
+  cv.connect();
+  </script>
 {% endblock %}

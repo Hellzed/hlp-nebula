@@ -2,7 +2,6 @@
 
 /*
 * Copyright 2014 HLP-Nebula authors, see NOTICE file
-
 *
 * Licensed under the EUPL, Version 1.1 or – as soon they
 will be approved by the European Commission - subsequent
@@ -13,7 +12,6 @@ Licence.
 *
 *
 http://ec.europa.eu/idabc/eupl
-
 *
 * Unless required by applicable law or agreed to in
 writing, software distributed under the Licence is
@@ -32,26 +30,35 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * FSMod
+ * Meta
  *
- * @ORM\Table(name="hlp_nebula_fsmod")
- * @ORM\Entity(repositoryClass="HLP\NebulaBundle\Entity\FSModRepository")
- * @UniqueEntity(fields={"modId"}, ignoreNull=false, message="The mod ID must be unique.")
+ * @ORM\Table(name="hlp_nebula_meta")
+ * @ORM\Entity(repositoryClass="HLP\NebulaBundle\Entity\MetaRepository")
+ * @UniqueEntity(fields={"metaId"}, ignoreNull=false, message="The meta ID must be unique.")
  */
-class FSMod
+class Meta
 {
     /**
-     * @var Integer
-     */
-    private $nbBranches = null;
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="metas")
+     **/
+    private $users;
     
     /**
      * @var Integer
+     *
+     * @ORM\Column(name="nbBranches", type="integer")
      */
-    private $nbBuilds = null;
+    private $nbBranches;
     
     /**
-     * @ORM\OneToMany(targetEntity="HLP\NebulaBundle\Entity\Author", mappedBy="mod", cascade={"remove"}, cascade={"persist", "remove"}, orphanRemoval=true)
+     * @var Integer
+     *
+     * @ORM\Column(name="nbBuilds", type="integer")
+     */
+    private $nbBuilds;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="HLP\NebulaBundle\Entity\Author", mappedBy="meta", cascade={"remove"}, cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $authors;
     
@@ -62,22 +69,18 @@ class FSMod
     private $logo;
     
     /**
-     * @ORM\OneToMany(targetEntity="HLP\NebulaBundle\Entity\Branch", mappedBy="mod", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="HLP\NebulaBundle\Entity\Branch", mappedBy="meta", cascade={"remove"})
      */
     private $branches;
     
     /**
-     * @ORM\ManyToOne(targetEntity="HLP\NebulaBundle\Entity\User", inversedBy="mods")
+     * @ORM\OneToMany(targetEntity="HLP\NebulaBundle\Entity\Build", mappedBy="meta", cascade={"remove"})
      */
-    private $userAsOwner;
-    
-    /**
-     * @ORM\ManyToOne(targetEntity="HLP\NebulaBundle\Entity\Team", inversedBy="mods")
-     */
-    private $teamAsOwner;
+    private $builds;
     
     /**
      * @ORM\ManyToMany(targetEntity="HLP\NebulaBundle\Entity\Category", cascade={"persist"})
+     * @ORM\JoinTable(name="hlp_nebula_meta_category")
      */
     private $categories;
     
@@ -93,13 +96,13 @@ class FSMod
     /**
      * @var string
      *
-     * @ORM\Column(name="modId", type="string", length=255)
+     * @ORM\Column(name="metaId", type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Length(max=255)
-     * @Assert\Regex("/^[-\w]+$/", message="Special characters not allowed in the mod ID.")
-     * @Assert\Regex("/^-/", match=false, message="Dash not allowed at the beginning of the mod ID.")
+     * @Assert\Regex("/^[-\w]+$/", message="Special characters not allowed in the meta ID.")
+     * @Assert\Regex("/^-/", match=false, message="Dash not allowed at the beginning of the meta ID.")
      */
-    private $modId;
+    private $metaId;
 
     /**
      * @var string
@@ -164,33 +167,33 @@ class FSMod
     }
 
     /**
-     * Set modId
+     * Set metaId
      *
-     * @param string $modId
-     * @return FSMod
+     * @param string $metaId
+     * @return Meta
      */
-    public function setModId($modId)
+    public function setMetaId($metaId)
     {
-        $this->modId = $modId;
+        $this->metaId = $metaId;
 
         return $this;
     }
 
     /**
-     * Get modId
+     * Get metaId
      *
      * @return string 
      */
-    public function getModId()
+    public function getMetaId()
     {
-        return $this->modId;
+        return $this->metaId;
     }
 
     /**
      * Set notes
      *
      * @param string $notes
-     * @return FSMod
+     * @return Meta
      */
     public function setNotes($notes)
     {
@@ -213,7 +216,7 @@ class FSMod
      * Set firstRelease
      *
      * @param \DateTime $firstRelease
-     * @return FSMod
+     * @return Meta
      */
     public function setFirstRelease($firstRelease)
     {
@@ -236,7 +239,7 @@ class FSMod
      * Set title
      *
      * @param string $title
-     * @return FSMod
+     * @return Meta
      */
     public function setTitle($title)
     {
@@ -259,7 +262,7 @@ class FSMod
      * Set description
      *
      * @param string $description
-     * @return FSMod
+     * @return Meta
      */
     public function setDescription($description)
     {
@@ -282,7 +285,7 @@ class FSMod
      * Set features
      *
      * @param array $features
-     * @return FSMod
+     * @return Meta
      */
     public function setFeatures($features)
     {
@@ -307,24 +310,28 @@ class FSMod
     {
         $this->branches = new \Doctrine\Common\Collections\ArrayCollection();
         $this->authors = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
         $this->firstRelease = new \Datetime();
+        $this->nbBranches = 0;
+        $this->nbBuilds = 0;
     }
     
     public function __toString()
     {
-        return $this->modId;
+        return $this->metaId;
     }
 
     /**
      * Add branches
      *
      * @param \HLP\NebulaBundle\Entity\Branch $branches
-     * @return FSMod
+     * @return Meta
      */
     public function addBranch(\HLP\NebulaBundle\Entity\Branch $branches)
     {
         $this->branches[] = $branches;
-        $branches->setMod($this);
+        $branches->setMeta($this);
+        $this->nbBranches++;
         return $this;
     }
 
@@ -335,6 +342,7 @@ class FSMod
      */
     public function removeBranch(\HLP\NebulaBundle\Entity\Branch $branches)
     {
+        $this->nbBranches--;
         $this->branches->removeElement($branches);
     }
 
@@ -347,134 +355,18 @@ class FSMod
     {
         return $this->branches;
     }
-
-
-    /**
-     * Set userAsOwner
-     *
-     * @param \HLP\NebulaBundle\Entity\User $userAsOwner
-     * @return FSMod
-     */
-    public function setUserAsOwner(\HLP\NebulaBundle\Entity\User $userAsOwner = null)
-    {
-        $this->userAsOwner = $userAsOwner;
-
-        return $this;
-    }
-
-    /**
-     * Get userAsOwner
-     *
-     * @return \HLP\NebulaBundle\Entity\User 
-     */
-    public function getUserAsOwner()
-    {
-        return $this->userAsOwner;
-    }
-
-    /**
-     * Set teamAsOwner
-     *
-     * @param \HLP\NebulaBundle\Entity\Team $teamAsOwner
-     * @return FSMod
-     */
-    public function setTeamAsOwner(\HLP\NebulaBundle\Entity\Team $teamAsOwner = null)
-    {
-        $this->teamAsOwner = $teamAsOwner;
-
-        return $this;
-    }
-
-    /**
-     * Get teamAsOwner
-     *
-     * @return \HLP\NebulaBundle\Entity\Team 
-     */
-    public function getTeamAsOwner()
-    {
-        return $this->teamAsOwner;
-    }
-    
-    public function setOwner(\HLP\NebulaBundle\Entity\OwnerInterface $owner)
-    {
-        
-        $ownerClass = get_class($owner);
-        
-        if($ownerClass == 'HLP\NebulaBundle\Entity\User')
-        {
-          $this->setUserAsOwner($owner);
-        }
-        
-        if($ownerClass == 'HLP\NebulaBundle\Entity\Team')
-        {
-          $this->setTeamAsOwner($owner);
-        }
-        
-        return $this;
-    }
-    
-    public function getOwner()
-    {
-        if(isset($this->teamAsOwner))
-        {   
-          return $this->teamAsOwner;
-        }
-        
-        if(isset($this->userAsOwner))
-        {   
-          return $this->userAsOwner;
-        }
-    }
-    
-      // lib/model/doctrine/BlogPost.class.php
-
-    /**
-     * Return the number of tags related to the blog post.
-     *
-     * @return Integer
-
-     */
-    public function getNbBranches()
-    {
-      if (is_null($this->nbBranches))
-      {
-        $this->nbBranches = $this->getBranches()->count();
-      }
-
-      return $this->nbBranches;
-    }
-    
-    /**
-     * Return the number of tags related to the blog post.
-     *
-     * @return Integer
-
-     */
-    public function getNbBuilds()
-    {
-      if (is_null($this->nbBuilds))
-      {
-        $this->nbBuilds = 0;
-        foreach($this->getBranches() as $branch)
-        {
-          $this->nbBuilds += $branch->getBuilds()->count();
-        }
-      }
-
-      return $this->nbBuilds;
-    }
     
     /**
      * @Assert\Callback
      */
     public function forbiddenWords(ExecutionContextInterface $context)
     {
-      $forbiddenWords = Array('mods','profile','activity');
+      $forbiddenWords = Array('metas','profile','activity');
       
-      if(in_array($this->modId, $forbiddenWords)) {
+      if(in_array($this->metaId, $forbiddenWords)) {
         $context->addViolationAt(
-            'modId',
-            'Mod ID is a forbidden word ("'.$this->modId.'") !',
+            'metaId',
+            'meta ID is a forbidden word ("'.$this->metaId.'") !',
             array(),
             null
             );
@@ -486,12 +378,12 @@ class FSMod
      * Add authors
      *
      * @param \HLP\NebulaBundle\Entity\Author $authors
-     * @return FSMod
+     * @return Meta
      */
     public function addAuthor(\HLP\NebulaBundle\Entity\Author $authors)
     {
         $this->authors[] = $authors;
-        $authors->setMod($this);
+        $authors->setMeta($this);
         return $this;
     }
 
@@ -503,7 +395,7 @@ class FSMod
     public function removeAuthor(\HLP\NebulaBundle\Entity\Author $authors)
     {
         $this->authors->removeElement($authors);
-        $authors->setMod(null);
+        $authors->setMeta(null);
     }
 
     /**
@@ -520,7 +412,7 @@ class FSMod
      * Set keywords
      *
      * @param array $keywords
-     * @return FSMod
+     * @return Meta
      */
     public function setKeywords($keywords)
     {
@@ -558,7 +450,7 @@ class FSMod
      * Add categories
      *
      * @param \HLP\NebulaBundle\Entity\Category $categories
-     * @return FSMod
+     * @return Meta
      */
     public function addCategory(\HLP\NebulaBundle\Entity\Category $categories)
     {
@@ -591,7 +483,7 @@ class FSMod
      * Set logo
      *
      * @param \HLP\NebulaBundle\Entity\Logo $logo
-     * @return FSMod
+     * @return Meta
      */
     public function setLogo(\HLP\NebulaBundle\Entity\Logo $logo = null)
     {
@@ -608,5 +500,119 @@ class FSMod
     public function getLogo()
     {
         return $this->logo;
+    }
+
+    /**
+     * Add users
+     *
+     * @param \HLP\NebulaBundle\Entity\User $users
+     * @return Meta
+     */
+    public function addUser(\HLP\NebulaBundle\Entity\User $users)
+    {
+        $this->users[] = $users;
+        $users->addMeta($this);
+        return $this;
+    }
+
+    /**
+     * Remove users
+     *
+     * @param \HLP\NebulaBundle\Entity\User $users
+     */
+    public function removeUser(\HLP\NebulaBundle\Entity\User $users)
+    {
+        $this->users->removeElement($users);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * Set nbBranches
+     *
+     * @param integer $nbBranches
+     * @return Meta
+     */
+    public function setNbBranches($nbBranches)
+    {
+        $this->nbBranches = $nbBranches;
+
+        return $this;
+    }
+
+    /**
+     * Get nbBranches
+     *
+     * @return integer 
+     */
+    public function getNbBranches()
+    {
+        return $this->nbBranches;
+    }
+
+    /**
+     * Set nbBuilds
+     *
+     * @param integer $nbBuilds
+     * @return Meta
+     */
+    public function setNbBuilds($nbBuilds)
+    {
+        $this->nbBuilds = $nbBuilds;
+
+        return $this;
+    }
+
+    /**
+     * Get nbBuilds
+     *
+     * @return integer 
+     */
+    public function getNbBuilds()
+    {
+        return $this->nbBuilds;
+    }
+
+    /**
+     * Add builds
+     *
+     * @param \HLP\NebulaBundle\Entity\Build $builds
+     * @return Meta
+     */
+    public function addBuild(\HLP\NebulaBundle\Entity\Build $builds)
+    {
+        $this->builds[] = $builds;
+        $builds->setMeta($this);
+        $this->nbBuilds++;
+        return $this;
+    }
+
+    /**
+     * Remove builds
+     *
+     * @param \HLP\NebulaBundle\Entity\Build $builds
+     */
+    public function removeBuild(\HLP\NebulaBundle\Entity\Build $builds)
+    {
+        $this->nbBuilds--;
+        $this->builds->removeElement($builds);
+    }
+
+    /**
+     * Get builds
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getBuilds()
+    {
+        return $this->builds;
     }
 }

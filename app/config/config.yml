@@ -83,3 +83,5 @@ fos_user:
 
 hlp_nebula:
     knossos_server: "%hlp_nebula_knossos_server%"
+    knossos_apikey: "%hlp_nebula_knossos_apikey%"
+    knossos_secure: "%hlp_nebula_knossos_secure%"

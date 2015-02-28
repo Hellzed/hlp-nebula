@@ -20,13 +20,15 @@ security:
             form_login:
                 login_path: fos_user_security_login
                 check_path: fos_user_security_check
-                default_target_path: hlp_nebula_homepage
+                default_target_path: hlp_nebula_workshop_home
                 use_referer : true
             logout:
                 path:       fos_user_security_logout
-                target:     hlp_nebula_homepage
+                target:     hlp_nebula_workshop_home
             remember_me:
                 key:        %secret% # %secret% est un paramètre de parameters.yml
 
         default:
             anonymous: ~
+    acl:
+        connection: default

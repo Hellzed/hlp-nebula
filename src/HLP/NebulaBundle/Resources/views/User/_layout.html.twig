@@ -1,0 +1,38 @@
+{% extends "HLPNebulaBundle::layout.html.twig" %}
+
+{% block title %}
+  {{ user.username }} - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <ol class="breadcrumb">
+    <li><a href="{{ path('hlp_nebula_workshop_home') }}">Users</a></li>
+    <li href="active">{{ user.username }}</li>
+  </ol>
+</div>
+<div class="row">
+  <div class="col-sm-3">
+    <h2>{{ user.username }}</h2>
+    <hr/>
+    <p class="text-muted"><span class="glyphicon glyphicon-time"></span> Joined on {{ user.joined|date("d M Y") }}</p>
+    <hr/>
+    <div class="row">
+      <div class="col-md-4 text-center"><p class="lead">0<br/><small class="text-muted">mod</small></p></div>
+      <div class="col-md-4 text-center"><p class="lead">0<br/><small class="text-muted">branch</small></p></div>
+      <div class="col-md-4 text-center"><p class="lead">0<br/><small class="text-muted">build</small></p></div>
+    </div>
+  </div>
+  <div class="col-sm-9">
+    <ul class="mainTabs nav nav-tabs" role="tablist">
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_user_metas' %}active{% endif %}"><a href="{{ path('hlp_nebula_user_metas', {'user': user.usernameCanonical}) }}"><h4 class="titletab">Mods</h4></a></li>
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_user_profile' %}active{% endif %}"><a href="{{ path('hlp_nebula_user_profile', {'user': user.usernameCanonical}) }}"><h4 class="titletab">Modder profile</h4></a></li>
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_user_activity' %}active{% endif %}"><a href="{{ path('hlp_nebula_user_activity', {'user': user.usernameCanonical}) }}"><h4 class="titletab">Activity</h4></a></li>
+    </ul>
+  {% include "HLPNebulaBundle:AdvancedUI:flashbox.html.twig" %}
+    
+  {% block user_tab %}
+  {% endblock %}
+  </div>
+</div>
+{% endblock %}

@@ -27,6 +27,7 @@ permissions and limitations under the Licence.
 namespace HLP\NebulaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * UserRepository
@@ -36,6 +37,23 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserRepository extends EntityRepository
 {
+    public function getUsers($meta, $page, $nbPerPage)
+    {
+        $query = $this->createQueryBuilder('u')
+            ->leftJoin('u.metas', 'm')
+            ->where('m = :meta')
+            ->setParameter('meta', $meta)
+            ->getQuery()
+        ;
+
+        $query
+            ->setFirstResult(($page-1) * $nbPerPage)
+            ->setMaxResults($nbPerPage)
+        ;
+
+        return new Paginator($query, true);
+    }
+    
   public function findSingleUser($usernameCanonical)
   {
 
@@ -43,14 +61,6 @@ class UserRepository extends EntityRepository
     $qb->select('i')
        ->from('HLPNebulaBundle:User', 'i')
        ->where('i.usernameCanonical = :usernameCanonical')
-       ->leftJoin('i.mods', 'm')
-       ->addSelect('m')
-       ->leftJoin('m.branches', 'b')
-       ->leftJoin('b.builds', 'u')
-       ->addSelect('PARTIAL b.{id}')
-       //->addSelect('COUNT(b) AS i.{nbBuilds}')
-       ->addSelect('PARTIAL u.{id}')
-       
        ->setParameter('usernameCanonical', $usernameCanonical);
 
     return $qb->getQuery()

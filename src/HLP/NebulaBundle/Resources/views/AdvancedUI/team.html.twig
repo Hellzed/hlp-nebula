@@ -1,0 +1,19 @@
+{% extends "HLPNebulaBundle:AdvancedUI:owner.html.twig" %}
+
+{% block owner_menu %}
+  <h2>{{ owner.name }}</h2>
+    <hr/>
+    <p class="text-muted"><span class="glyphicon glyphicon-time"></span> Created on {{ owner.created|date("d M Y") }}</p>
+    <hr/>
+    <div class="row">
+      <div class="col-md-4 text-center"><p class="lead">{{ owner.nbMods }}<br/><small class="text-muted">mod{% if owner.nbMods > 1 %}s{% endif %}</small></p></div>
+      <div class="col-md-4 text-center"><p class="lead">{{ owner.nbBranches }}<br/><small class="text-muted">branch{% if owner.nbBranches > 1 %}es{% endif %}</small></p></div>
+      <div class="col-md-4 text-center"><p class="lead">{{ owner.nbBuilds }}<br/><small class="text-muted">build{% if owner.nbBuilds > 1 %}s{% endif %}</small></p></div>
+    </div>
+{% endblock %}  
+
+{% block owner_tablist %}
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_owner_mods' %}active{% endif %}"><a href="{{ path('hlp_nebula_owner_mods', {'owner': owner.nameCanonical}) }}"><h4 class="titletab">Mods</h4></a></li>
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_owner_profile' %}active{% endif %}"><a href="{{ path('hlp_nebula_owner_profile', {'owner': owner.nameCanonical}) }}"><h4 class="titletab">Team workspace</h4></a></li>
+      <li class="{% if app.request.attributes.get('_route') == 'hlp_nebula_owner_activity' %}active{% endif %}"><a href="{{ path('hlp_nebula_owner_activity', {'owner': owner.nameCanonical}) }}"><h4 class="titletab">Activity</h4></a></li> 
+{% endblock %}

@@ -2,7 +2,6 @@
 
 /*
 * Copyright 2014 HLP-Nebula authors, see NOTICE file
-4
 *
 * Licensed under the EUPL, Version 1.1 or – as soon they
 will be approved by the European Commission - subsequent
@@ -13,7 +12,6 @@ Licence.
 *
 *
 http://ec.europa.eu/idabc/eupl
-5
 *
 * Unless required by applicable law or agreed to in
 writing, software distributed under the Licence is
@@ -36,14 +34,16 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
  *
  * @ORM\Table(name="hlp_nebula_branch")
  * @ORM\Entity(repositoryClass="HLP\NebulaBundle\Entity\BranchRepository")
- * @UniqueEntity(fields={"mod","branchId"}, message="A branch with the same ID already exists in the repository.")
+ * @UniqueEntity(fields={"meta","branchId"}, message="A branch with the same ID already exists in the repository.")
  */
 class Branch
 {
     /**
      * @var Integer
+     *
+     * @ORM\Column(name="nbBuilds", type="integer")
      */
-    private $nbBuilds = null;
+    private $nbBuilds;
     
     /**
      * @ORM\OneToMany(targetEntity="HLP\NebulaBundle\Entity\Build", mappedBy="branch", cascade={"remove"})
@@ -51,10 +51,10 @@ class Branch
     private $builds;
     
     /**
-     * @ORM\ManyToOne(targetEntity="HLP\NebulaBundle\Entity\FSMod", inversedBy="branches")
+     * @ORM\ManyToOne(targetEntity="HLP\NebulaBundle\Entity\Meta", inversedBy="branches")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $mod;
+    private $meta;
   
     /**
      * @var integer
@@ -64,7 +64,7 @@ class Branch
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
+    
     /**
      * @var string
      *
@@ -180,26 +180,26 @@ class Branch
     }
 
     /**
-     * Set mod
+     * Set meta
      *
-     * @param \HLP\NebulaBundle\Entity\FSMod $mod
+     * @param \HLP\NebulaBundle\Entity\Meta $meta
      * @return Branch
      */
-    public function setMod(\HLP\NebulaBundle\Entity\FSMod $mod)
+    public function setMeta(\HLP\NebulaBundle\Entity\Meta $meta)
     {
-        $this->mod = $mod;
-
+        $this->meta = $meta;
+        
         return $this;
     }
 
     /**
-     * Get mod
+     * Get meta
      *
-     * @return \HLP\NebulaBundle\Entity\FSMod 
+     * @return \HLP\NebulaBundle\Entity\Meta 
      */
-    public function getMod()
+    public function getMeta()
     {
-        return $this->mod;
+        return $this->meta;
     }
     /**
      * Constructor
@@ -208,6 +208,7 @@ class Branch
     {
         $this->builds = new \Doctrine\Common\Collections\ArrayCollection();
         $this->isDefault = false;
+        $this->nbBuilds = 0;
     }
     
     public function __toString()
@@ -224,7 +225,9 @@ class Branch
     public function addBuild(\HLP\NebulaBundle\Entity\Build $builds)
     {
         $this->builds[] = $builds;
+        $this->nbBuilds++;
         $builds->setBranch($this);
+        $this->meta->addBuild($builds);
         return $this;
     }
 
@@ -236,6 +239,7 @@ class Branch
     public function removeBuild(\HLP\NebulaBundle\Entity\Build $builds)
     {
         $this->builds->removeElement($builds);
+        $this->nbBuilds--;
     }
 
     /**
@@ -247,22 +251,6 @@ class Branch
     {
         return $this->builds;
     }
-
-  /**
-   * Return the number of tags related to the blog post.
-   *
-   * @return Integer
-
-   */
-  public function getNbBuilds()
-  {
-    if (is_null($this->nbBuilds))
-    {
-      $this->nbBuilds = $this->getBuilds()->count();
-    }
-
-    return $this->nbBuilds;
-  }
   
   /**
    * @Assert\Callback
@@ -302,5 +290,28 @@ class Branch
     public function getIsDefault()
     {
         return $this->isDefault;
+    }
+
+    /**
+     * Set nbBuilds
+     *
+     * @param integer $nbBuilds
+     * @return Branch
+     */
+    public function setNbBuilds($nbBuilds)
+    {
+        $this->nbBuilds = $nbBuilds;
+
+        return $this;
+    }
+
+    /**
+     * Get nbBuilds
+     *
+     * @return integer 
+     */
+    public function getNbBuilds()
+    {
+        return $this->nbBuilds;
     }
 }

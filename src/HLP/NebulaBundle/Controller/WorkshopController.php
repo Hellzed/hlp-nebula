@@ -29,19 +29,19 @@ namespace HLP\NebulaBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
-class BaseController extends Controller
+class WorkshopController extends Controller
 {
-  public function indexAction()
+  public function homeAction()
   {
     return $this->render('HLPNebulaBundle:AdvancedUI:homepage.html.twig');
   }
   
-  public function getStartedAction()
+  public function startAction()
   {
     return $this->render('HLPNebulaBundle:AdvancedUI:get_started.html.twig');
   }
   
-  public function modsAction()
+  public function metasAction()
   {
     $repository = $this
       ->getDoctrine()
@@ -56,7 +56,7 @@ class BaseController extends Controller
     ));
   }
   
-  public function ownersAction()
+  public function usersAction()
   {
     $repository = $this
       ->getDoctrine()

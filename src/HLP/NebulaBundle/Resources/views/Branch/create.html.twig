@@ -1,0 +1,28 @@
+{% extends "HLPNebulaBundle::layout.html.twig" %}
+
+{% block title %}
+  {{ meta.title }} / New branch - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <ol class="breadcrumb">
+    <li><a href="{{ path('hlp_nebula_workshop_home') }}">Browse mods</a></li>
+    <li><a href="{{ path('hlp_nebula_repository_meta', {'meta': meta.metaId}) }}">{{ meta.title }}</a></li>
+    <li href="active">New branch</li>
+  </ol>
+</div>
+<div class="row">
+  <div class="col-sm-3">
+    <h2><small>Create a </small>New branch</h2>
+    <hr/>
+    <p class="lead"><small class="text-muted">of mod </small>{{ meta.title }}</p>
+    <p class="lead"><small class="text-muted">as </small>{{ app.user.username }}</p>
+    <hr/>
+    <p class="lead"><small class="text-muted">or </small><a href="{{ path('hlp_nebula_repository_meta', {'meta': meta.metaId}) }}" class="btn btn-danger">Cancel</a></p>
+  </div>
+  <div class="col-sm-9">
+  {% include "HLPNebulaBundle:Branch:_form.html.twig" %}
+  </div>
+</div>
+{% endblock %}

@@ -2,7 +2,7 @@
 
 /*
 * Copyright 2014 HLP-Nebula authors, see NOTICE file
-4
+
 *
 * Licensed under the EUPL, Version 1.1 or – as soon they
 will be approved by the European Commission - subsequent
@@ -13,7 +13,7 @@ Licence.
 *
 *
 http://ec.europa.eu/idabc/eupl
-5
+
 *
 * Unless required by applicable law or agreed to in
 writing, software distributed under the Licence is
@@ -27,21 +27,22 @@ permissions and limitations under the Licence.
 
 namespace HLP\NebulaBundle\Entity;
 
-use FOS\UserBundle\Entity\User as BaseUser;
+use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="HLP\NebulaBundle\Entity\UserRepository")
  * @ORM\Table(name="hlp_nebula_user")
  */
-class User extends BaseUser implements OwnerInterface
+class User extends BaseUser
 {
-  use OwnerCounters;
-    
-  /**
-   * @ORM\OneToMany(targetEntity="HLP\NebulaBundle\Entity\FSMod", mappedBy="userAsOwner")
-   */
-  private $mods;
+    /**
+     * @ORM\ManyToMany(targetEntity="Meta", inversedBy="users")
+     * @ORM\JoinTable(name="hlp_nebula_user_meta")
+     **/
+    private $metas;
   
   /**
    * @ORM\Id
@@ -63,8 +64,9 @@ class User extends BaseUser implements OwnerInterface
   public function __construct()
   {
       parent::__construct();
+      
+      $this->metas = new \Doctrine\Common\Collections\ArrayCollection();
 
-      $this->mods = new \Doctrine\Common\Collections\ArrayCollection();
       $this->joined = new \Datetime;
   }
   
@@ -81,49 +83,6 @@ class User extends BaseUser implements OwnerInterface
   public function getId()
   {
       return $this->id;
-  }
-
-  /**
-   * Add mods
-   *
-   * @param \HLP\NebulaBundle\Entity\FSMod $mods
-   * @return User
-   */
-  public function addMod(\HLP\NebulaBundle\Entity\FSMod $mods)
-  {
-      $this->mods[] = $mods;
-      $mods->setOwner($this);
-      return $this;
-  }
-
-  /**
-   * Remove mods
-   *
-   * @param \HLP\NebulaBundle\Entity\FSMod $mods
-   */
-  public function removeMod(\HLP\NebulaBundle\Entity\FSMod $mods)
-  {
-      $this->mods->removeElement($mods);
-  }
-
-  /**
-   * Get mods
-   *
-   * @return \Doctrine\Common\Collections\Collection 
-   */
-  public function getMods()
-  {
-      return $this->mods;
-  }
-  
-  public function getName()
-  {
-      return $this->username;
-  }
-  
-  public function getNameCanonical()
-  {
-      return $this->usernameCanonical;
   }
 
   /**
@@ -148,4 +107,55 @@ class User extends BaseUser implements OwnerInterface
   {
       return $this->joined;
   }
+    
+    /**
+     * @Assert\Callback
+     * Need to change this to avoid team name duplicates
+     */
+    public function forbiddenWords(ExecutionContextInterface $context)
+    {
+      $forbiddenWords = Array('test');
+      
+      if(in_array($this->usernameCanonical, $forbiddenWords)) {
+        $context->addViolationAt(
+            'usernameCanonical',
+            'Username is a forbidden word ("'.$this->usernameCanonical.'") !',
+            array(),
+            null
+            );
+       }
+    }
+
+    /**
+     * Add metas
+     *
+     * @param \HLP\NebulaBundle\Entity\Meta $metas
+     * @return User
+     */
+    public function addMeta(\HLP\NebulaBundle\Entity\Meta $metas)
+    {
+        $this->metas[] = $metas;
+
+        return $this;
+    }
+
+    /**
+     * Remove metas
+     *
+     * @param \HLP\NebulaBundle\Entity\Meta $metas
+     */
+    public function removeMeta(\HLP\NebulaBundle\Entity\Meta $metas)
+    {
+        $this->metas->removeElement($metas);
+    }
+
+    /**
+     * Get metas
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMetas()
+    {
+        return $this->metas;
+    }
 }

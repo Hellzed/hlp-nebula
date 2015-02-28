@@ -1,14 +1,13 @@
 {% extends "HLPNebulaBundle::layout.html.twig" %}
 
 {% block title %}
-  {{ owner.name }} / New mod - {{ parent() }}
+  New mod - {{ parent() }}
 {% endblock %}
 
 {% block body %}
 <div class="row">
   <ol class="breadcrumb">
-    <li><a href="{{ path('hlp_nebula_homepage') }}">Nebula</a></li>
-    <li><a href="{{ path('hlp_nebula_owner', {'owner': owner.nameCanonical}) }}">{{ owner.name }}</a></li>
+    <li><a href="{{ path('hlp_nebula_workshop_home') }}">Mod</a></li>
     <li href="active">New mod</li>
   </ol>
 </div>
@@ -16,9 +15,9 @@
   <div class="col-sm-3">
     <h2><small>Create a </small>New mod</h2>
     <hr/>
-    <p class="lead"><small class="text-muted">as </small>{{ owner }}</p>
+    <p class="lead"><small class="text-muted">as </small>{{ app.user.username }}</p>
     <hr/>
-    <p class="lead"><small class="text-muted">or </small><a href="{{ path('hlp_nebula_owner', {'owner': owner.nameCanonical}) }}" class="btn btn-danger">Cancel</a></p>
+    <p class="lead"><small class="text-muted">or </small><a href="{{ path('hlp_nebula_user', {'user': app.user.usernameCanonical}) }}" class="btn btn-danger">Cancel</a></p>
   </div>
   <div class="col-sm-9">
   {% include "HLPNebulaBundle:AdvancedUI:form_mod.html.twig" %}

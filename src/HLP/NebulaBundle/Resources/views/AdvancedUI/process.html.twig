@@ -30,17 +30,6 @@
   <div class="col-sm-9">
     {% block process_widget %}
     {% endblock %}
-    
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script type="text/javascript" src="http://s1.nebula.tproxy.de/static/converter.js"></script>
-    <script type="text/javascript">
-    var cv = new Converter('ws://s1.nebula.tproxy.de/ws/converter', {{ ksticket }});
-    cv.bootstrap_ui($('#progress-container'));
-    cv.on('done', function (success) {
-      $('#finaliseButton').removeAttr('disabled');
-    });
-    cv.connect();
-    </script>
   </div>
 </div>
 {% endblock %}

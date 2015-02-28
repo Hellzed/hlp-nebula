@@ -1,196 +1,241 @@
 # Catalogue site
 
-hlp_catalogue_homepage:
+hlp_catalogue_catalogue_home:
     path:     /
     defaults: { _controller: HLPNebulaBundle:Catalogue:index }
     
-hlp_catalogue_highlights:
+hlp_catalogue_catalogue_highlights:
     path:     /highlights
     defaults: { _controller: HLPNebulaBundle:Catalogue:index }
     
-hlp_catalogue_mods:
+hlp_catalogue_catalogue_mods:
     path:     /mods
     defaults: { _controller: HLPNebulaBundle:Catalogue:mods }
 
 # Base Nebula (owners part) routes
 
-hlp_nebula_homepage:
-    path:     /nebula
-    defaults: { _controller: HLPNebulaBundle:Base:index }
+hlp_nebula_workshop_home:
+    path:     /workshop
+    defaults: { _controller: HLPNebulaBundle:Workshop:home }
     
-hlp_nebula_get_started:
-    path:     /nebula/get_started
-    defaults: { _controller: HLPNebulaBundle:Base:getStarted }
+hlp_nebula_workshop_start:
+    path:     /workshop/get_started
+    defaults: { _controller: HLPNebulaBundle:Workshop:start }
     
-hlp_nebula_all_mods:
-    path:     /nebula/mods
-    defaults: { _controller: HLPNebulaBundle:Base:mods }
+hlp_nebula_workshop_metas:
+    path:     /workshop/mods
+    defaults: { _controller: HLPNebulaBundle:Workshop:metas }
     
-hlp_nebula_all_owners:
-    path:     /nebula/owners
-    defaults: { _controller: HLPNebulaBundle:Base:owners }
+hlp_nebula_workshop_users:
+    path:     /workshop/modders
+    defaults: { _controller: HLPNebulaBundle:Workshop:users }
     
-hlp_nebula_all_activity:
-    path:     /nebula/activity
-    defaults: { _controller: HLPNebulaBundle:Base:activity }
+hlp_nebula_workshop_activity:
+    path:     /workshop/activity
+    defaults: { _controller: HLPNebulaBundle:Workshop:activity }
     
 # Nebula AJAX Routes
 
 hlp_nebula_ajax_mods:
-    path:     /nebula/ajax/search_mods
-    defaults: { _controller: HLPNebulaBundle:AJAX:searchMods }
+    path:     /ajax/search_mods
+    defaults: { _controller: HLPNebulaBundle:AJAX:searchMetas }
     
 hlp_nebula_ajax_packages:
-    path:     /nebula/ajax/{mod}/search_packages
-    defaults: { _controller: HLPNebulaBundle:AJAX:searchPacakgesInMod }
+    path:     /ajax/{mod}/search_packages
+    defaults: { _controller: HLPNebulaBundle:AJAX:searchPacakgesInMeta }
+    
+# Nebula user public data routes
+    
+hlp_nebula_user_profile:
+    path:     /user/{user}/profile
+    defaults: { _controller: HLPNebulaBundle:User:showProfile }  
+    
+hlp_nebula_user_metas:
+    path:     /user/{user}/mods/{page}
+    defaults: { _controller: HLPNebulaBundle:User:showMetas, page: 1 }
+    requirements:
+        page: \d*
+    
+hlp_nebula_user_activity:
+    path:     /user/{user}/activity/{page}
+    defaults: { _controller: HLPNebulaBundle:User:showActivity, page: 1 }
+    requirements:
+        page: \d*
         
-# Nebula owners public data routes
+hlp_nebula_user:
+    pattern: /user/{user}
+    defaults:
+        _controller: FrameworkBundle:Redirect:redirect
+        route: hlp_nebula_user_metas
+        permanent: true
 
-hlp_nebula_owner:
-    path:     /nebula/{owner}
-    defaults: { _controller: HLPNebulaBundle:Owner:index }
     
-hlp_nebula_owner_mods:
-    path:     /nebula/{owner}/mods/{page}
-    defaults: { _controller: HLPNebulaBundle:Owner:mods, page: 1 }
+# Nebula meta routes
+
+hlp_nebula_repository_meta_create:
+    path:     /repository/new
+    defaults: { _controller: HLPNebulaBundle:Meta:create }
+    
+hlp_nebula_repository_meta_update:
+    path:     /repository/{meta}/edit
+    defaults: { _controller: HLPNebulaBundle:Meta:update }
+    
+hlp_nebula_repository_meta_delete:
+    path:     /repository/{meta}/delete
+    defaults: { _controller: HLPNebulaBundle:Meta:delete }
+        
+hlp_nebula_repository_meta_details:
+    path:     /repository/{meta}/details
+    defaults: { _controller: HLPNebulaBundle:Meta:showDetails }
+
+hlp_nebula_repository_meta_team:
+    path:     /repository/{meta}/team
+    defaults: { _controller: HLPNebulaBundle:Meta:showTeam, page: 1 }
+    requirements:
+        page: \d*
+        
+hlp_nebula_repository_meta_branches:
+    path:     /repository/{meta}/branches/{page}
+    defaults: { _controller: HLPNebulaBundle:Meta:showBranches, page: 1 }
     requirements:
         page: \d*
     
-hlp_nebula_owner_profile:
-    path:     /nebula/{owner}/profile
-    defaults: { _controller: HLPNebulaBundle:Owner:profile }
-    
-hlp_nebula_owner_activity:
-    path:     /nebula/{owner}/activity
-    defaults: { _controller: HLPNebulaBundle:Owner:activity }
-    
-hlp_nebula_new_mod:
-    path:     /nebula/{owner}/new_mod
-    defaults: { _controller: HLPNebulaBundle:Owner:newMod }
-    
-    
-# Nebula mods routes
-
-hlp_nebula_mod:
-    path:     /nebula/{owner}/{mod}
-    defaults: { _controller: HLPNebulaBundle:Mod:index }
-    
-hlp_nebula_mod_branches:
-    path:     /nebula/{owner}/{mod}/branches/{page}
-    defaults: { _controller: HLPNebulaBundle:Mod:branches, page: 1 }
+hlp_nebula_repository_meta_activity:
+    path:     /repository/{meta}/activity/{page}
+    defaults: { _controller: HLPNebulaBundle:Meta:showActivity, page: 1 }
     requirements:
         page: \d*
-    
-hlp_nebula_mod_details:
-    path:     /nebula/{owner}/{mod}/details
-    defaults: { _controller: HLPNebulaBundle:Mod:details }
-    
-hlp_nebula_mod_activity:
-    path:     /nebula/{owner}/{mod}/activity
-    defaults: { _controller: HLPNebulaBundle:Mod:activity }
-    
-hlp_nebula_new_branch:
-    path:     /nebula/{owner}/{mod}/new_branch
-    defaults: { _controller: HLPNebulaBundle:Mod:newBranch }
-    
-hlp_nebula_delete_mod:
-    path:     /nebula/{owner}/{mod}/delete
-    defaults: { _controller: HLPNebulaBundle:Mod:delete }
-    
-hlp_nebula_edit_mod:
-    path:     /nebula/{owner}/{mod}/edit
-    defaults: { _controller: HLPNebulaBundle:Mod:edit }
+        
+hlp_nebula_repository_meta:
+    pattern: /repository/{meta}
+    defaults:
+        _controller: FrameworkBundle:Redirect:redirect
+        route: hlp_nebula_repository_meta_branches
+        permanent: true
     
     
 # Nebula branches routes
 
-hlp_nebula_branch:
-    path:     /nebula/{owner}/{mod}/{branch}
-    defaults: { _controller: HLPNebulaBundle:Branch:index }
+hlp_nebula_repository_branch_create:
+    path:     /repository/{meta}/new
+    defaults: { _controller: HLPNebulaBundle:Branch:create }
     
-hlp_nebula_branch_builds:
-    path:     /nebula/{owner}/{mod}/{branch}/builds/{page}
-    defaults: { _controller: HLPNebulaBundle:Branch:builds, page: 1 }
+hlp_nebula_repository_branch_update:
+    path:     /repository/{meta}/{branch}/edit
+    defaults: { _controller: HLPNebulaBundle:Branch:update }
+    
+hlp_nebula_repository_branch_delete:
+    path:     /repository/{meta}/{branch}/delete
+    defaults: { _controller: HLPNebulaBundle:Branch:delete }
+        
+hlp_nebula_repository_branch_details:
+    path:     /repository/{meta}/{branch}/details
+    defaults: { _controller: HLPNebulaBundle:Branch:showDetails }
+        
+hlp_nebula_repository_branch_builds:
+    path:     /repository/{meta}/{branch}/builds/{page}
+    defaults: { _controller: HLPNebulaBundle:Branch:showBuilds, page: 1 }
     requirements:
         page: \d*
     
-hlp_nebula_branch_details:
-    path:     /nebula/{owner}/{mod}/{branch}/details
-    defaults: { _controller: HLPNebulaBundle:Branch:details }
+hlp_nebula_repository_branch_activity:
+    path:     /repository/{meta}/{branch}/activity/{page}
+    defaults: { _controller: HLPNebulaBundle:Branch:showActivity, page: 1 }
+    requirements:
+        page: \d*
+        
+hlp_nebula_repository_branch:
+    pattern: /repository/{meta}/{branch}
+    defaults:
+        _controller: FrameworkBundle:Redirect:redirect
+        route: hlp_nebula_repository_branch_builds
+        permanent: true
     
-hlp_nebula_branch_activity:
-    path:     /nebula/{owner}/{mod}/{branch}/activity
-    defaults: { _controller: HLPNebulaBundle:Branch:activity }
     
-hlp_nebula_new_build:
-    path:     /nebula/{owner}/{mod}/{branch}/new_build
-    defaults: { _controller: HLPNebulaBundle:Branch:newBuild }
-    
-hlp_nebula_delete_branch:
-    path:     /nebula/{owner}/{mod}/{branch}/delete
-    defaults: { _controller: HLPNebulaBundle:Branch:delete }
-    
-hlp_nebula_edit_branch:
-    path:     /nebula/{owner}/{mod}/{branch}/edit
-    defaults: { _controller: HLPNebulaBundle:Branch:edit }
     
 # Nebula builds routes
-
+hlp_nebula_repository_build_create:
+    path:     /repository/{meta}/{branch}/new
+    defaults: { _controller: HLPNebulaBundle:Build:create }
+    
+hlp_nebula_repository_build_delete:
+    path:     /repository/{meta}/{branch}/{build}/delete
+    defaults: { _controller: HLPNebulaBundle:Build:delete }
+    
+hlp_nebula_repository_build_details:
+    path:     /repository/{meta}/{branch}/{build}/details
+    defaults: { _controller: HLPNebulaBundle:Build:showDetails }
+    
+    
+hlp_nebula_repository_build:
+    pattern: /repository/{meta}/{branch}/{build}
+    defaults:
+        _controller: FrameworkBundle:Redirect:redirect
+        route: hlp_nebula_repository_build_details
+        permanent: true
+    
+    
+    
+    
+hlp_nebula_new_build:
+    path:     /repository/{meta}/{branch}/new
+    defaults: { _controller: HLPNebulaBundle:Branch:newBuild }
+    
 hlp_nebula_build:
-    path:     /nebula/{owner}/{mod}/{branch}/{build}
+    path:     /repository/{mod}/{branch}/{build}
     defaults: { _controller: HLPNebulaBundle:Build:index }
     requirements:
         build:  ^(\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$
         
 hlp_nebula_process:
-    path:     /nebula/{owner}/{mod}/{branch}/{build}/process
+    path:     /repository/{mod}/{branch}/{build}/process
     defaults: { _controller: HLPNebulaBundle:Build:process }
     requirements:
         build:  ^(\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$
         
 hlp_nebula_process_finalise:
-    path:     /nebula/{owner}/{mod}/{branch}/{build}/process_finalise
+    path:     /repository/{mod}/{branch}/{build}/process_finalise
     defaults: { _controller: HLPNebulaBundle:Build:processFinalise }
     requirements:
         build:  ^(\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$
         
 hlp_nebula_process_force_fail:
-    path:     /nebula/{owner}/{mod}/{branch}/{build}/process_force_fail
+    path:     /repository/{mod}/{branch}/{build}/process_force_fail
     defaults: { _controller: HLPNebulaBundle:Build:processForceFail }
     requirements:
         build:  ^(\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$
 
 hlp_nebula_build_data:
-    path:     /nebula/{owner}/{mod}/{branch}/{build}/show_data
+    path:     /repository/{mod}/{branch}/{build}/show_data
     defaults: { _controller: HLPNebulaBundle:Build:show }
     requirements:
         build:  ^((\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?|current)$
         
 hlp_nebula_build_data_finalised:
-    path:     /nebula/{owner}/{mod}/{branch}/{build}/show_data_finalised
+    path:     /repository/{mod}/{branch}/{build}/show_data_finalised
     defaults: { _controller: HLPNebulaBundle:Build:showFinalised }
     requirements:
         build:  ^((\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?|current)$
         
 hlp_nebula_update_build:
-    path:     /nebula/{owner}/{mod}/{branch}/{build}/copy_and_update
+    path:     /repository/{mod}/{branch}/{build}/copy_and_update
     defaults: { _controller: HLPNebulaBundle:Build:newBuildFrom }
     requirements:
         build:  ^(\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$
         
 hlp_nebula_transfer_build:
-    path:     /nebula/{owner}/{mod}/{branch}/{build}/copy_and_transfer
+    path:     /repository/{mod}/{branch}/{build}/copy_and_transfer
     defaults: { _controller: HLPNebulaBundle:Build:transfer }
     requirements:
         build:  ^(\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$
 
 hlp_nebula_delete_build:
-    path:     /nebula/{owner}/{mod}/{branch}/{build}/delete
+    path:     /repository/{mod}/{branch}/{build}/delete
     defaults: { _controller: HLPNebulaBundle:Build:delete }
     
 hlp_nebula_fs2mod:
-    path:      /nebula/{owner}/{mod}/{branch}/{build}.{format}
-    defaults:  { _controller: HLPNebulaBundle:Build:raw, format: json }
+    path:     /repository/{mod}/{branch}/{build}.{format}
+    defaults: { _controller: HLPNebulaBundle:Build:raw, format: json }
     requirements:
         build:  ^((\d+\.){2}\d+(\-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?|current)$
         format: json|txt

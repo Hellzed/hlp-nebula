@@ -2,7 +2,6 @@
 
 /*
 * Copyright 2014 HLP-Nebula authors, see NOTICE file
-4
 *
 * Licensed under the EUPL, Version 1.1 or – as soon they
 will be approved by the European Commission - subsequent
@@ -13,7 +12,6 @@ Licence.
 *
 *
 http://ec.europa.eu/idabc/eupl
-5
 *
 * Unless required by applicable law or agreed to in
 writing, software distributed under the Licence is
@@ -28,6 +26,7 @@ permissions and limitations under the Licence.
 namespace HLP\NebulaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * BuildRepository
@@ -37,6 +36,42 @@ use Doctrine\ORM\EntityRepository;
  */
 class BuildRepository extends EntityRepository
 {
+    public function findOneWithParents($parameters)
+    {
+        $queryBuilder = $this->createQueryBuilder('u')
+            ->leftJoin('u.branch', 'b')
+            ->addSelect('b')
+            ->leftJoin('u.meta', 'm')
+            ->addSelect('m')
+            ->where('m.metaId = :meta')
+            ->andWhere('b.branchId = :branch')
+            ->andWhere('u.version = :version')
+            ->setParameter('meta', $parameters['meta'])
+            ->setParameter('branch', $parameters['branch'])
+            ->setParameter('version', $parameters['version'])
+        ;
+        
+        return $queryBuilder->getQuery()
+            ->getOneOrNullResult();
+    }
+    
+    public function getBuilds($branch, $page, $nbPerPage)
+    {
+        $query = $this->createQueryBuilder('u')
+            ->leftJoin('u.branch', 'b')
+            ->where('b = :branch')
+            ->setParameter('branch', $branch)
+            ->getQuery()
+        ;
+
+        $query
+            ->setFirstResult(($page-1) * $nbPerPage)
+            ->setMaxResults($nbPerPage)
+        ;
+
+        return new Paginator($query, true);
+    }
+    
   public function findSingleBuild($ownerNameCanonical, $modId, $branchId = null, $versionMajor = null, $versionMinor = null, $versionPatch = null, $versionPreRelease = null, $versionMetadata = null)
   {
     $qb = $this->_em->createQueryBuilder();

@@ -13,10 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
 class Author
 {
     /**
-     * @ORM\ManyToOne(targetEntity="HLP\NebulaBundle\Entity\FSMod", inversedBy="authors")
+     * @ORM\ManyToOne(targetEntity="HLP\NebulaBundle\Entity\Meta", inversedBy="authors")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $mod;
+    private $meta;
     
     /**
      * @var integer
@@ -99,25 +99,25 @@ class Author
     }
 
     /**
-     * Set mod
+     * Set meta
      *
-     * @param \HLP\NebulaBundle\Entity\FSMod $mod
+     * @param \HLP\NebulaBundle\Entity\Meta $meta
      * @return Author
      */
-    public function setMod(\HLP\NebulaBundle\Entity\FSMod $mod = null)
+    public function setMeta(\HLP\NebulaBundle\Entity\Meta $meta = null)
     {
-        $this->mod = $mod;
+        $this->mod = $meta;
 
         return $this;
     }
 
     /**
-     * Get mod
+     * Get meta
      *
-     * @return \HLP\NebulaBundle\Entity\FSMod 
+     * @return \HLP\NebulaBundle\Entity\Meta
      */
-    public function getMod()
+    public function getMeta()
     {
-        return $this->mod;
+        return $this->meta;
     }
 }

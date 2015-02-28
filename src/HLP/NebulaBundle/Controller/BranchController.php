@@ -2,7 +2,6 @@
 
 /*
 * Copyright 2014 HLP-Nebula authors, see NOTICE file
-4
 *
 * Licensed under the EUPL, Version 1.1 or – as soon they
 will be approved by the European Commission - subsequent
@@ -13,7 +12,6 @@ Licence.
 *
 *
 http://ec.europa.eu/idabc/eupl
-5
 *
 * Unless required by applicable law or agreed to in
 writing, software distributed under the Licence is
@@ -32,236 +30,187 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-use HLP\NebulaBundle\Entity\FSMod;
+use HLP\NebulaBundle\Entity\Meta;
 use HLP\NebulaBundle\Entity\Branch;
-use HLP\NebulaBundle\Entity\Build;
+use HLP\NebulaBundle\Form\BranchType;
 use HLP\NebulaBundle\Form\BranchEditType;
-use HLP\NebulaBundle\Form\BuildType;
 
 
 class BranchController extends Controller
 {
-  public function indexAction($owner, $mod, $branch)
-  {
-    return $this->redirect($this->generateUrl('hlp_nebula_branch_builds', array(
-      'owner'  => $owner,
-      'mod'    => $mod,
-      'branch' => $branch
-    )), 301);
-  }
-  
-  //IMPLICIT : string to Branch parameter conversion, with custom ParamConverter
-  //Keeping this param converter config as a reference. I'll use this to optimise requests later.
-  /**
-   * @ParamConverter("branch", options={"test": false})
-   */
-  public function buildsAction(Branch $branch, $page)
-  {
-    if ($page < 1) {
-      throw $this->createNotFoundException("Page ".$page." does not exist.");
-    }
-    
-    $mod = $branch->getMod();
-    $owner = $mod->getOwner();
-    
-    $buildsPerPage = 10;
-    $buildsAll = $branch->getBuilds()->toArray();
-    $nbPages = ceil(count($buildsAll)/$buildsPerPage);
-    
-    if (($page > $nbPages) && ($page > 1)) {
-      throw $this->createNotFoundException("Page ".$page." does not exist.");
-    }
-    
-    $buildsList = array_slice($buildsAll, ($page-1)*$buildsPerPage, $buildsPerPage);
-    
-    return $this->render('HLPNebulaBundle:AdvancedUI:branch_builds.html.twig', array(
-      'owner'      => $owner,
-      'mod'        => $mod,
-      'branch'     => $branch,
-      'buildsList' => $buildsList,
-      'page'       => $page,
-      'nbPages'    => $nbPages
-    ));
-  }
-  
-  public function detailsAction(Branch $branch)
-  {
-    $mod = $branch->getMod();
-    $owner = $mod->getOwner();
-    
-    $session = new Session();
-    $session->set('branchRefer', 'fromDetails');
-    
-    return $this->render('HLPNebulaBundle:AdvancedUI:branch_details.html.twig', array(
-      'owner'  => $owner,
-      'mod'    => $mod,
-      'branch' => $branch
-    ));
-  }
-  
-  public function activityAction(Branch $branch)
-  {
-    $mod = $branch->getMod();
-    $owner = $mod->getOwner();
-    
-    return $this->render('HLPNebulaBundle:AdvancedUI:branch_activity.html.twig', array(
-      'owner'  => $owner,
-      'mod'    => $mod,
-      'branch' => $branch
-    ));
-  }
-  
-  public function newBuildAction(Request $request, Branch $branch)
-  {
-    $mod = $branch->getMod();
-    $owner = $mod->getOwner();
-    
-    if (false === $this->get('security.context')->isGranted('add', $owner)) {
-        throw new AccessDeniedException('Unauthorised access!');
-    }
-    
-    $build = new Build;
-    $build->setBranch($branch);
-    
-    $form = $this->createForm(new BuildType(), $build);
-
-    $form->handleRequest($request);
-
-    if ($form->isValid())
+    /**
+     * @ParamConverter("branch", options={"mapping": {"meta": "meta", "branch": "branchId"}, "repository_method" = "findOneWithParent"})
+     */
+    public function showDetailsAction(Request $request, Branch $branch)
     {
-      $em = $this->getDoctrine()
-                 ->getManager();
-                 
-      $em->persist($build);
-      $em->flush();
-      
-      $request->getSession()
-              ->getFlashBag()
-              ->add('success', 'New build <strong>version '.$build->getVersion().'</strong> successfully created.');
-              
-      return $this->redirect($this->generateUrl('hlp_nebula_process', array(
-        'owner'  => $owner,
-        'mod'    => $mod,
-        'branch' => $branch,
-        'build'  => $build
-      )));
+        $session = new Session();
+        $session->set('branch_refer', $this->getRequest()
+                                           ->getUri()
+        );
+        
+        return $this->render('HLPNebulaBundle:Branch:details.html.twig', array(
+            'meta'   => $branch->getMeta(),
+            'branch' => $branch
+        ));
     }
     
-    if ((!$form->isValid()) && $request->isMethod('POST') )
+    /**
+     * @ParamConverter("branch", options={"mapping": {"meta": "meta", "branch": "branchId"}, "repository_method" = "findOneWithParent"})
+     */
+    public function showBuildsAction(Request $request, Branch $branch, $page)
     {
-      $request->getSession()
-              ->getFlashBag()
-              ->add('error', '<strong>Invalid data !</strong> Please check this form again.');
+        if ($page < 1) {
+            throw $this->createNotFoundException("Page ".$page." not found.");
+        }
+        
+        $nbPerPage = 10;
+        
+        $buildsList = $this->getDoctrine()
+            ->getManager()
+            ->getRepository('HLPNebulaBundle:Build')
+            ->getBuilds($branch, $page, $nbPerPage)
+        ;
+
+        $nbPages = ceil(count($buildsList)/$nbPerPage);
+        
+        if ($page > $nbPages && $nbPages != 0) {
+            throw $this->createNotFoundException("Page ".$page." not found.");
+        }
+        
+        $session = new Session();
+        $session->set('build_refer', $this->getRequest()
+                                           ->getUri()
+        );
+    
+        return $this->render('HLPNebulaBundle:Branch:builds.html.twig', array(
+            'meta'   => $branch->getMeta(),
+            'branch' => $branch,
+            'buildsList'   => $buildsList,
+            'nbPages' => $nbPages,
+            'page' => $page
+        ));
     }
     
-    return $this->render('HLPNebulaBundle:AdvancedUI:new_build.html.twig', array(
-      'owner'  => $owner,
-      'mod'    => $mod,
-      'branch' => $branch,
-      'form'   => $form->createView()
-    ));
-  }
+    /**
+     * @ParamConverter("branch", options={"mapping": {"meta": "meta", "branch": "branchId"}, "repository_method" = "findOneWithParent"})
+     */
+    public function showActivityAction(Branch $branch)
+    {
+        return $this->render('HLPNebulaBundle:Branch:activity.html.twig', array(
+            'meta'   => $branch->getMeta(),
+            'branch' => $branch
+        ));
+    }
+    
+    /**
+     * @ParamConverter("meta", options={"mapping": {"meta": "metaId"}})
+     * @Security("is_granted('EDIT', meta)")
+     */
+    public function createAction(Request $request, Meta $meta)
+    {
+        $branch = new Branch;
+        
+        $form = $this->createForm(new BranchType(), $branch);
+
+        if ($form->handleRequest($request)->isValid())
+        {
+            if ($meta->getNbBranches() == 0) {
+                $branch->setIsDefault(true);
+            }
+            
+            $meta->addBranch($branch);
+            
+            $em = $this->getDoctrine()
+                ->getManager();
+
+            $em->persist($branch);
+            $em->flush();
+
+            $request->getSession()
+                ->getFlashBag()
+                ->add('success', 'New branch <strong>"'.$branch->getName().'" (id: '.$branch->getBranchId().')</strong> successfully created.');
+
+            return $this->redirect($this->generateUrl('hlp_nebula_repository_branch', array(
+                'meta'      => $meta,
+                'branch'    => $branch
+            )));
+        }
+
+        return $this->render('HLPNebulaBundle:Branch:create.html.twig', array(
+            'meta'  => $meta,
+            'form'  => $form->createView()
+        ));
+    }
+    
+    /**
+     * @ParamConverter("branch", options={"mapping": {"meta": "meta", "branch": "branchId"}, "repository_method" = "findOneWithParent"})
+     * @Security("is_granted('EDIT', branch.getMeta())")
+     */
+    public function updateAction(Request $request, Branch $branch)
+    {
+        $session = new Session();
+        $referURL = $session->get('branch_refer');
+
+        $form = $this->createForm(new BranchEditType(), $branch);
+
+        if ($form->handleRequest($request)->isValid()) {
+            $em = $this->getDoctrine()
+                ->getManager();
+
+            $em->flush();
+
+            $request->getSession()
+                ->getFlashBag()
+                ->add('success', 'Branch <strong>"'.$branch->getName().'" (id: '.$branch->getBranchId().')</strong> has been successfully edited.');
+
+            return $this->redirect($referURL);
+        }
+
+        return $this->render('HLPNebulaBundle:Branch:update.html.twig', array(
+            'meta'     => $branch->getMeta(),
+            'branch'   => $branch,
+            'form'     => $form->createView(),
+            'referURL' => $referURL
+        ));
+    }
   
-  public function editAction(Request $request, Branch $branch)
-  {
-    $mod = $branch->getMod();
-    $owner = $mod->getOwner();
-    
-    if (false === $this->get('security.context')->isGranted('add', $owner)) {
-        throw new AccessDeniedException('Unauthorised access!');
-    }
-    
-    $session = new Session();
-    $refer = $session->get('branchRefer');
-    $referURL = $this->getReferURL($refer, $owner, $mod, $branch);
-
-    $form = $this->createForm(new BranchEditType(), $branch);
-
-    if ($form->handleRequest($request)->isValid()) {
-      
-      $em = $this->getDoctrine()
-                 ->getManager();
-
-      $em->flush();
-      
-      $request->getSession()
-              ->getFlashBag()
-              ->add('success', 'Branch <strong>"'.$branch->getName().'" (id: '.$branch->getBranchId().')</strong> has been successfully edited.');
-
-      return $this->redirect($referURL);
-    }
-
-    return $this->render('HLPNebulaBundle:AdvancedUI:edit_branch.html.twig', array(
-      'owner'    => $owner,
-      'mod'      => $mod,
-      'branch'   => $branch,
-      'form'     => $form->createView(),
-      'referURL' => $referURL
-    ));
-  }
-  
-  public function deleteAction(Request $request, Branch $branch)
-  {
-    $mod = $branch->getMod();
-    $owner = $mod->getOwner();
-
-    if (false === $this->get('security.context')->isGranted('add', $owner)) {
-        throw new AccessDeniedException('Unauthorised access!');
-    }
-    
-    $session = new Session();
-    $refer = $session->get('branchRefer');
-    $referURL = $this->getReferURL($refer, $owner, $mod, $branch);
-
-    $form = $this->createFormBuilder()
-                 ->getForm();
-
-    if ($form->handleRequest($request)->isValid())
+    /**
+     * @ParamConverter("branch", options={"mapping": {"meta": "meta", "branch": "branchId"}, "repository_method" = "findOneWithParent"})
+     * @Security("is_granted('EDIT', branch.getMeta())")
+     */
+    public function deleteAction(Request $request, Branch $branch)
     {
-      $em = $this->getDoctrine()
-                 ->getManager();
-                 
-      $em->remove($branch);
-      $em->flush();
+        $session = new Session();
+        $referURL = $session->get('branch_refer');
 
-      $request->getSession()
-              ->getFlashBag()
-              ->add('success', 'Branch <strong>"'.$branch->getName().'" (id: '.$branch->getBranchId().')</strong> has been deleted.');
-      
-      return $this->redirect($this->generateUrl('hlp_nebula_mod', array(
-        'mod'   => $mod,
-        'owner' => $owner
-      )));
-    }
+        $form = $this->createFormBuilder()
+            ->getForm();
 
-    return $this->render('HLPNebulaBundle:AdvancedUI:delete_branch.html.twig', array(
-      'owner'    => $owner,
-      'mod'      => $mod,
-      'branch'   => $branch,
-      'form'     => $form->createView(),
-      'referURL' => $referURL
-    ));
-  }
-  
-  private function getReferURL($refer, $owner, $mod, $branch)
-  {
-    if($refer == 'fromDetails')
-    {
-      $referURL = $this->generateUrl('hlp_nebula_branch_details', array(
-        'branch' => $branch,
-        'mod'    => $mod,
-        'owner'  => $owner
-      ));
+        if ($form->handleRequest($request)->isValid()) {
+            $branch->getMeta()->removeBranch($branch);
+            
+            $em = $this->getDoctrine()
+                ->getManager();
+
+            $em->remove($branch);
+            $em->flush();
+
+            $request->getSession()
+                ->getFlashBag()
+                ->add('success', 'Branch <strong>"'.$branch->getName().'" (id: '.$branch->getBranchId().')</strong> has been deleted.');
+
+            return $this->redirect($this->generateUrl('hlp_nebula_repository_meta', array(
+                'meta'   => $branch->getMeta()
+            )));
+        }
+
+        return $this->render('HLPNebulaBundle:Branch:delete.html.twig', array(
+            'meta'      => $branch->getMeta(),
+            'branch'    => $branch,
+            'form'      => $form->createView(),
+            'referURL'  => $referURL
+        ));
     }
-    else
-    {
-      $referURL = $this->generateUrl('hlp_nebula_mod_branches', array(
-        'mod'   => $mod,
-        'owner' => $owner
-      ));
-    }
-    
-    return $referURL;
-  }
 }

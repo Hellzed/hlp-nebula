@@ -2,7 +2,7 @@
 
 /*
 * Copyright 2014 HLP-Nebula authors, see NOTICE file
-4
+
 *
 * Licensed under the EUPL, Version 1.1 or – as soon they
 will be approved by the European Commission - subsequent
@@ -13,7 +13,7 @@ Licence.
 *
 *
 http://ec.europa.eu/idabc/eupl
-5
+
 *
 * Unless required by applicable law or agreed to in
 writing, software distributed under the Licence is
@@ -33,9 +33,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 
-use HLP\NebulaBundle\Entity\FSMod;
+use HLP\NebulaBundle\Entity\Meta;
 use HLP\NebulaBundle\Entity\Branch;
 use HLP\NebulaBundle\Entity\Build;
 use HLP\NebulaBundle\Form\BuildType;
@@ -43,36 +44,70 @@ use HLP\NebulaBundle\Form\BuildTransferType;
 
 class BuildController extends Controller
 {
-  public function indexAction($owner, $mod, $branch, $build)
-  {
-    return $this->redirect($this->generateUrl('hlp_nebula_build_data', array(
-      'owner'  => $owner,
-      'mod'    => $mod,
-      'branch' => $branch,
-      'build'  => $build
-    )), 301);
-  }
-  
-  public function showAction(Build $build)
-  {
-    $branch = $build->getBranch();
-    $mod = $branch->getMod();
-    $owner = $mod->getOwner();
+    /**
+     * @ParamConverter("branch", options={"mapping": {"meta": "meta", "branch": "branchId"}, "repository_method" = "findOneWithParent"})
+     * @Security("is_granted('EDIT', branch.getMeta())")
+     */
+    public function createAction(Request $request, Branch $branch)
+    {
+        $build = new Build;
+
+        $form = $this->createForm(new BuildType(), $build);
+
+        $form->handleRequest($request);
+
+        if ($form->isValid())
+        {
+            $branch->addBuild($build);
+            
+            $em = $this->getDoctrine()
+                ->getManager();
+
+            $em->persist($build);
+            $em->flush();
+
+            $request->getSession()
+                ->getFlashBag()
+                ->add('success', 'New build <strong>version '.$build->getVersion().'</strong> successfully created.');
+
+            return $this->redirect($this->generateUrl('hlp_nebula_repository_build', array(
+                'meta'   => $build->getMeta(),
+                'branch' => $build->getBranch(),
+                'build'  => $build
+            )));
+        }
+        
+        if ((!$form->isValid()) && $request->isMethod('POST') )
+        {
+            $request->getSession()
+                ->getFlashBag()
+                ->add('error', '<strong>Invalid data !</strong> Please check this form again.');
+        }
+        
+        return $this->render('HLPNebulaBundle:Build:create.html.twig', array(
+            'meta'   => $branch->getMeta(),
+            'branch' => $branch,
+            'form'   => $form->createView()
+        ));
+    }
     
-    $jsonBuilder = $this->container
-                        ->get('hlpnebula.json_builder');
-                        
-    $data = $jsonBuilder->createFromBuild($build);
-    //$data = Array('mods' => Array($data));
-    
-    return $this->render('HLPNebulaBundle:AdvancedUI:build_show.html.twig', array(
-      'owner'  => $owner,
-      'mod'    => $mod,
-      'branch' => $branch,
-      'build'  => $build,
-      'data'   => $data
-    ));
-  }
+    /**
+     * @ParamConverter("build", options={"mapping": {"meta": "meta", "branch": "branch", "build": "version"}, "repository_method" = "findOneWithParents"})
+     */
+    public function showDetailsAction(Build $build)
+    {
+        //$jsonBuilder = $this->container
+        //    ->get('hlpnebula.json_builder');
+
+        //$data = $jsonBuilder->createFromBuild($build);
+        //$data = Array('mods' => Array($data));
+
+        return $this->render('HLPNebulaBundle:Build:details.html.twig', array(
+            'meta'   => $build->getMeta(),
+            'branch' => $build->getBranch(),
+            'build'  => $build
+        ));
+    }
   
   public function showFinalisedAction(Build $build)
   {
@@ -259,10 +294,10 @@ class BuildController extends Controller
         else
         {
           return $this->render('HLPNebulaBundle:AdvancedUI:process_error.html.twig', array(
-            'owner'  => $owner,
-            'mod'    => $mod,
-            'branch' => $branch,
-            'build'  => $build,
+            'owner'         => $owner,
+            'mod'           => $mod,
+            'branch'        => $branch,
+            'build'         => $build
           ));
         }
       }
@@ -270,11 +305,13 @@ class BuildController extends Controller
       $ksticket = $build->getConverterTicket();
       
       return $this->render('HLPNebulaBundle:AdvancedUI:process_build.html.twig', array(
-        'owner'  => $owner,
-        'mod'    => $mod,
-        'branch' => $branch,
-        'build'  => $build,
-        'ksticket' => $ksticket
+        'owner'         => $owner,
+        'mod'           => $mod,
+        'branch'        => $branch,
+        'build'         => $build,
+        'ksticket'      => $ksticket,
+        'converter_url' => $ks->getConverterURL(),
+        'ws_url'        => $ks->getWsURL()
       ));
     }
     
